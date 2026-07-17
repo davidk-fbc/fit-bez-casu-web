@@ -87,11 +87,6 @@ body {
     radial-gradient(1.2px 1.2px at 30% 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
 }
 
-html {
-  /* Keeps anchor-scrolled sections clear of the sticky header (~93px tall). */
-  scroll-padding-top: 6.5rem;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;

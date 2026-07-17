@@ -40,9 +40,6 @@ export function Hero() {
       <div className="stars-layer" />
       <div className="noise-layer" />
 
-      {/* bottom fade into next section for a deliberate, non-flat edge */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[var(--color-surface-muted)]" />
-
       <Container className="relative flex flex-col items-start gap-10 py-20 sm:py-24 lg:flex-row lg:items-start lg:justify-between lg:gap-12 lg:py-28">
         <div className="flex max-w-2xl flex-col items-start gap-7 lg:pt-6">
           <h1
@@ -77,7 +74,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[15rem] sm:max-w-[17rem] lg:mx-0 lg:w-[19rem] xl:w-[21rem]">
+        <div className="relative mx-auto w-full max-w-[18rem] sm:max-w-[21rem] lg:mx-0 lg:w-[25rem] xl:w-[28rem]">
           <div
             className="pointer-events-none absolute inset-0 scale-90 rounded-full opacity-80 blur-3xl"
             style={{ background: "var(--gradient-brand-diagonal)" }}
@@ -88,7 +85,7 @@ export function Hero() {
             width={1844}
             height={3558}
             priority
-            sizes="(min-width: 1280px) 21rem, (min-width: 1024px) 19rem, (min-width: 640px) 17rem, 15rem"
+            sizes="(min-width: 1280px) 28rem, (min-width: 1024px) 25rem, (min-width: 640px) 21rem, 18rem"
             className="relative h-auto w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.5)]"
           />
           <div className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full border border-white/25 bg-white/[0.06] backdrop-blur-sm sm:-right-8 sm:-top-8 sm:h-20 sm:w-20" />

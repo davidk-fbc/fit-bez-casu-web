@@ -6,7 +6,7 @@ import { COMMUNITY_URL, NAV_LINKS } from "@/lib/navigation";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.08] bg-[var(--color-dark)]/85 backdrop-blur-md">
+    <header className="relative z-40 border-b border-white/[0.08] bg-[var(--color-dark)]">
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-px opacity-60"
         style={{ background: "var(--gradient-brand)" }}

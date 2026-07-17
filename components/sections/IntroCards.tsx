@@ -43,8 +43,8 @@ const CARDS = [
 
 export function IntroCards() {
   return (
-    <section className="relative bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
-      <Container className="-mt-24 sm:-mt-20 lg:-mt-24">
+    <section className="relative flow-root bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
+      <Container className="-mt-28 sm:-mt-24 lg:-mt-28">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {CARDS.map((card) => (
             <FeatureCard key={card.title} {...card} />
