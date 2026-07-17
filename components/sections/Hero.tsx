@@ -1,6 +1,6 @@
+import Image from "next/image";
 import { Button } from "../Button";
 import { Container } from "../Container";
-import { PlaceholderImage } from "../PlaceholderImage";
 import { HERO_PRIMARY_CTA, HERO_SECONDARY_CTA } from "@/lib/navigation";
 
 export function Hero() {
@@ -77,18 +77,20 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative w-full max-w-sm sm:max-w-md lg:w-[28rem] xl:w-[30rem]">
+        <div className="relative mx-auto w-full max-w-[15rem] sm:max-w-[17rem] lg:mx-0 lg:w-[19rem] xl:w-[21rem]">
           <div
-            className="pointer-events-none absolute -inset-3 rounded-[calc(var(--radius-card)+0.75rem)] opacity-70 blur-2xl"
+            className="pointer-events-none absolute inset-0 scale-90 rounded-full opacity-80 blur-3xl"
             style={{ background: "var(--gradient-brand-diagonal)" }}
           />
-          <div className="relative rounded-[var(--radius-card)] p-[3px]" style={{ background: "var(--gradient-brand-diagonal)" }}>
-            <PlaceholderImage
-              label="Foto: Klára a David"
-              tone="muted"
-              className="aspect-[4/5] w-full rounded-[calc(var(--radius-card)-3px)] shadow-[var(--shadow-card-hover)]"
-            />
-          </div>
+          <Image
+            src="/images/homepage/hero-klara-david.png"
+            alt="Klára a David, zakladatelé Fit bez času"
+            width={1844}
+            height={3558}
+            priority
+            sizes="(min-width: 1280px) 21rem, (min-width: 1024px) 19rem, (min-width: 640px) 17rem, 15rem"
+            className="relative h-auto w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.5)]"
+          />
           <div className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full border border-white/25 bg-white/[0.06] backdrop-blur-sm sm:-right-8 sm:-top-8 sm:h-20 sm:w-20" />
           <div className="pointer-events-none absolute -bottom-5 -left-5 h-10 w-10 rounded-2xl opacity-90 blur-[1px]" style={{ background: "var(--gradient-brand)" }} />
         </div>

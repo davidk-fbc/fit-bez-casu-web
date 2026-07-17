@@ -1,6 +1,6 @@
+import Image from "next/image";
 import { ArrowRightIcon, HeartPulseIcon, SparkIcon, UsersIcon } from "../icons";
 import { Container } from "../Container";
-import { PlaceholderImage } from "../PlaceholderImage";
 
 // Kvalitativní mikrobloky (bez čísel/neověřených statistik) — vizuálně
 // nahrazují stat řádek z referenčního návrhu, obsahově navazují na tón
@@ -17,10 +17,15 @@ export function AboutUs() {
       <div className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-[var(--color-accent-purple)] opacity-[0.06] blur-3xl" />
       <Container className="relative flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
         <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left lg:max-w-lg lg:shrink-0">
-          <PlaceholderImage
-            label="Foto: Klára a David"
-            className="h-40 w-40 shrink-0 rounded-full shadow-[var(--shadow-card)] sm:h-48 sm:w-48"
-          />
+          <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-full shadow-[var(--shadow-card)] sm:h-48 sm:w-48">
+            <Image
+              src="/images/about/klara-david.png"
+              alt="Klára a David, zakladatelé Fit bez času"
+              fill
+              sizes="(min-width: 640px) 12rem, 10rem"
+              className="object-cover"
+            />
+          </div>
           <div className="flex flex-col items-center gap-3 sm:items-start">
             <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
               <span className="h-1.5 w-6 rounded-full" style={{ background: "var(--gradient-brand)" }} />
