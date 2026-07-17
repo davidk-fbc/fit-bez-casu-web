@@ -1,32 +1,55 @@
-import { ArrowRightIcon } from "../icons";
+import { ArrowRightIcon, HeartPulseIcon, SparkIcon, UsersIcon } from "../icons";
 import { Container } from "../Container";
 import { PlaceholderImage } from "../PlaceholderImage";
 
+// Kvalitativní mikrobloky (bez čísel/neověřených statistik) — vizuálně
+// nahrazují stat řádek z referenčního návrhu, obsahově navazují na tón
+// popisu vlevo, nic nového si nevymýšlí.
+const VALUES = [
+  { icon: <UsersIcon className="h-full w-full" />, title: "Nejsi na to sama", description: "Podpora a komunita nablízku" },
+  { icon: <HeartPulseIcon className="h-full w-full" />, title: "Bez extrémů", description: "Udržitelný přístup, ne diety" },
+  { icon: <SparkIcon className="h-full w-full" />, title: "Malé kroky", description: "Které vedou k velkým změnám" },
+];
+
 export function AboutUs() {
   return (
-    <section id="o-nas" className="bg-[var(--color-surface)] py-[var(--space-section)]">
-      <Container className="flex flex-col items-center gap-8 sm:flex-row sm:items-center">
-        <PlaceholderImage
-          label="Foto: Klára a David"
-          className="h-40 w-40 shrink-0 rounded-full sm:h-48 sm:w-48"
-        />
-        <div className="flex flex-col items-start gap-3 text-center sm:text-left">
-          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
-            O nás
-          </span>
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text)] sm:text-3xl">
-            Jsme Klára a David
-          </h2>
-          <p className="max-w-lg text-base leading-relaxed text-[var(--color-text-muted)]">
-            Pomáháme ženám najít rovnováhu mezi zdravím, energií a každodenním životem. Věříme v jednoduchost, podporu a malé kroky, které přináší velké změny.
-          </p>
-          <a
-            href="#o-nas"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110"
-          >
-            Přečíst náš příběh
-            <ArrowRightIcon className="h-4 w-4" />
-          </a>
+    <section id="o-nas" className="relative overflow-hidden bg-[var(--color-surface)] py-[var(--space-section)]">
+      <div className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-[var(--color-accent-purple)] opacity-[0.06] blur-3xl" />
+      <Container className="relative flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+        <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left lg:max-w-lg lg:shrink-0">
+          <PlaceholderImage
+            label="Foto: Klára a David"
+            className="h-40 w-40 shrink-0 rounded-full shadow-[var(--shadow-card)] sm:h-48 sm:w-48"
+          />
+          <div className="flex flex-col items-center gap-3 sm:items-start">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
+              <span className="h-1.5 w-6 rounded-full" style={{ background: "var(--gradient-brand)" }} />
+              O nás
+            </span>
+            <h2 className="text-4xl font-bold tracking-tight text-[var(--color-text)] sm:text-5xl">
+              Jsme Klára a David
+            </h2>
+            <p className="max-w-lg text-base leading-relaxed text-[var(--color-text-muted)]">
+              Pomáháme ženám najít rovnováhu mezi zdravím, energií a každodenním životem. Věříme v jednoduchost, podporu a malé kroky, které přináší velké změny.
+            </p>
+            <a
+              href="#o-nas"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110"
+            >
+              Přečíst náš příběh
+              <ArrowRightIcon className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-6 border-t border-[var(--color-border-light)] pt-8 lg:gap-8 lg:border-t-0 lg:border-l lg:pl-10 lg:pt-0">
+          {VALUES.map((value) => (
+            <div key={value.title} className="flex flex-col items-center gap-2 text-center lg:items-start lg:text-left">
+              <div className="h-7 w-7 text-[var(--color-accent-purple)]">{value.icon}</div>
+              <span className="text-sm font-semibold text-[var(--color-text)]">{value.title}</span>
+              <span className="text-xs leading-snug text-[var(--color-text-muted)]">{value.description}</span>
+            </div>
+          ))}
         </div>
       </Container>
     </section>

@@ -30,15 +30,16 @@ const ARTICLES = [
 
 export function LatestArticles() {
   return (
-    <section id="blog" className="bg-[var(--color-surface-muted)] py-[var(--space-section)]">
-      <Container className="flex flex-col gap-10">
+    <section id="blog" className="relative overflow-hidden bg-[var(--color-surface-muted)] py-[var(--space-section)]">
+      <div className="pointer-events-none absolute -right-32 -top-16 h-96 w-96 rounded-full bg-[var(--color-accent-blue)] opacity-[0.07] blur-3xl" />
+      <Container className="relative flex flex-col gap-12">
         <SectionHeading eyebrow="Z blogu" title="Nové články" />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {ARTICLES.map((article) => (
             <ArticleCard key={article.title} {...article} />
           ))}
         </div>
-        <Button href="#blog" variant="outline-light" withArrow={false} className="mx-auto">
+        <Button href="#blog" variant="outline-light" withArrow={false} className="mx-auto px-7 py-3.5">
           Zobrazit další články
         </Button>
       </Container>

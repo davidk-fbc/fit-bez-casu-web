@@ -109,6 +109,41 @@ export function UsersIcon({ className }: IconProps) {
   );
 }
 
+export function FacebookIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <path d="M14.5 8.5h2V5.6c-.35-.05-1.55-.15-2.95-.15-2.92 0-4.92 1.83-4.92 5.2v2.7H6v3.4h3.13V21h3.5v-4.25h3.02l.48-3.4h-3.5v-2.36c0-.98.27-1.66 1.87-1.66Z" />
+    </svg>
+  );
+}
+
+export function InstagramIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17" cy="7" r="0.8" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function YoutubeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <rect x="3" y="6" width="18" height="12" rx="4" />
+      <path d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function TiktokIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <path d="M16.5 3.5c.4 2.2 1.8 3.7 4 3.9v2.9c-1.5.05-2.85-.4-4-1.25v6.1c0 3.2-2.35 5.35-5.3 5.35-3 0-5.3-2.2-5.3-5.15 0-3 2.4-5.2 5.4-5.2.35 0 .7.03 1 .1v3.05a2.3 2.3 0 0 0-1-.22c-1.35 0-2.35 1.02-2.35 2.3 0 1.3 1 2.28 2.35 2.28 1.4 0 2.45-1 2.45-2.5V3.5h2.75Z" />
+    </svg>
+  );
+}
+
 export function MenuIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className} aria-hidden="true">

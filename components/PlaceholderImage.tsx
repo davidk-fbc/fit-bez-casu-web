@@ -6,12 +6,13 @@ type PlaceholderImageProps = {
   className?: string;
   tone?: "muted" | "brand-purple" | "brand-blue";
   fill?: boolean;
+  showContent?: boolean;
 };
 
 const toneClasses: Record<NonNullable<PlaceholderImageProps["tone"]>, string> = {
   muted: "bg-[linear-gradient(135deg,#eceafb,#f7f7fb_45%,#e7e2fb)] text-[var(--color-text-muted)]",
-  "brand-purple": "bg-[linear-gradient(135deg,#9256f2,#6b3ce0)] text-white/80",
-  "brand-blue": "bg-[linear-gradient(135deg,#3a86f6,#1552d6)] text-white/80",
+  "brand-purple": "bg-[linear-gradient(135deg,#7c3aed,#4c1d95)] text-white/80",
+  "brand-blue": "bg-[linear-gradient(135deg,#2f6ff2,#0d2f9e)] text-white/80",
 };
 
 /**
@@ -24,6 +25,7 @@ export function PlaceholderImage({
   className = "",
   tone = "muted",
   fill = false,
+  showContent = true,
 }: PlaceholderImageProps) {
   return (
     <div
@@ -33,8 +35,12 @@ export function PlaceholderImage({
       className={`${fill ? "absolute inset-0" : "relative"} flex flex-col items-center justify-center gap-2 overflow-hidden ${toneClasses[tone]} ${className}`}
     >
       <div className="absolute inset-0 opacity-40 [background-image:repeating-linear-gradient(135deg,currentColor_0,currentColor_1px,transparent_1px,transparent_12px)]" />
-      {icon && <div className="relative h-8 w-8">{icon}</div>}
-      <span className="relative px-4 text-center text-xs font-medium">{label}</span>
+      {showContent && (
+        <>
+          {icon && <div className="relative h-8 w-8">{icon}</div>}
+          <span className="relative px-4 text-center text-xs font-medium">{label}</span>
+        </>
+      )}
     </div>
   );
 }

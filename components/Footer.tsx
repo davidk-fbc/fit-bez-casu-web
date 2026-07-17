@@ -1,21 +1,28 @@
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
-import { COMMUNITY_URL, NAV_LINKS } from "@/lib/navigation";
+import { FacebookIcon, InstagramIcon, TiktokIcon, YoutubeIcon } from "./icons";
+import { COMMUNITY_URL } from "@/lib/navigation";
 
 const SOCIAL_LINKS = [
-  { label: "Facebook", href: "#" },
-  { label: "Instagram", href: "#" },
-  { label: "YouTube", href: "#" },
-  { label: "TikTok", href: "#" },
+  { label: "Facebook", href: "#", icon: <FacebookIcon className="h-4.5 w-4.5" /> },
+  { label: "Instagram", href: "#", icon: <InstagramIcon className="h-4.5 w-4.5" /> },
+  { label: "YouTube", href: "#", icon: <YoutubeIcon className="h-4.5 w-4.5" /> },
+  { label: "TikTok", href: "#", icon: <TiktokIcon className="h-4.5 w-4.5" /> },
 ];
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[var(--color-border-dark)] bg-[var(--color-dark)]">
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative overflow-hidden border-t border-white/[0.08] bg-[var(--color-dark)]">
+      <div
+        className="pointer-events-none absolute -top-32 left-1/2 h-96 w-[48rem] -translate-x-1/2 rounded-full opacity-25 blur-3xl"
+        style={{ background: "var(--gradient-brand-diagonal)" }}
+      />
+      <div className="noise-layer" />
+
+      <Container className="relative grid gap-12 py-20 sm:grid-cols-3">
         <div className="flex flex-col gap-4">
           <Logo />
           <p className="max-w-xs text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
@@ -23,50 +30,38 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <h3 className="text-sm font-semibold text-white">Sleduj nás</h3>
-          <ul className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-5">
+          <h3 className="text-lg font-bold leading-snug text-white">
+            Malé kroky každý den = velká změna časem.
+          </h3>
+          <div className="flex items-center gap-3">
             {SOCIAL_LINKS.map((social) => (
-              <li key={social.label}>
-                <a
-                  href={social.href}
-                  className="text-sm text-[var(--color-text-on-dark-muted)] transition hover:text-white"
-                >
-                  {social.label}
-                </a>
-              </li>
+              <a
+                key={social.label}
+                href={social.href}
+                aria-label={social.label}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+              >
+                {social.icon}
+              </a>
             ))}
-          </ul>
+          </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className="text-sm font-semibold text-white">Rychlé odkazy</h3>
-          <ul className="flex flex-col gap-2.5">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="text-sm text-[var(--color-text-on-dark-muted)] transition hover:text-white"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <h3 className="text-sm font-semibold text-white">Přidej se do komunity</h3>
+          <h3 className="text-lg font-bold leading-snug text-white">
+            Už tě nebaví pořád začínat znovu?
+          </h3>
           <p className="text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
-            Buď první, kdo získá nové tipy, články a speciální nabídky.
+            Přidej se ke komunitě žen, které to myslí vážně.
           </p>
-          <Button href={COMMUNITY_URL} variant="gradient" withArrow={false} className="w-fit">
+          <Button href={COMMUNITY_URL} variant="gradient" withArrow={false} className="w-fit px-6 py-3">
             Vstoupit do komunity
           </Button>
         </div>
       </Container>
 
-      <div className="border-t border-[var(--color-border-dark)] py-6">
+      <div className="relative border-t border-white/[0.08] py-6">
         <Container>
           <p className="text-xs text-[var(--color-text-on-dark-muted)]">
             © {year} Fit bez času

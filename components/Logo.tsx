@@ -3,7 +3,7 @@ import Link from "next/link";
 export function Logo({ className = "" }: { className?: string }) {
   return (
     <Link href="/" className={`inline-flex shrink-0 items-center gap-2.5 ${className}`}>
-      <svg viewBox="0 0 40 40" className="h-8 w-8" aria-hidden="true">
+      <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
         <defs>
           <linearGradient id="logo-gradient" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="var(--color-accent-blue)" />
@@ -20,7 +20,7 @@ export function Logo({ className = "" }: { className?: string }) {
           strokeLinejoin="round"
         />
       </svg>
-      <span className="whitespace-nowrap text-lg font-bold text-white">Fit bez času</span>
+      <span className="whitespace-nowrap text-2xl font-extrabold tracking-tight text-white">Fit bez času</span>
     </Link>
   );
 }

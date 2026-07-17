@@ -23,8 +23,8 @@ export function ArticleCard({ tag, title, excerpt, href, imageIcon }: ArticleCar
           {tag}
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        <h3 className="text-base font-semibold leading-snug text-[var(--color-text)]">{title}</h3>
+      <div className="flex flex-1 flex-col gap-3 p-7">
+        <h3 className="text-lg font-bold leading-snug text-[var(--color-text)]">{title}</h3>
         <p className="text-sm leading-relaxed text-[var(--color-text-muted)]">{excerpt}</p>
         <a
           href={href}

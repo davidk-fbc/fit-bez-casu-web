@@ -38,17 +38,17 @@ const MEALS = ["Snídaně", "Oběd", "Večeře"];
 
 function PhoneMockup() {
   return (
-    <div className="mx-auto w-full max-w-[280px] rounded-[2.5rem] border-8 border-[var(--color-text)] bg-white p-3 shadow-[var(--shadow-card-hover)]">
-      <div className="flex flex-col gap-4 rounded-[1.75rem] bg-[var(--color-surface-muted)] p-4">
+    <div className="mx-auto w-full max-w-[320px] rounded-[2.75rem] border-[10px] border-[var(--color-text)] bg-white p-3 shadow-[var(--shadow-card-hover)]">
+      <div className="flex flex-col gap-5 rounded-[1.9rem] bg-[var(--color-surface-muted)] p-5">
         <div className="flex items-center justify-between">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-[var(--color-accent-blue)] text-xs font-bold text-[var(--color-text)]">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[var(--color-accent-blue)] text-sm font-bold text-[var(--color-text)]">
             1 556
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-2">
             {["B", "S", "T"].map((letter) => (
               <span
                 key={letter}
-                className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[var(--color-accent-purple-soft)] text-[10px] font-semibold text-[var(--color-text-muted)]"
+                className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[var(--color-accent-purple-soft)] text-xs font-semibold text-[var(--color-text-muted)]"
               >
                 {letter}
               </span>
@@ -56,16 +56,16 @@ function PhoneMockup() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold text-[var(--color-text-muted)]">Dnešní jídla</span>
+        <div className="flex flex-col gap-2.5">
+          <span className="text-sm font-semibold text-[var(--color-text-muted)]">Dnešní jídla</span>
           {MEALS.map((meal) => (
-            <div key={meal} className="flex items-center gap-2.5 rounded-xl bg-white p-2 shadow-sm">
+            <div key={meal} className="flex items-center gap-3 rounded-xl bg-white p-2.5 shadow-sm">
               <PlaceholderImage
                 label=""
                 icon={<ForkKnifeIcon className="h-full w-full" />}
-                className="h-9 w-9 shrink-0 rounded-lg"
+                className="h-10 w-10 shrink-0 rounded-lg"
               />
-              <span className="text-xs font-medium text-[var(--color-text)]">{meal}</span>
+              <span className="text-sm font-medium text-[var(--color-text)]">{meal}</span>
             </div>
           ))}
         </div>
@@ -76,39 +76,41 @@ function PhoneMockup() {
 
 export function AppShowcase() {
   return (
-    <section id="aplikace" className="bg-[var(--color-surface)] py-[var(--space-section)]">
-      <Container className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.75fr)_minmax(0,0.9fr)] lg:items-center lg:gap-8">
-        <div className="flex flex-col gap-5">
-          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
+    <section id="aplikace" className="relative overflow-hidden bg-[var(--color-surface)] py-[var(--space-section)]">
+      <div className="pointer-events-none absolute right-0 top-1/4 h-96 w-96 rounded-full bg-[var(--color-accent-blue)] opacity-[0.06] blur-3xl" />
+      <Container className="relative grid gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,0.8fr)_minmax(0,0.85fr)] lg:items-center lg:gap-10">
+        <div className="flex flex-col gap-6">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
+            <span className="h-1.5 w-6 rounded-full" style={{ background: "var(--gradient-brand)" }} />
             Aplikace
           </span>
-          <h2 className="text-3xl font-bold tracking-tight text-[var(--color-text)] sm:text-4xl">
+          <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-[var(--color-text)] sm:text-5xl">
             Vše, co potřebuješ, máš v jedné aplikaci
           </h2>
-          <p className="text-base leading-relaxed text-[var(--color-text-muted)]">
+          <p className="text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
             Jednoduché sledování, které ti dává smysl. Měj přehled, zůstaň motivovaná a posouvej se. Dostupné přímo v prohlížeči.
           </p>
-          <ul className="flex flex-col gap-2.5">
+          <ul className="flex flex-col gap-3">
             {CHECKLIST.map((item) => (
-              <li key={item} className="flex items-center gap-2.5 text-sm text-[var(--color-text)]">
-                <CheckIcon className="h-4 w-4 shrink-0 text-[var(--color-accent-blue)]" />
+              <li key={item} className="flex items-center gap-2.5 text-sm text-[var(--color-text)] sm:text-base">
+                <CheckIcon className="h-5 w-5 shrink-0 text-[var(--color-accent-blue)]" />
                 {item}
               </li>
             ))}
           </ul>
-          <Button href="#aplikace" variant="solid-blue" withArrow={false} className="w-fit">
+          <Button href="#aplikace" variant="solid-blue" withArrow={false} className="w-fit px-7 py-3.5">
             Poznat aplikaci
           </Button>
         </div>
 
         <PhoneMockup />
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1">
           {FEATURES.map((feature) => (
-            <div key={feature.title} className="flex items-start gap-3">
-              <div className="h-6 w-6 shrink-0 text-[var(--color-accent-purple)]">{feature.icon}</div>
-              <div className="flex flex-col gap-1">
-                <h3 className="text-sm font-semibold text-[var(--color-text)]">{feature.title}</h3>
+            <div key={feature.title} className="flex items-start gap-4">
+              <div className="h-7 w-7 shrink-0 text-[var(--color-accent-purple)]">{feature.icon}</div>
+              <div className="flex flex-col gap-1.5">
+                <h3 className="text-base font-semibold text-[var(--color-text)]">{feature.title}</h3>
                 <p className="text-sm leading-relaxed text-[var(--color-text-muted)]">{feature.description}</p>
               </div>
             </div>
