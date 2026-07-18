@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
@@ -16,13 +17,13 @@ export function Header() {
 
         <nav aria-label="Hlavní navigace" className="hidden items-center gap-7 lg:flex xl:gap-10">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="whitespace-nowrap text-[15px] font-semibold text-white/85 transition hover:text-white"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

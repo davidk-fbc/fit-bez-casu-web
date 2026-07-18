@@ -38,7 +38,7 @@ export function AboutUs() {
               Pomáháme ženám najít rovnováhu mezi zdravím, energií a každodenním životem. Věříme v jednoduchost, podporu a malé kroky, které přináší velké změny.
             </p>
             <a
-              href="#o-nas"
+              href="/o-nas"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110"
             >
               Přečíst náš příběh

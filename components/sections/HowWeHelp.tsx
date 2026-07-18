@@ -56,7 +56,7 @@ function PathCard({ number, icon, title, description, ctaLabel, ctaHref, gradien
 
 export function HowWeHelp() {
   return (
-    <section className="relative overflow-hidden bg-[var(--color-surface-muted)] py-[var(--space-section)]">
+    <section id="jidelnicek" className="relative overflow-hidden bg-[var(--color-surface-muted)] py-[var(--space-section)]">
       <div className="pointer-events-none absolute -left-40 top-0 h-96 w-96 rounded-full bg-[var(--color-accent-purple)] opacity-[0.07] blur-3xl" />
       <Container className="relative grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14">
         <SectionHeading

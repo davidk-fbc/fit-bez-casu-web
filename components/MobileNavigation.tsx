@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import Link from "next/link";
 import { Button } from "./Button";
 import { CloseIcon, MenuIcon } from "./icons";
 import { COMMUNITY_URL, NAV_LINKS } from "@/lib/navigation";
@@ -45,14 +46,14 @@ export function MobileNavigation() {
         >
           <nav aria-label="Hlavní navigace" className="flex flex-col">
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className="border-b border-white/5 py-3.5 text-base font-medium text-white/90"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
           <Button href={COMMUNITY_URL} variant="gradient" className="mt-5 w-full justify-center">

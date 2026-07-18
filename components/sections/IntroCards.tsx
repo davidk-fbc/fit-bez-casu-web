@@ -37,13 +37,13 @@ const CARDS = [
         Praktické články, recepty a inspirace <strong>pro reálný život</strong>.
       </>
     ),
-    href: "#blog",
+    href: "/blog",
   },
 ];
 
 export function IntroCards() {
   return (
-    <section className="relative flow-root bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
+    <section id="zdarma" className="relative flow-root bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
       <Container className="-mt-28 sm:-mt-24 lg:-mt-28">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {CARDS.map((card) => (

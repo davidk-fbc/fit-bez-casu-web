@@ -3,14 +3,15 @@ export type NavLink = {
   href: string;
 };
 
-// Single source of truth for header/footer nav. Update hrefs here once
-// the real subpages (jídelníček, aplikace, zdarma, blog, o nás) exist.
+// Single source of truth for header/footer nav. Jídelníček, Aplikace a
+// Zdarma zatím nemají vlastní podstránku, proto míří na homepage kotvy
+// (funguje i z /blog a /o-nas). Update once those subpages exist.
 export const NAV_LINKS: NavLink[] = [
-  { label: "Jídelníček", href: "#jidelnicek" },
-  { label: "Aplikace", href: "#aplikace" },
-  { label: "Zdarma", href: "#zdarma" },
-  { label: "Blog", href: "#blog" },
-  { label: "O nás", href: "#o-nas" },
+  { label: "Jídelníček", href: "/#jidelnicek" },
+  { label: "Aplikace", href: "/#aplikace" },
+  { label: "Zdarma", href: "/#zdarma" },
+  { label: "Blog", href: "/blog" },
+  { label: "O nás", href: "/o-nas" },
 ];
 
 // External sales/community destination — replace with the real URL when available.

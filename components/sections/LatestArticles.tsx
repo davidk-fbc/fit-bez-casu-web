@@ -9,21 +9,21 @@ const ARTICLES = [
     tag: "Strava & recepty",
     title: "7 jednoduchých večeří, které zasytí a nezatíží",
     excerpt: "Rychlé, chutné a vyvážené recepty pro dny, kdy není čas a dietě do víček.",
-    href: "#blog",
+    href: "/blog",
     imageIcon: <ForkKnifeIcon className="h-full w-full" />,
   },
   {
     tag: "Motivace & mindset",
     title: "Jak zůstat motivovaná, i když se nedaří",
     excerpt: "Praktické tipy, jak překonat horší dny a udržet se na cestě.",
-    href: "#blog",
+    href: "/blog",
     imageIcon: <SparkIcon className="h-full w-full" />,
   },
   {
     tag: "Cvičení & pohyb",
     title: "10 minut denně pro pevnější tělo a víc energie",
     excerpt: "Krátký trénink, který zvládneš doma bez vybavení.",
-    href: "#blog",
+    href: "/blog",
     imageIcon: <HeartPulseIcon className="h-full w-full" />,
   },
 ];
@@ -39,7 +39,7 @@ export function LatestArticles() {
             <ArticleCard key={article.title} {...article} />
           ))}
         </div>
-        <Button href="#blog" variant="outline-light" withArrow={false} className="mx-auto px-7 py-3.5">
+        <Button href="/blog" variant="outline-light" withArrow={false} className="mx-auto px-7 py-3.5">
           Zobrazit další články
         </Button>
       </Container>
