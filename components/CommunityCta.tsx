@@ -3,7 +3,17 @@ import { Container } from "./Container";
 import { UsersIcon } from "./icons";
 import { COMMUNITY_URL } from "@/lib/navigation";
 
-export function CommunityCta() {
+type CommunityCtaProps = {
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
+};
+
+export function CommunityCta({
+  title = "Přidej se ke komunitě fit žen",
+  description = "Získej podporu, motivaci, tipy a přístup k exkluzivnímu obsahu. Společně to zvládneme.",
+  buttonLabel = "Vstoupit do komunity",
+}: CommunityCtaProps = {}) {
   return (
     <Container>
       <div
@@ -19,15 +29,15 @@ export function CommunityCta() {
             </div>
             <div className="flex flex-col gap-2">
               <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">
-                Přidej se ke komunitě fit žen
+                {title}
               </h2>
               <p className="max-w-md text-sm leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-base">
-                Získej podporu, motivaci, tipy a přístup k exkluzivnímu obsahu. Společně to zvládneme.
+                {description}
               </p>
             </div>
           </div>
           <Button href={COMMUNITY_URL} variant="gradient" className="shrink-0 px-7 py-3.5">
-            Vstoupit do komunity
+            {buttonLabel}
           </Button>
         </div>
       </div>
