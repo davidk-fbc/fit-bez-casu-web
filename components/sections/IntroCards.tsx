@@ -1,6 +1,7 @@
 import { Container } from "../Container";
 import { FeatureCard } from "../FeatureCard";
 import { ForkKnifeIcon, GiftIcon, PencilIcon, PhoneIcon } from "../icons";
+import { EXTERNAL_LINKS } from "@/lib/links";
 
 const CARDS = [
   {
@@ -11,13 +12,13 @@ const CARDS = [
         Vyvážené a jednoduché jídelníčky, které šetří <strong>čas a chutnají</strong>.
       </>
     ),
-    href: "#jidelnicek",
+    href: EXTERNAL_LINKS.mealPlan,
   },
   {
     icon: <PhoneIcon className="h-full w-full" />,
     title: "Aplikace",
     description: "Měj přehled o jídle, pokroku a motivaci. Vše v jedné aplikaci.",
-    href: "#aplikace",
+    href: EXTERNAL_LINKS.app,
   },
   {
     icon: <GiftIcon className="h-full w-full" />,

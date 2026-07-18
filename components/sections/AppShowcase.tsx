@@ -2,6 +2,7 @@ import { Button } from "../Button";
 import { Container } from "../Container";
 import { PlaceholderImage } from "../PlaceholderImage";
 import { CheckIcon, ForkKnifeIcon, HeartPulseIcon, LayersIcon, SparkIcon, TrophyIcon } from "../icons";
+import { EXTERNAL_LINKS } from "@/lib/links";
 
 const CHECKLIST = [
   "Zapisování jídel a pitného režimu",
@@ -98,7 +99,7 @@ export function AppShowcase() {
               </li>
             ))}
           </ul>
-          <Button href="#aplikace" variant="solid-blue" withArrow={false} className="w-fit px-7 py-3.5">
+          <Button href={EXTERNAL_LINKS.app} variant="solid-blue" withArrow={false} className="w-fit px-7 py-3.5">
             Poznat aplikaci
           </Button>
         </div>

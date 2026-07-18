@@ -3,6 +3,7 @@ import { Button } from "../Button";
 import { Container } from "../Container";
 import { SectionHeading } from "../SectionHeading";
 import { ForkKnifeIcon, UsersIcon } from "../icons";
+import { EXTERNAL_LINKS } from "@/lib/links";
 
 type PathCardProps = {
   number: string;
@@ -71,7 +72,7 @@ export function HowWeHelp() {
             title="Jídelníček"
             description="Získej jasný plán, podle kterého budeš vědět, co jíst, kolik toho sníst a jak si jídlo poskládat bez každodenního přemýšlení."
             ctaLabel="Prohlédnout jídelníček"
-            ctaHref="#jidelnicek"
+            ctaHref={EXTERNAL_LINKS.mealPlan}
             gradient="linear-gradient(135deg, #8b3cf9, #4c1d95)"
             glowPosition="-right-16 -top-16"
           />
