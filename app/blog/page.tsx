@@ -4,11 +4,12 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { SectionHeading } from "@/components/SectionHeading";
 import { CommunityCta } from "@/components/CommunityCta";
+import { EmailSignupPlaceholder } from "@/components/EmailSignupPlaceholder";
 import { BlogHero } from "@/components/sections/BlogHero";
 import { CategoryBadges } from "@/components/blog/CategoryBadges";
 import { LatestArticleCard } from "@/components/blog/LatestArticleCard";
 import { SimpleArticleCard } from "@/components/blog/SimpleArticleCard";
-import { getNewestArticles, getOlderArticles } from "@/lib/blog/articles";
+import { getLatestArticles, getRecommendedArticles } from "@/lib/blog/articles";
 
 export const metadata: Metadata = {
   title: "Blog | Fit bez času",
@@ -24,8 +25,8 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const newestArticles = getNewestArticles(3);
-  const olderArticles = getOlderArticles(3);
+  const latestArticles = getLatestArticles(3);
+  const recommendedArticles = getRecommendedArticles(3);
 
   return (
     <>
@@ -33,7 +34,7 @@ export default function BlogPage() {
       <main className="flex-1">
         <BlogHero />
 
-        {/* Kategorie — V1: čistě vizuální přehled, viz report */}
+        {/* Kategorie — skutečné odkazy na /blog/[categorySlug], viz report */}
         <section className="bg-[var(--color-surface)] py-16 sm:py-20">
           <Container className="flex flex-col gap-10">
             <SectionHeading
@@ -48,7 +49,7 @@ export default function BlogPage() {
         </section>
 
         {/* Nejnovější články — jednotná mřížka, dominantnější karty */}
-        {newestArticles.length > 0 && (
+        {latestArticles.length > 0 && (
           <section className="bg-[var(--color-surface-muted)] py-[var(--space-section)]">
             <Container className="flex flex-col gap-10">
               <SectionHeading
@@ -57,7 +58,7 @@ export default function BlogPage() {
                 description="Praktické tipy, které můžeš použít hned v běžném dni."
               />
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                {newestArticles.map((article) => (
+                {latestArticles.map((article) => (
                   <LatestArticleCard key={article.slug} article={article} />
                 ))}
               </div>
@@ -65,17 +66,22 @@ export default function BlogPage() {
           </section>
         )}
 
-        {/* Další články — jednodušší, lehčí karty */}
-        {olderArticles.length > 0 && (
-          <section className="bg-[var(--color-surface)] pt-[var(--space-section)] pb-12 sm:pb-16">
+        {/* Připravený blok pro budoucí e-mailový formulář — zatím bez Brevo/MailerLite */}
+        <section className="bg-[var(--color-surface)] py-[var(--space-section)]">
+          <EmailSignupPlaceholder />
+        </section>
+
+        {/* Doporučené články — jednodušší, lehčí karty */}
+        {recommendedArticles.length > 0 && (
+          <section className="bg-[var(--color-surface)] pt-4 pb-12 sm:pb-16">
             <Container className="flex flex-col gap-10">
               <SectionHeading
-                eyebrow="Archiv"
-                title="Další články"
-                description="Další témata, která ti mohou pomoct s pohybem, jídlem i každodenními návyky."
+                eyebrow="Tip na čtení"
+                title="Doporučené články"
+                description="Témata, která stojí za přečtení a mohou ti pomoct udělat další malý krok."
               />
               <div className="grid gap-6 lg:grid-cols-3">
-                {olderArticles.map((article) => (
+                {recommendedArticles.map((article) => (
                   <SimpleArticleCard key={article.slug} article={article} />
                 ))}
               </div>

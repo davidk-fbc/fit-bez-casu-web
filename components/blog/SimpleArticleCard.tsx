@@ -1,20 +1,22 @@
 import Link from "next/link";
 import { ArrowRightIcon } from "../icons";
 import { ArticleVisual } from "./ArticleVisual";
-import { formatArticleDate, type BlogArticle } from "@/lib/blog/articles";
+import { formatArticleDate, getCategoryBySlug, type BlogArticle } from "@/lib/blog/articles";
 
 type SimpleArticleCardProps = {
   article: BlogArticle;
 };
 
-// Lehčí karta pro sekci "Další články" — jen malý barevný akcent
+// Lehčí karta pro sekci "Doporučené články" — jen malý barevný akcent
 // místo velkého vizuálu, jemný border, bez výrazného stínu.
 export function SimpleArticleCard({ article }: SimpleArticleCardProps) {
+  const categoryName = getCategoryBySlug(article.categorySlug)?.name ?? article.categorySlug;
+
   return (
     <article className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] border border-[var(--color-border-light)] bg-[var(--color-surface)] p-6">
-      <ArticleVisual category={article.category} className="h-10 w-10 rounded-full" iconClassName="h-4 w-4" />
+      <ArticleVisual categorySlug={article.categorySlug} className="h-10 w-10 rounded-full" iconClassName="h-4 w-4" />
       <span className="w-fit text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
-        {article.category}
+        {categoryName}
       </span>
       <h3 className="text-base font-bold leading-snug text-[var(--color-text)]">
         <Link href={`/blog/${article.slug}`} className="hover:underline">

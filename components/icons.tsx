@@ -62,6 +62,15 @@ export function CheckIcon({ className }: IconProps) {
   );
 }
 
+export function MailIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m4 6.5 8 6 8-6" />
+    </svg>
+  );
+}
+
 export function LayersIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className} aria-hidden="true">

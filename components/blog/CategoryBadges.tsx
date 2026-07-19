@@ -1,33 +1,28 @@
+import Link from "next/link";
 import { ForkKnifeIcon, HeartPulseIcon, LayersIcon, SparkIcon } from "../icons";
-import { BLOG_CATEGORIES, type BlogCategory } from "@/lib/blog/articles";
+import { BLOG_CATEGORIES, type CategorySlug } from "@/lib/blog/articles";
 
-const CATEGORY_ICONS: Record<BlogCategory, React.ReactNode> = {
-  "Cvičení a pohyb": <HeartPulseIcon className="h-full w-full" />,
-  "Strava a recepty": <ForkKnifeIcon className="h-full w-full" />,
-  "Motivace a podpora": <SparkIcon className="h-full w-full" />,
-  "Osobní rozvoj": <LayersIcon className="h-full w-full" />,
+const CATEGORY_ICONS: Record<CategorySlug, React.ReactNode> = {
+  "cviceni-a-pohyb": <HeartPulseIcon className="h-full w-full" />,
+  "jidelnicek-a-recepty": <ForkKnifeIcon className="h-full w-full" />,
+  "motivace-a-podpora": <SparkIcon className="h-full w-full" />,
+  "osobni-rozvoj": <LayersIcon className="h-full w-full" />,
 };
 
-// V1: čistě vizuální přehled kategorií, bez klientského filtrování —
-// viz report. Až bude víc obsahu, doplní se funkční filtr/URL struktura.
+// Kategorie jsou skutečné odkazy na vlastní podstránky /blog/[categorySlug],
+// ne klientský filtr na téže stránce.
 export function CategoryBadges() {
   return (
     <ul className="flex flex-wrap justify-center gap-3 sm:gap-4">
-      <li>
-        <span
-          aria-current="true"
-          className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-card)]"
-          style={{ background: "var(--gradient-brand)" }}
-        >
-          Všechny články
-        </span>
-      </li>
       {BLOG_CATEGORIES.map((category) => (
-        <li key={category}>
-          <span className="inline-flex items-center gap-2.5 rounded-full border border-[var(--color-border-light)] bg-[var(--color-surface)] px-5 py-2.5 text-sm font-semibold text-[var(--color-text)] shadow-[var(--shadow-card)]">
-            <span className="h-4 w-4 text-[var(--color-accent-purple)]">{CATEGORY_ICONS[category]}</span>
-            {category}
-          </span>
+        <li key={category.slug}>
+          <Link
+            href={`/blog/${category.slug}`}
+            className="inline-flex items-center gap-2.5 rounded-full border border-[var(--color-border-light)] bg-[var(--color-surface)] px-5 py-2.5 text-sm font-semibold text-[var(--color-text)] shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:border-[var(--color-accent-blue)] hover:shadow-[var(--shadow-card-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-blue)]"
+          >
+            <span className="h-4 w-4 text-[var(--color-accent-purple)]">{CATEGORY_ICONS[category.slug]}</span>
+            {category.name}
+          </Link>
         </li>
       ))}
     </ul>

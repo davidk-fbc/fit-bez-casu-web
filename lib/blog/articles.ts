@@ -1,11 +1,34 @@
+// Centrální zdroj pravdy pro kategorie blogu — název i slug se odvozují
+// odsud, nikde jinde se nesmí opisovat ručně.
 export const BLOG_CATEGORIES = [
-  "Cvičení a pohyb",
-  "Strava a recepty",
-  "Motivace a podpora",
-  "Osobní rozvoj",
+  {
+    name: "Cvičení a pohyb",
+    slug: "cviceni-a-pohyb",
+    description:
+      "Články o pohybu, cvičení a jednoduchých způsobech, jak dostat aktivitu do běžného dne.",
+  },
+  {
+    name: "Jídelníček a recepty",
+    slug: "jidelnicek-a-recepty",
+    description:
+      "Praktické tipy k jídelníčku, receptům a jídlu bez extrémů a zbytečné složitosti.",
+  },
+  {
+    name: "Motivace a podpora",
+    slug: "motivace-a-podpora",
+    description:
+      "Podpora pro chvíle, kdy motivace nestačí a potřebuješ najít jednodušší cestu dál.",
+  },
+  {
+    name: "Osobní rozvoj",
+    slug: "osobni-rozvoj",
+    description:
+      "Články o návycích, energii, odpočinku a změnách, které dávají smysl v běžném životě.",
+  },
 ] as const;
 
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+export type CategorySlug = BlogCategory["slug"];
 
 export type BlogContentBlock =
   | { type: "heading"; text: string }
@@ -15,10 +38,12 @@ export type BlogArticle = {
   slug: string;
   title: string;
   excerpt: string;
-  category: BlogCategory;
+  categorySlug: CategorySlug;
   publishedAt: string;
   readingTime: number;
-  featured: boolean;
+  // Ručně řízený příznak pro sekci "Doporučené články" na /blog — nezávisí
+  // na datu publikace, viz getRecommendedArticles.
+  recommended: boolean;
   content: BlogContentBlock[];
 };
 
@@ -30,10 +55,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: "Jak si vytvořit návyk cvičení",
     excerpt:
       "Jak si to nastavit tak, aby ses nemusela pokaždé přemlouvat a dokázala se k pohybu pravidelně vracet.",
-    category: "Cvičení a pohyb",
+    categorySlug: "cviceni-a-pohyb",
     publishedAt: "2026-06-26",
     readingTime: 3,
-    featured: false,
+    recommended: false,
     content: [
       { type: "paragraph", text: "Cvičení nezůstane návykem, dokud nenajdeš způsob, jak ho spustit bez dlouhého rozhodování." },
       {
@@ -51,10 +76,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: "Proč nevydržíš: 7 důvodů, které nejsou o disciplíně",
     excerpt:
       "Najdi skutečnou příčinu, proč se ti nedaří u změny vydržet, a zjisti, co můžeš tentokrát udělat jinak.",
-    category: "Motivace a podpora",
+    categorySlug: "motivace-a-podpora",
     publishedAt: "2026-07-03",
     readingTime: 3,
-    featured: false,
+    recommended: false,
     content: [
       { type: "paragraph", text: "Když něco nevydržíš, není to nutně o slabé vůli — často jde o špatně nastavený start." },
       {
@@ -72,10 +97,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: "Sladké chutě: proč přicházejí a jak je zvládat",
     excerpt:
       "Zjisti, proč chuť na sladké není jen otázka pevné vůle a jak si s ní poradit v běžném dni.",
-    category: "Strava a recepty",
+    categorySlug: "jidelnicek-a-recepty",
     publishedAt: "2026-06-18",
     readingTime: 2,
-    featured: false,
+    recommended: true,
     content: [
       { type: "paragraph", text: "Chuť na sladké většinou nepřijde jen tak — má svůj spouštěč, i když ho hned nevidíš." },
       {
@@ -93,10 +118,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: "Jak začít cvičit, když nemáš čas",
     excerpt:
       "Jednoduchý postup, jak dostat pohyb do běžného týdne i vedle práce, rodiny a povinností.",
-    category: "Cvičení a pohyb",
+    categorySlug: "cviceni-a-pohyb",
     publishedAt: "2026-06-10",
     readingTime: 2,
-    featured: false,
+    recommended: true,
     content: [
       { type: "paragraph", text: "Čas na cvičení většinou nechybí — chybí mu pevné místo v týdnu." },
       {
@@ -114,10 +139,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: "Jak přestat večer vyjídat ledničku",
     excerpt:
       "Nejdřív zjisti, co večerní chutě spouští, a potom změň jednu konkrétní věc, která ti uleví.",
-    category: "Strava a recepty",
+    categorySlug: "jidelnicek-a-recepty",
     publishedAt: "2026-07-10",
     readingTime: 5,
-    featured: true,
+    recommended: false,
     content: [
       {
         type: "paragraph",
@@ -189,10 +214,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: "Jsem pořád unavená: nejčastější důvody a co s tím",
     excerpt:
       "Únava může mít více příčin. Začni jednoduchou kontrolou běžného režimu, spánku, jídla a odpočinku.",
-    category: "Osobní rozvoj",
+    categorySlug: "osobni-rozvoj",
     publishedAt: "2026-06-02",
     readingTime: 2,
-    featured: false,
+    recommended: true,
     content: [
       { type: "paragraph", text: "Únava má často víc příčin najednou, a proto pomáhá projít je jednu po druhé." },
       {
@@ -217,14 +242,30 @@ function sortByDateDesc(articles: BlogArticle[]): BlogArticle[] {
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 }
 
+export function getCategoryBySlug(slug: string): BlogCategory | undefined {
+  return BLOG_CATEGORIES.find((category) => category.slug === slug);
+}
+
+export function getAllCategorySlugs(): CategorySlug[] {
+  return BLOG_CATEGORIES.map((category) => category.slug);
+}
+
+export function getArticlesByCategory(categorySlug: CategorySlug): BlogArticle[] {
+  return sortByDateDesc(getAllArticles().filter((article) => article.categorySlug === categorySlug));
+}
+
 // 3 nejnovější články (ze všech) pro sekci "Nejnovější články" na /blog.
-export function getNewestArticles(limit = 3): BlogArticle[] {
+export function getLatestArticles(limit = 3): BlogArticle[] {
   return sortByDateDesc(getAllArticles()).slice(0, limit);
 }
 
-// Zbylé články pro sekci "Další články" na /blog.
-export function getOlderArticles(offset = 3): BlogArticle[] {
-  return sortByDateDesc(getAllArticles()).slice(offset);
+// Ručně vybrané (recommended: true) články pro sekci "Doporučené články" na
+// /blog, bez překryvu s aktuální sekcí "Nejnovější články".
+export function getRecommendedArticles(limit = 3): BlogArticle[] {
+  const latestSlugs = new Set(getLatestArticles(limit).map((article) => article.slug));
+  return sortByDateDesc(getAllArticles())
+    .filter((article) => article.recommended && !latestSlugs.has(article.slug))
+    .slice(0, limit);
 }
 
 export function getArticleBySlug(slug: string): BlogArticle | undefined {
@@ -233,7 +274,7 @@ export function getArticleBySlug(slug: string): BlogArticle | undefined {
 
 export function getRelatedArticles(article: BlogArticle, limit = 3): BlogArticle[] {
   return BLOG_ARTICLES.filter((candidate) => candidate.slug !== article.slug)
-    .sort((a, b) => (a.category === article.category ? -1 : 0) - (b.category === article.category ? -1 : 0))
+    .sort((a, b) => (a.categorySlug === article.categorySlug ? -1 : 0) - (b.categorySlug === article.categorySlug ? -1 : 0))
     .slice(0, limit);
 }
 
