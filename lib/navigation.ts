@@ -16,8 +16,9 @@ export const NAV_LINKS: NavLink[] = [
   { label: "O nás", href: "/o-nas" },
 ];
 
-// External sales/community destination — replace with the real URL when available.
-export const COMMUNITY_URL = "#komunita";
+// Odvozeno z jediného centrálního zdroje (lib/links.ts) — žádná URL se
+// nezadává ručně na dvou místech.
+export const COMMUNITY_URL = EXTERNAL_LINKS.community;
 
 export const HERO_PRIMARY_CTA = { label: "Mrknout na jídelníček", href: EXTERNAL_LINKS.mealPlan };
 export const HERO_SECONDARY_CTA = { label: "Poznat aplikaci", href: EXTERNAL_LINKS.app };

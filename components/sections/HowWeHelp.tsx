@@ -82,7 +82,7 @@ export function HowWeHelp() {
             title="Komunita"
             description="Získej pravidelnou podporu, motivaci a místo, kde na změnu nebudeš sama ani ve dnech, kdy se ti nebude chtít."
             ctaLabel="Přidat se ke komunitě"
-            ctaHref="#komunita"
+            ctaHref={EXTERNAL_LINKS.community}
             gradient="linear-gradient(135deg, #1f6ef9, #4c1d95)"
             glowPosition="-right-10 top-0"
           />
