@@ -15,10 +15,14 @@ export const metadata: Metadata = {
   title: "Blog | Fit bez času",
   description:
     "Praktické články o jídle, cvičení, motivaci a zdravějších návycích pro ženy, které mají plný diář.",
+  alternates: {
+    canonical: "/blog",
+  },
   openGraph: {
     title: "Blog | Fit bez času",
     description:
       "Praktické články o jídle, cvičení, motivaci a zdravějších návycích pro ženy, které mají plný diář.",
+    url: "/blog",
     locale: "cs_CZ",
     type: "website",
   },

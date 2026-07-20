@@ -33,12 +33,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const category = getCategoryBySlug(identifier);
   if (category) {
+    const canonicalPath = `/blog/${category.slug}`;
     return {
       title: `${category.name} | Blog Fit bez času`,
       description: category.description,
+      alternates: {
+        canonical: canonicalPath,
+      },
       openGraph: {
         title: `${category.name} | Blog Fit bez času`,
         description: category.description,
+        url: canonicalPath,
         locale: "cs_CZ",
         type: "website",
       },
@@ -48,13 +53,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const article = getArticleBySlug(identifier);
   if (article) {
     const title = `${article.seoTitle} | Fit bez času`;
+    const canonicalPath = `/blog/${article.slug}`;
     return {
       title,
       description: article.seoDescription,
       keywords: article.seoKeywords,
+      alternates: {
+        canonical: canonicalPath,
+      },
       openGraph: {
         title,
         description: article.seoDescription,
+        url: canonicalPath,
         locale: "cs_CZ",
         type: "article",
       },

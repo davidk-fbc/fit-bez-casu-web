@@ -11,10 +11,14 @@ export const metadata: Metadata = {
   title: "O nás | Fit bez času",
   description:
     "Poznej Kláru a Davida a zjisti, proč vzniklo Fit bez času a jak pomáhá ženám začít s jídlem a pohybem bez extrémů.",
+  alternates: {
+    canonical: "/o-nas",
+  },
   openGraph: {
     title: "O nás | Fit bez času",
     description:
       "Poznej Kláru a Davida a zjisti, proč vzniklo Fit bez času a jak pomáhá ženám začít s jídlem a pohybem bez extrémů.",
+    url: "/o-nas",
     locale: "cs_CZ",
     type: "website",
   },
