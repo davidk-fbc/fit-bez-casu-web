@@ -24,7 +24,7 @@ export function Footer() {
 
       <Container className="relative grid gap-12 py-20 sm:grid-cols-3">
         <div className="flex flex-col gap-4">
-          <Logo />
+          <Logo size="footer" />
           <p className="max-w-xs text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
             Pomáháme ženám cítit se lépe ve svém těle, mít více energie a zvládnout život s lehkostí.
           </p>
