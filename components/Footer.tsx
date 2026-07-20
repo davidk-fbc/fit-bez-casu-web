@@ -5,10 +5,26 @@ import { FacebookIcon, InstagramIcon, TiktokIcon, YoutubeIcon } from "./icons";
 import { COMMUNITY_URL } from "@/lib/navigation";
 
 const SOCIAL_LINKS = [
-  { label: "Facebook", href: "#", icon: <FacebookIcon className="h-4.5 w-4.5" /> },
-  { label: "Instagram", href: "#", icon: <InstagramIcon className="h-4.5 w-4.5" /> },
-  { label: "YouTube", href: "#", icon: <YoutubeIcon className="h-4.5 w-4.5" /> },
-  { label: "TikTok", href: "#", icon: <TiktokIcon className="h-4.5 w-4.5" /> },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61569640431106",
+    icon: <FacebookIcon className="h-4.5 w-4.5" />,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/fitbezcasu/",
+    icon: <InstagramIcon className="h-4.5 w-4.5" />,
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@fitbezcasu",
+    icon: <YoutubeIcon className="h-4.5 w-4.5" />,
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@fitbezcasu",
+    icon: <TiktokIcon className="h-4.5 w-4.5" />,
+  },
 ];
 
 export function Footer() {
@@ -23,23 +39,24 @@ export function Footer() {
       <div className="noise-layer" />
 
       <Container className="relative grid gap-12 py-20 sm:grid-cols-3">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4 text-center">
           <Logo size="footer" />
-          <p className="max-w-xs text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
-            Pomáháme ženám cítit se lépe ve svém těle, mít více energie a zvládnout život s lehkostí.
+          <p className="max-w-sm text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
+            Pomáháme ženám, které mají málo času, začít se hýbat, lépe jíst a postupně si vytvořit návyky, které
+            dokážou dlouhodobě udržet.
           </p>
         </div>
 
-        <div className="flex flex-col gap-5">
-          <h3 className="text-lg font-bold leading-snug text-white">
-            Malé kroky každý den = velká změna časem.
-          </h3>
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col items-center gap-5 text-center">
+          <h3 className="text-lg font-bold leading-snug text-white">Sleduj nás na sociálních sítích</h3>
+          <div className="flex items-center justify-center gap-3">
             {SOCIAL_LINKS.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
-                aria-label={social.label}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${social.label} Fit bez času`}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
               >
                 {social.icon}
@@ -48,21 +65,20 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold leading-snug text-white">
-            Už tě nebaví pořád začínat znovu?
-          </h3>
-          <p className="text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
-            Přidej se ke komunitě žen, které to myslí vážně.
+        <div className="flex flex-col items-center gap-4 text-center">
+          <h3 className="text-lg font-bold leading-snug text-white">Přidej se do komunity Fit bez času</h3>
+          <p className="max-w-sm text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
+            Získej pravidelnou podporu, krátká cvičení, praktické tipy k jídlu a motivaci, která ti pomůže začít a
+            hlavně u změny vydržet.
           </p>
           <Button href={COMMUNITY_URL} variant="gradient" withArrow={false} className="w-fit px-6 py-3">
-            Vstoupit do komunity
+            Přidat se ke komunitě
           </Button>
         </div>
       </Container>
 
       <div className="relative border-t border-white/[0.08] py-6">
-        <Container>
+        <Container className="text-center">
           <p className="text-xs text-[var(--color-text-on-dark-muted)]">
             © {year} Fit bez času
           </p>
