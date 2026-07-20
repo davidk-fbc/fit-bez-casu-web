@@ -1,0 +1,77 @@
+import { Button } from "./Button";
+import { Container } from "./Container";
+import { ForkKnifeIcon, TrophyIcon, UsersIcon } from "./icons";
+import { EXTERNAL_LINKS } from "@/lib/links";
+import { COMMUNITY_URL } from "@/lib/navigation";
+import type { ArticleCtaType } from "@/lib/blog/articles";
+
+type ArticleCtaProps = {
+  ctaType: ArticleCtaType;
+};
+
+const CTA_CONTENT: Record<
+  ArticleCtaType,
+  { eyebrow: string; title: string; text: string; buttonLabel: string; href: string; icon: React.ReactNode }
+> = {
+  challenge: {
+    eyebrow: "21denní výzva",
+    title: "Nečekej na další ideální začátek",
+    text: "Začni s krátkým cvičením, které zvládneš doma i v týdnu, kdy máš plný diář. Ve 21denní výzvě dostaneš jednoduchý plán a jasný další krok.",
+    buttonLabel: "Chci začít s 21denní výzvou",
+    href: EXTERNAL_LINKS.challenge,
+    icon: <TrophyIcon className="h-6 w-6" />,
+  },
+  "meal-plan": {
+    eyebrow: "Jídelníček",
+    title: "Chceš konečně vědět, co a kolik jíst?",
+    text: "Získej jednoduchý systém, podle kterého si poskládáš jídlo bez extrémů, každodenního přemýšlení a věčného začínání znovu.",
+    buttonLabel: "Prohlédnout jídelníček",
+    href: EXTERNAL_LINKS.mealPlan,
+    icon: <ForkKnifeIcon className="h-6 w-6" />,
+  },
+  community: {
+    eyebrow: "Komunita",
+    title: "Nemusíš to dál táhnout sama",
+    text: "Přidej se k ženám, které řeší stejné překážky jako ty. Získáš podporu, motivaci a prostředí, které ti pomůže vracet se ke svým krokům i ve dnech, kdy se ti nechce.",
+    buttonLabel: "Přidat se ke komunitě",
+    href: COMMUNITY_URL,
+    icon: <UsersIcon className="h-6 w-6" />,
+  },
+};
+
+// Sdílená tematická CTA na konci článku — nahrazuje obyčejnou větu s vypsanou
+// URL. Cíl a text se řídí ctaType, odkazy jdou vždy přes centrální zdroje.
+export function ArticleCta({ ctaType }: ArticleCtaProps) {
+  const content = CTA_CONTENT[ctaType];
+
+  return (
+    <Container>
+      <div
+        className="relative overflow-hidden rounded-[2rem] px-8 py-12 sm:px-12 sm:py-14"
+        style={{ background: "radial-gradient(120% 160% at 100% 0%, #34179a 0%, #150746 55%, #0a0322 100%)" }}
+      >
+        <div className="pointer-events-none absolute -right-16 -top-24 h-96 w-96 rounded-full bg-[var(--color-accent-purple)] opacity-40 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 left-1/4 h-64 w-64 rounded-full bg-[var(--color-accent-blue)] opacity-20 blur-3xl" />
+        <div className="relative flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-5">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--color-border-dark)] text-white">
+              {content.icon}
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple-soft)]">
+                {content.eyebrow}
+              </span>
+              <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">{content.title}</h2>
+              <p className="max-w-md text-sm leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-base">
+                {content.text}
+              </p>
+            </div>
+          </div>
+          <Button href={content.href} variant="gradient" className="shrink-0 px-7 py-3.5">
+            {content.buttonLabel}
+          </Button>
+        </div>
+      </div>
+    </Container>
+  );
+}

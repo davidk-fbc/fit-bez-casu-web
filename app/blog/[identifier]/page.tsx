@@ -47,12 +47,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const article = getArticleBySlug(identifier);
   if (article) {
+    const title = `${article.seoTitle} | Fit bez času`;
     return {
-      title: `${article.title} | Fit bez času`,
-      description: article.excerpt,
+      title,
+      description: article.seoDescription,
+      keywords: article.seoKeywords,
       openGraph: {
-        title: `${article.title} | Fit bez času`,
-        description: article.excerpt,
+        title,
+        description: article.seoDescription,
         locale: "cs_CZ",
         type: "article",
       },

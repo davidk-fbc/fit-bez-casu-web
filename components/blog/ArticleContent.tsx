@@ -2,10 +2,12 @@ import Link from "next/link";
 import { Container } from "../Container";
 import { SectionHeading } from "../SectionHeading";
 import { CommunityCta } from "../CommunityCta";
+import { ArticleCta } from "../ArticleCta";
 import { PlaceholderImage } from "../PlaceholderImage";
 import { DarkSectionGlow } from "../DarkSectionGlow";
 import { UsersIcon } from "../icons";
 import { BlogArticleCard } from "./BlogArticleCard";
+import { ArticleClosingSections } from "./ArticleClosingSections";
 import {
   formatArticleDate,
   getCategoryBySlug,
@@ -17,11 +19,13 @@ type ArticleContentProps = {
   article: BlogArticle;
 };
 
-// Obsah detailu článku — beze změny oproti předchozí verzi kromě odkazu na
-// kategorii (nyní vede na /blog/[categorySlug]).
+// Obsah detailu článku: hero, plný obsah, povinné závěrečné bloky, tematické
+// ArticleCta, související články a (pokud nevznikne duplicita s ArticleCta)
+// obecné komunitní CTA.
 export function ArticleContent({ article }: ArticleContentProps) {
   const category = getCategoryBySlug(article.categorySlug);
   const relatedArticles = getRelatedArticles(article, 3);
+  const showGenericCommunityCta = article.ctaType !== "community";
 
   return (
     <>
@@ -56,21 +60,59 @@ export function ArticleContent({ article }: ArticleContentProps) {
           />
 
           <article className="flex flex-col gap-6">
-            {article.content.map((block, index) =>
-              block.type === "heading" ? (
-                <h2
-                  key={index}
-                  className="mt-4 text-2xl font-bold tracking-tight text-[var(--color-text)]"
-                >
-                  {block.text}
-                </h2>
-              ) : (
-                <p key={index} className="text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
-                  {block.text}
-                </p>
-              ),
-            )}
+            {article.content.map((block, index) => {
+              switch (block.type) {
+                case "heading":
+                  return (
+                    <h2 key={index} className="mt-4 text-2xl font-bold tracking-tight text-[var(--color-text)]">
+                      {block.text}
+                    </h2>
+                  );
+                case "paragraph":
+                  return (
+                    <p key={index} className="text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
+                      {block.text}
+                    </p>
+                  );
+                case "list":
+                  return block.ordered ? (
+                    <ol key={index} className="flex list-decimal flex-col gap-2 pl-6 text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
+                      {block.items.map((item, itemIndex) => (
+                        <li key={itemIndex}>{item}</li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <ul key={index} className="flex list-disc flex-col gap-2 pl-6 text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
+                      {block.items.map((item, itemIndex) => (
+                        <li key={itemIndex}>{item}</li>
+                      ))}
+                    </ul>
+                  );
+                case "callout":
+                  return (
+                    <div
+                      key={index}
+                      className="rounded-[var(--radius-card)] border border-[var(--color-border-light)] bg-[var(--color-surface-muted)] p-5 text-base font-semibold leading-relaxed text-[var(--color-text)] sm:text-lg"
+                    >
+                      {block.text}
+                    </div>
+                  );
+                case "quote":
+                  return (
+                    <blockquote
+                      key={index}
+                      className="border-l-4 border-[var(--color-accent-purple)] pl-6 text-lg font-semibold italic leading-relaxed text-[var(--color-text)]"
+                    >
+                      {block.text}
+                    </blockquote>
+                  );
+                default:
+                  return null;
+              }
+            })}
           </article>
+
+          <ArticleClosingSections sections={article.closingSections} />
 
           <div className="flex items-center gap-4 rounded-[var(--radius-card)] border border-[var(--color-border-light)] bg-[var(--color-surface-muted)] p-6">
             <div
@@ -86,6 +128,10 @@ export function ArticleContent({ article }: ArticleContentProps) {
         </Container>
       </section>
 
+      <section className="bg-[var(--color-surface)] pb-[var(--space-section)]">
+        <ArticleCta ctaType={article.ctaType} />
+      </section>
+
       {relatedArticles.length > 0 && (
         <section className="bg-[var(--color-surface-muted)] py-[var(--space-section)]">
           <Container className="flex flex-col gap-12">
@@ -99,9 +145,11 @@ export function ArticleContent({ article }: ArticleContentProps) {
         </section>
       )}
 
-      <section className="bg-[var(--color-surface)] pb-[var(--space-section)]">
-        <CommunityCta />
-      </section>
+      {showGenericCommunityCta && (
+        <section className="bg-[var(--color-surface)] pb-[var(--space-section)]">
+          <CommunityCta />
+        </section>
+      )}
     </>
   );
 }
