@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Fit bez času",
-    description: "Pomáháme ženám cítit se lépe ve svém těle, i když maji plný diář.",
+    description: "Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.",
     url: "/",
     locale: "cs_CZ",
     type: "website",
@@ -40,7 +40,11 @@ export default function Home() {
         <AboutUs />
         <LatestArticles />
         <section className="bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
-          <CommunityCta />
+          <CommunityCta
+            title="Na změnu nemusíš být sama"
+            description="Přidej se do komunity Fit bez času a získej pravidelnou podporu, krátká cvičení, praktické tipy k jídlu a motivaci, která ti pomůže začít a hlavně vydržet."
+            buttonLabel="Přidat se ke komunitě"
+          />
         </section>
       </main>
       <Footer />

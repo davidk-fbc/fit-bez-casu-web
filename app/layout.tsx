@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Fit bez času",
-  description: "Pomáháme ženám cítit se lépe ve svém těle, i když maji plný diář.",
+  description: "Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.",
   openGraph: {
     title: "Fit bez času",
-    description: "Pomáháme ženám cítit se lépe ve svém těle, i když maji plný diář.",
+    description: "Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.",
     locale: "cs_CZ",
     type: "website",
   },

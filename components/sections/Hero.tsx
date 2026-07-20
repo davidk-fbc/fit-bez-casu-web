@@ -54,7 +54,7 @@ export function Hero() {
             </span>
           </h1>
           <p className="max-w-md text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">
-            Pomáháme ženám cítit se lépe ve svém těle, i když maji plný diář.
+            Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <Button
