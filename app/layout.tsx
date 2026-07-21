@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { SITE_URL } from "@/lib/seo";
 import "./globals.css";
+
+// Read once at module scope - NEXT_PUBLIC_* vars are inlined at build time
+// anyway, so this doesn't add a runtime env lookup per render. GTM only
+// renders when the variable is actually set (e.g. missing in local/preview
+// environments that don't define it), never with a hardcoded fallback ID.
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +42,7 @@ export default function RootLayout({
       lang="cs"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
       <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
