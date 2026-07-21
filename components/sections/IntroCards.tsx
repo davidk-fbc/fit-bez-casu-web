@@ -7,37 +7,32 @@ const CARDS = [
   {
     icon: <ForkKnifeIcon className="h-full w-full" />,
     title: "Jídelníček",
-    description: (
-      <>
-        Vyvážené a jednoduché jídelníčky, které šetří <strong>čas a chutnají</strong>.
-      </>
-    ),
+    description:
+      "Získej jídelníček na míru, konkrétní porce a ukázkové recepty, díky kterým budeš vědět, co jíst i v běžném nabitém dni.",
     href: EXTERNAL_LINKS.mealPlan,
   },
   {
     icon: <PhoneIcon className="h-full w-full" />,
     title: "Aplikace",
-    description: "Měj přehled o jídle, pokroku a motivaci. Vše v jedné aplikaci.",
+    description:
+      "Měj jídlo, pohyb i svůj progres na jednom místě. Jednoduše, přehledně a tak, aby ses v tom vyznala i ve dnech, kdy nestíháš.",
     href: EXTERNAL_LINKS.app,
   },
   {
     icon: <GiftIcon className="h-full w-full" />,
     title: "Zdarma",
-    description: (
-      <>
-        E-booky, tipy a návody zdarma <strong>pro tvůj zdravější</strong> každodenní život.
-      </>
-    ),
+    description:
+      "Stáhni si e-booky, tipy a návody zdarma, které ti pomůžou začít lépe jíst, více se hýbat a udělat první krok.",
+    // Zatím vede zpět na sekci, ve které karta samotná leží (self-reference,
+    // ne skutečný obsah zdarma) - viz report. Cíl neměníme, dokud nebude
+    // potvrzená skutečná cílová stránka.
     href: "#zdarma",
   },
   {
     icon: <PencilIcon className="h-full w-full" />,
     title: "Blog",
-    description: (
-      <>
-        Praktické články, recepty a inspirace <strong>pro reálný život</strong>.
-      </>
-    ),
+    description:
+      "Najdeš tu praktické články o jídle, pohybu, motivaci a běžném životě, které využiješ i ve svém každodenním režimu.",
     href: "/blog",
   },
 ];

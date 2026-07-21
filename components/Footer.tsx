@@ -42,8 +42,7 @@ export function Footer() {
         <div className="flex flex-col items-center gap-4 text-center">
           <Logo size="footer" />
           <p className="max-w-sm text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
-            Pomáháme ženám, které mají málo času, začít se hýbat, lépe jíst a postupně si vytvořit návyky, které
-            dokážou dlouhodobě udržet.
+            Pomáháme ženám, které mají málo času, zhubnout a cítit se lépe bez diet, zákazů a zbytečných extrémů.
           </p>
         </div>
 
@@ -68,8 +67,7 @@ export function Footer() {
         <div className="flex flex-col items-center gap-4 text-center">
           <h3 className="text-lg font-bold leading-snug text-white">Přidej se do komunity Fit bez času</h3>
           <p className="max-w-sm text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">
-            Získej pravidelnou podporu, krátká cvičení, praktické tipy k jídlu a motivaci, která ti pomůže začít a
-            hlavně u změny vydržet.
+            Krátká cvičení, praktické tipy k jídlu a podpora, díky které na změnu nebudeš sama.
           </p>
           <Button href={COMMUNITY_URL} variant="gradient" withArrow={false} className="w-fit px-6 py-3">
             Přidat se ke komunitě

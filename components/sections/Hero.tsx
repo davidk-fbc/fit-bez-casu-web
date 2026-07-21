@@ -1,7 +1,21 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { Button } from "../Button";
 import { Container } from "../Container";
-import { HERO_PRIMARY_CTA, HERO_SECONDARY_CTA } from "@/lib/navigation";
+import { ForkKnifeIcon, RunningIcon, UsersIcon } from "../icons";
+import { EXTERNAL_LINKS } from "@/lib/links";
+import { COMMUNITY_URL } from "@/lib/navigation";
+
+type HeroPoint = {
+  icon: ReactNode;
+  label: string;
+};
+
+const HERO_POINTS: HeroPoint[] = [
+  { icon: <ForkKnifeIcon className="h-full w-full" />, label: "Jídlo" },
+  { icon: <RunningIcon className="h-full w-full" />, label: "Krátká cvičení" },
+  { icon: <UsersIcon className="h-full w-full" />, label: "Komunita" },
+];
 
 export function Hero() {
   return (
@@ -40,41 +54,60 @@ export function Hero() {
       <div className="stars-layer" />
       <div className="noise-layer" />
 
-      <Container className="relative flex flex-col items-start gap-10 py-20 sm:py-24 lg:flex-row lg:items-start lg:justify-between lg:gap-12 lg:py-28">
+      <Container className="relative flex flex-col items-start gap-10 py-20 sm:py-24 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:py-28">
         <div className="flex max-w-2xl flex-col items-start gap-7 lg:pt-6">
-          <h1
-            className="text-6xl font-bold leading-[0.92] tracking-tight text-white sm:text-7xl lg:text-8xl [text-shadow:0_0_60px_rgba(139,60,249,0.45)]"
-          >
-            Fit bez{" "}
-            <span
-              className="bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(139,60,249,0.65)]"
-              style={{ backgroundImage: "var(--gradient-brand)" }}
-            >
-              času
-            </span>
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple-soft)]">
+            <span className="h-1.5 w-6 rounded-full" style={{ background: "var(--gradient-brand)" }} />
+            Fit bez času
+          </span>
+          <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl [text-shadow:0_0_60px_rgba(139,60,249,0.45)]">
+            Pomáháme ženám, které mají málo času, zhubnout a cítit se lépe bez diet, výčitek a začínání pořád od
+            nuly.
           </h1>
-          <p className="max-w-md text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">
-            Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.
+          <p className="max-w-xl text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">
+            Získáš jasný systém pro jídlo, krátká cvičení a podporu komunity, která ti pomůže vydržet i v běžném
+            životě plném práce, rodiny a povinností.
           </p>
+
           <div className="flex flex-wrap items-center gap-4">
             <Button
-              href={HERO_PRIMARY_CTA.href}
+              href={COMMUNITY_URL}
               variant="gradient"
               className="px-8 py-4 text-base shadow-[0_20px_50px_-12px_rgba(139,60,249,0.8)] transition hover:scale-[1.03] hover:shadow-[0_25px_60px_-10px_rgba(139,60,249,0.9)]"
             >
-              {HERO_PRIMARY_CTA.label}
+              Přidat se ke komunitě
             </Button>
             <Button
-              href={HERO_SECONDARY_CTA.href}
+              href={EXTERNAL_LINKS.mealPlan}
               variant="outline-dark"
               className="border-white/25 bg-white/[0.04] px-8 py-4 text-base backdrop-blur-sm transition hover:scale-[1.03] hover:bg-white/10"
             >
-              {HERO_SECONDARY_CTA.label}
+              Mrknout na jídelníček
             </Button>
           </div>
+
+          <ul className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-3">
+            {HERO_POINTS.map((point) => (
+              <li key={point.label} className="flex items-center gap-2.5 text-sm text-[var(--color-text-on-dark-muted)]">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/85">
+                  <span className="h-4 w-4">{point.icon}</span>
+                </span>
+                {point.label}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="relative mx-auto w-full max-w-[18rem] sm:max-w-[21rem] lg:mx-0 lg:w-[25rem] xl:w-[28rem]">
+          {/* neon ring glow behind Klára and David */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[82%] w-[82%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{
+              boxShadow:
+                "inset 0 0 0 2px rgba(155,110,255,0.55), 0 0 90px 12px rgba(139,60,249,0.35), 0 0 160px 45px rgba(31,110,249,0.28)",
+            }}
+          />
           <div
             className="pointer-events-none absolute inset-0 scale-90 rounded-full opacity-80 blur-3xl"
             style={{ background: "var(--gradient-brand-diagonal)" }}

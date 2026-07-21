@@ -40,7 +40,7 @@ export function LatestArticles() {
         <SectionHeading
           eyebrow="Z blogu"
           title="Vybrali jsme pro tebe"
-          description="Praktické tipy k pohybu, jídlu a energii pro běžný den."
+          description="Praktické tipy pro pohyb, jídlo a zdravější návyky v běžném životě."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (

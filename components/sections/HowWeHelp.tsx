@@ -62,16 +62,16 @@ export function HowWeHelp() {
       <Container className="relative grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14">
         <SectionHeading
           eyebrow="Vyber si, s čím chceš začít"
-          title="Dvě cesty, jeden společný cíl"
-          description="Ať chceš získat jasný plán pro jídlo, nebo potřebuješ podporu, abys u změny vydržela, vyber si cestu, která ti teď dává největší smysl."
+          title="Dvě možnosti, jak začít. Jeden cíl: cítit se lépe."
+          description="Ať teď nejvíc potřebuješ jasno v jídle, nebo podporu a krátká cvičení, vyber si cestu, která ti dává největší smysl. Nemusíš změnit všechno najednou."
         />
         <div className="grid gap-6 sm:grid-cols-2">
           <PathCard
             number="01"
             icon={<ForkKnifeIcon className="h-full w-full" />}
             title="Jídelníček"
-            description="Získej jasný plán, podle kterého budeš vědět, co jíst, kolik toho sníst a jak si jídlo poskládat bez každodenního přemýšlení."
-            ctaLabel="Prohlédnout jídelníček"
+            description="Získej jídelníček na míru, konkrétní porce, recepty a jasný plán, díky kterému budeš vědět, co jíst bez hladovění a každodenního vymýšlení."
+            ctaLabel="Chci jídelníček na míru"
             ctaHref={EXTERNAL_LINKS.mealPlan}
             gradient="linear-gradient(135deg, #8b3cf9, #4c1d95)"
             glowPosition="-right-16 -top-16"
@@ -80,7 +80,7 @@ export function HowWeHelp() {
             number="02"
             icon={<UsersIcon className="h-full w-full" />}
             title="Komunita"
-            description="Získej pravidelnou podporu, motivaci a místo, kde na změnu nebudeš sama ani ve dnech, kdy se ti nebude chtít."
+            description="Získej pravidelnou podporu, krátká domácí cvičení, praktické tipy k jídlu a motivaci, která ti pomůže pokračovat i ve dnech, kdy se ti nebude chtít."
             ctaLabel="Přidat se ke komunitě"
             ctaHref={EXTERNAL_LINKS.community}
             gradient="linear-gradient(135deg, #1f6ef9, #4c1d95)"

@@ -1,14 +1,25 @@
 import Image from "next/image";
-import { ArrowRightIcon, HeartPulseIcon, SparkIcon, UsersIcon } from "../icons";
+import { ArrowRightIcon } from "../icons";
 import { Container } from "../Container";
 
-// Kvalitativní mikrobloky (bez čísel/neověřených statistik) — vizuálně
-// nahrazují stat řádek z referenčního návrhu, obsahově navazují na tón
-// popisu vlevo, nic nového si nevymýšlí.
-const VALUES = [
-  { icon: <UsersIcon className="h-full w-full" />, title: "Nejsi na to sama", description: "Podpora a komunita nablízku" },
-  { icon: <HeartPulseIcon className="h-full w-full" />, title: "Bez extrémů", description: "Udržitelný přístup, ne diety" },
-  { icon: <SparkIcon className="h-full w-full" />, title: "Malé kroky", description: "Které vedou k velkým změnám" },
+// Číselné body o zkušenostech Kláry a Davida - čísla musí zůstat vizuálně
+// dominantní (viz JSX níže), text pod nimi jen upřesňuje, čeho se číslo týká.
+const STATS = [
+  {
+    value: "10+",
+    title: "certifikací a odborných kurzů",
+    description: "z oblasti výživy, pohybu a psychologie",
+  },
+  {
+    value: "1000+",
+    title: "hodin studia a dalšího vzdělávání",
+    description: "v oblasti výživy, cvičení, těla a návyků",
+  },
+  {
+    value: "1000+",
+    title: "hodin zkušeností z praxe",
+    description: "s pohybem, stravou a budováním návyků v reálném životě",
+  },
 ];
 
 export function AboutUs() {
@@ -35,7 +46,11 @@ export function AboutUs() {
               Jsme Klára a David
             </h2>
             <p className="max-w-lg text-base leading-relaxed text-[var(--color-text-muted)]">
-              Pomáháme ženám najít rovnováhu mezi zdravím, energií a každodenním životem. Věříme v jednoduchost, podporu a malé kroky, které přináší velké změny.
+              Pomáháme ženám, které mají málo času, nastavit jídlo, pohyb a každodenní návyky tak, aby fungovaly i
+              vedle práce, rodiny a běžných povinností.
+            </p>
+            <p className="max-w-lg text-base leading-relaxed text-[var(--color-text-muted)]">
+              Chceme ti ukázat jednoduchý a udržitelný systém, který zvládneš používat i v reálném životě.
             </p>
             <a
               href="/o-nas"
@@ -48,11 +63,11 @@ export function AboutUs() {
         </div>
 
         <div className="grid grid-cols-3 gap-6 border-t border-[var(--color-border-light)] pt-8 lg:gap-8 lg:border-t-0 lg:border-l lg:pl-10 lg:pt-0">
-          {VALUES.map((value) => (
-            <div key={value.title} className="flex flex-col items-center gap-2 text-center lg:items-start lg:text-left">
-              <div className="h-7 w-7 text-[var(--color-accent-purple)]">{value.icon}</div>
-              <span className="text-sm font-semibold text-[var(--color-text)]">{value.title}</span>
-              <span className="text-xs leading-snug text-[var(--color-text-muted)]">{value.description}</span>
+          {STATS.map((stat) => (
+            <div key={stat.title} className="flex flex-col items-center gap-1 text-center lg:items-start lg:text-left">
+              <span className="text-3xl font-black tracking-tight text-[var(--color-text)] sm:text-4xl">{stat.value}</span>
+              <span className="text-sm font-semibold text-[var(--color-text)]">{stat.title}</span>
+              <span className="text-xs leading-snug text-[var(--color-text-muted)]">{stat.description}</span>
             </div>
           ))}
         </div>

@@ -108,6 +108,30 @@ export function HeartPulseIcon({ className }: IconProps) {
   );
 }
 
+// Calculator - used for the app's intake calculator feature.
+export function CalculatorIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <rect x="5" y="3" width="14" height="18" rx="2" />
+      <path d="M8 7h8" />
+      <path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01M8 15.5h.01M12 15.5h.01M16 15.5h.01" />
+    </svg>
+  );
+}
+
+// Repeat / copy arrows - used for reusing favourite meals, templates and
+// copying days in the app.
+export function RepeatIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <path d="M4 12a8 8 0 0 1 13.5-5.5L20 9" />
+      <path d="M20 5v4h-4" />
+      <path d="M20 12a8 8 0 0 1-13.5 5.5L4 15" />
+      <path d="M4 19v-4h4" />
+    </svg>
+  );
+}
+
 // Running figure - used for the "Cvičení a pohyb" blog category (activity /
 // movement, deliberately not a heart/pulse symbol).
 export function RunningIcon({ className }: IconProps) {
