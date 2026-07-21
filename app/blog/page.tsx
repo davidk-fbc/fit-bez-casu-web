@@ -57,7 +57,7 @@ export default function BlogPage() {
           <section className="bg-[var(--color-surface-muted)] py-[var(--space-section)]">
             <Container className="flex flex-col gap-10">
               <SectionHeading
-                eyebrow="Čerstvé"
+                eyebrow="Nově na blogu"
                 title="Nejnovější články"
                 description="Praktické tipy, které můžeš použít hned v běžném dni."
               />

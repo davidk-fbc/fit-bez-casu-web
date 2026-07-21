@@ -1,13 +1,6 @@
 import Link from "next/link";
-import { ForkKnifeIcon, HeartPulseIcon, LayersIcon, SparkIcon } from "../icons";
-import { BLOG_CATEGORIES, type CategorySlug } from "@/lib/blog/articles";
-
-const CATEGORY_ICONS: Record<CategorySlug, React.ReactNode> = {
-  "cviceni-a-pohyb": <HeartPulseIcon className="h-full w-full" />,
-  "jidelnicek-a-recepty": <ForkKnifeIcon className="h-full w-full" />,
-  "motivace-a-podpora": <SparkIcon className="h-full w-full" />,
-  "osobni-rozvoj": <LayersIcon className="h-full w-full" />,
-};
+import { BLOG_CATEGORIES } from "@/lib/blog/articles";
+import { CATEGORY_ICONS } from "./categoryIcons";
 
 // Kategorie jsou skutečné odkazy na vlastní podstránky /blog/[categorySlug],
 // ne klientský filtr na téže stránce.

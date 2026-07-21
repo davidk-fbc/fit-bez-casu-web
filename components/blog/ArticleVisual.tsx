@@ -1,13 +1,5 @@
-import type { ReactNode } from "react";
-import { ForkKnifeIcon, HeartPulseIcon, LayersIcon, SparkIcon } from "../icons";
 import { getCategoryBySlug, type CategorySlug } from "@/lib/blog/articles";
-
-const CATEGORY_ICONS: Record<CategorySlug, ReactNode> = {
-  "cviceni-a-pohyb": <HeartPulseIcon className="h-full w-full" />,
-  "jidelnicek-a-recepty": <ForkKnifeIcon className="h-full w-full" />,
-  "motivace-a-podpora": <SparkIcon className="h-full w-full" />,
-  "osobni-rozvoj": <LayersIcon className="h-full w-full" />,
-};
+import { CATEGORY_ICONS } from "./categoryIcons";
 
 const CATEGORY_GRADIENTS: Record<CategorySlug, string> = {
   "cviceni-a-pohyb": "linear-gradient(135deg, #7c3aed, #4c1d95)",

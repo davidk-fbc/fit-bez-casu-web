@@ -108,6 +108,41 @@ export function HeartPulseIcon({ className }: IconProps) {
   );
 }
 
+// Running figure - used for the "Cvičení a pohyb" blog category (activity /
+// movement, deliberately not a heart/pulse symbol).
+export function RunningIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <circle cx="14" cy="4.5" r="1.7" />
+      <path d="M10.5 9 13 7.5l3 2.5 3-1.5" />
+      <path d="M13 7.5l-1 4 3.5 1.5-1 6" />
+      <path d="M12 11.5l-4 2 .5 5" />
+    </svg>
+  );
+}
+
+// Two overlapping chat bubbles - used for the "Motivace a podpora" blog
+// category (conversation / support, not a generic sun/target symbol).
+export function ChatBubblesIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <path d="M4 5.5A2 2 0 0 1 6 3.5h6A2 2 0 0 1 14 5.5v4A2 2 0 0 1 12 11.5H9.5L6.5 14v-2.5H6A2 2 0 0 1 4 9.5v-4Z" />
+      <path d="M13 9.8h3A2 2 0 0 1 18 11.8v4a2 2 0 0 1-2 2h-.3v2.4L13 18h-2a2 2 0 0 1-2-2v-.5" />
+    </svg>
+  );
+}
+
+// Upward trend arrow - used for the "Osobní rozvoj" blog category (growth /
+// progress, not layers/stack or a book).
+export function TrendingUpIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <path d="M3 17 9 11l4 4 8-8" />
+      <path d="M15 6h6v6" />
+    </svg>
+  );
+}
+
 export function UsersIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className} aria-hidden="true">

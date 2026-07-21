@@ -7,35 +7,37 @@ type SimpleArticleCardProps = {
   article: BlogArticle;
 };
 
-// Lehčí karta pro sekci "Doporučené články" — jen malý barevný akcent
-// místo velkého vizuálu, jemný border, bez výrazného stínu.
+// Kompaktnější, sekundární karta pro sekci "Doporučené články" — stejný
+// gradientový vizuální jazyk jako LatestArticleCard (Nejnovější články),
+// jen nižší vizuál, menší ikona a těsnější padding, aby zůstala vizuálně
+// menší a méně dominantní než hlavní karty.
 export function SimpleArticleCard({ article }: SimpleArticleCardProps) {
   const categoryName = getCategoryBySlug(article.categorySlug)?.name ?? article.categorySlug;
 
   return (
-    <article className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] border border-[var(--color-border-light)] bg-[var(--color-surface)] p-6">
-      <ArticleVisual categorySlug={article.categorySlug} className="h-10 w-10 rounded-full" iconClassName="h-4 w-4" />
-      <span className="w-fit text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
-        {categoryName}
-      </span>
-      <h3 className="text-base font-bold leading-snug text-[var(--color-text)]">
-        <Link href={`/blog/${article.slug}`} className="hover:underline">
-          {article.title}
-        </Link>
-      </h3>
-      <p className="line-clamp-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{article.excerpt}</p>
-      <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-text-muted)]">
-        <time dateTime={article.publishedAt}>{formatArticleDate(article.publishedAt)}</time>
-        <span aria-hidden="true">·</span>
-        <span>{article.readingTime} min čtení</span>
+    <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-border-light)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
+      <div className="relative aspect-[8/3] w-full overflow-hidden">
+        <ArticleVisual categorySlug={article.categorySlug} className="h-full w-full" iconClassName="h-7 w-7" />
       </div>
-      <Link
-        href={`/blog/${article.slug}`}
-        className="mt-auto inline-flex w-fit items-center gap-1.5 pt-1 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110"
-      >
-        Přečíst článek
-        <ArrowRightIcon className="h-4 w-4" />
-      </Link>
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <span className="w-fit text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
+          {categoryName}
+        </span>
+        <h3 className="line-clamp-2 text-base font-bold leading-snug text-[var(--color-text)]">{article.title}</h3>
+        <p className="line-clamp-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{article.excerpt}</p>
+        <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-text-muted)]">
+          <time dateTime={article.publishedAt}>{formatArticleDate(article.publishedAt)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{article.readingTime} min čtení</span>
+        </div>
+        <Link
+          href={`/blog/${article.slug}`}
+          className="mt-auto inline-flex items-center gap-1.5 pt-1 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110"
+        >
+          Přečíst článek
+          <ArrowRightIcon className="h-4 w-4" />
+        </Link>
+      </div>
     </article>
   );
 }
