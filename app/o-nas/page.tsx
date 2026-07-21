@@ -44,19 +44,18 @@ const MISSION_AREAS = [
   },
 ];
 
-// Reálné principy z původní sekce komunity (fitbezcasu.cz/o-nas).
 const COMMUNITY_PILLARS = [
   {
-    title: "Jednoduchost",
-    text: "Pohyb a jídlo tak, aby ses nemusela přizpůsobovat režimu, který funguje jen první týden. U nás zapadnou do běžného dne, i když je plný práce a povinností.",
+    title: "Jídelníček na míru",
+    text: "Získáš jídelníček sestavený podle tvého cíle, denního režimu a toho, co ti vyhovuje. Součástí jsou konkrétní porce, ukázkové recepty a jasný plán, díky kterému budeš přesně vědět, co jíst bez každodenního vymýšlení receptů.",
   },
   {
-    title: "Udržitelnost",
-    text: "Nečekej rychlé zázraky. Spíš cestu, ke které se můžeš vracet znovu a znovu, i když občas vypadneš z rytmu. Bez pocitu, že „už je pozdě to zase začít\".",
+    title: "Krátká cvičení",
+    text: "Získáš krátká cvičení, která zvládneš doma i v nabitém dni. Bez složitého vybavení a dlouhých tréninků, abys mohla pravidelně cvičit, zpevnit tělo a mít více energie.",
   },
   {
-    title: "Podpora",
-    text: "Nejsi v tom sama. Komunita žen, které řeší stejné věci jako ty. Bez srovnávání, bez tlaku, bez toho, že by ses cítila pozadu.",
+    title: "Podpora, když ji potřebuješ",
+    text: "Na změnu nebudeš sama. Získáš pravidelnou motivaci, podporu komunity a prostor zeptat se, když si nebudeš vědět rady s jídelníčkem, cvičením nebo návratem po výpadku.",
   },
 ];
 
