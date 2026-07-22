@@ -3,6 +3,7 @@ import { Container } from "./Container";
 import { Logo } from "./Logo";
 import { FacebookIcon, InstagramIcon, TiktokIcon, YoutubeIcon } from "./icons";
 import { COMMUNITY_URL } from "@/lib/navigation";
+import { ConsentSettingsButton } from "@/components/consent/consent-settings-button";
 
 const SOCIAL_LINKS = [
   {
@@ -76,10 +77,13 @@ export function Footer() {
       </Container>
 
       <div className="relative border-t border-white/[0.08] py-6">
-        <Container className="text-center">
+        <Container className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-center sm:gap-4">
           <p className="text-xs text-[var(--color-text-on-dark-muted)]">
             © {year} Fit bez času
           </p>
+          <ConsentSettingsButton className="text-xs text-[var(--color-text-on-dark-muted)] underline-offset-2 transition hover:text-white hover:underline">
+            Nastavení cookies
+          </ConsentSettingsButton>
         </Container>
       </div>
     </footer>
