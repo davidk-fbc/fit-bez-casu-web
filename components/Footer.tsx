@@ -77,13 +77,35 @@ export function Footer() {
       </Container>
 
       <div className="relative border-t border-white/[0.08] py-6">
-        <Container className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-center sm:gap-4">
-          <p className="text-xs text-[var(--color-text-on-dark-muted)]">
-            © {year} Fit bez času
-          </p>
-          <ConsentSettingsButton className="text-xs text-[var(--color-text-on-dark-muted)] underline-offset-2 transition hover:text-white hover:underline">
-            Nastavení cookies
-          </ConsentSettingsButton>
+        <Container>
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-xs text-[var(--color-text-on-dark-muted)]">
+            <span>© {year} Fit bez času</span>
+            <span aria-hidden="true">·</span>
+            <a
+              href="https://platforma.fitbezcasu.cz/obchodni-podminky"
+              className="underline-offset-2 transition hover:text-white hover:underline"
+            >
+              Obchodní podmínky
+            </a>
+            <span aria-hidden="true">·</span>
+            <a
+              href="https://platforma.fitbezcasu.cz/ochrana-osobnich-udaju"
+              className="underline-offset-2 transition hover:text-white hover:underline"
+            >
+              Ochrana osobních údajů
+            </a>
+            <span aria-hidden="true">·</span>
+            <a
+              href="https://platforma.fitbezcasu.cz/zasady-cookies"
+              className="underline-offset-2 transition hover:text-white hover:underline"
+            >
+              Zásady cookies
+            </a>
+            <span aria-hidden="true">·</span>
+            <ConsentSettingsButton className="underline-offset-2 transition hover:text-white hover:underline">
+              Nastavení cookies
+            </ConsentSettingsButton>
+          </div>
         </Container>
       </div>
     </footer>
