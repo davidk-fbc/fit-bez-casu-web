@@ -9,7 +9,7 @@ import { BlogHero } from "@/components/sections/BlogHero";
 import { CategoryBadges } from "@/components/blog/CategoryBadges";
 import { LatestArticleCard } from "@/components/blog/LatestArticleCard";
 import { SimpleArticleCard } from "@/components/blog/SimpleArticleCard";
-import { getLatestArticles, getRecommendedArticles } from "@/lib/blog/articles";
+import { getAllCategories, getLatestArticles, getRecommendedArticles } from "@/lib/blog/articles";
 
 export const metadata: Metadata = {
   title: "Blog | Fit bez času",
@@ -28,9 +28,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
-  const latestArticles = getLatestArticles(3);
-  const recommendedArticles = getRecommendedArticles(3);
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
+  const [latestArticles, recommendedArticles, categories] = await Promise.all([getLatestArticles(3), getRecommendedArticles(3), getAllCategories()]);
 
   return (
     <>
@@ -48,7 +49,7 @@ export default function BlogPage() {
               align="center"
               className="mx-auto items-center text-center"
             />
-            <CategoryBadges />
+            <CategoryBadges categories={categories} />
           </Container>
         </section>
 

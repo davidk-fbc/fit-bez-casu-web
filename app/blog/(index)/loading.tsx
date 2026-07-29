@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="flex min-h-[60vh] items-center justify-center bg-[var(--color-surface-muted)]"><p role="status" className="text-sm font-medium text-[var(--color-text-muted)]">Načítám blog…</p></main>; }

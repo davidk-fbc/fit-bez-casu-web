@@ -54,6 +54,7 @@ export function CategoryContent({ category, articles }: CategoryContentProps) {
               <LatestArticleCard key={article.slug} article={article} />
             ))}
           </div>
+          {articles.length === 0 && <p className="rounded-[var(--radius-card)] bg-white p-8 text-center text-[var(--color-text-muted)]">V této kategorii zatím nejsou žádné veřejné články.</p>}
         </Container>
       </section>
 

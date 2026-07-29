@@ -1,21 +1,19 @@
 import Link from "next/link";
 import { ArrowRightIcon } from "../icons";
-import { ArticleVisual } from "./ArticleVisual";
-import { formatArticleDate, getCategoryBySlug, type BlogArticle } from "@/lib/blog/articles";
+import { ArticleImage } from "./ArticleImage";
+import { formatArticleDate, type BlogArticle } from "@/lib/blog/articles";
 
 type BlogArticleCardProps = {
   article: BlogArticle;
 };
 
 export function BlogArticleCard({ article }: BlogArticleCardProps) {
-  const categoryName = getCategoryBySlug(article.categorySlug)?.name ?? article.categorySlug;
-
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
       <div className="relative">
-        <ArticleVisual categorySlug={article.categorySlug} className="aspect-[16/10] w-full" />
+        <ArticleImage article={article} className="aspect-[16/10] w-full" sizes="(max-width: 640px) 100vw, 33vw" />
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
-          {categoryName}
+          {article.categoryName}
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-2.5 p-6">

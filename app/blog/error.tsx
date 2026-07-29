@@ -1,0 +1,3 @@
+"use client";
+
+export default function Error({ reset }: { error: Error; reset: () => void }) { return <main className="flex min-h-[60vh] items-center justify-center bg-[var(--color-surface-muted)] px-4"><div className="max-w-lg rounded-[var(--radius-card)] bg-white p-8 text-center shadow-[var(--shadow-card)]"><h1 className="text-2xl font-bold">Blog se nepodařilo načíst</h1><p className="mt-3 text-[var(--color-text-muted)]">Zkuste načtení zopakovat. Koncepty ani interní data nebyla zpřístupněna.</p><button type="button" onClick={reset} className="mt-6 rounded-full px-6 py-3 text-sm font-semibold text-white" style={{ background: "var(--gradient-brand)" }}>Zkusit znovu</button></div></main>; }

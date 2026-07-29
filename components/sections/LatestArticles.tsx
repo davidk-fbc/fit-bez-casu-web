@@ -3,8 +3,8 @@ import { Button } from "../Button";
 import { Container } from "../Container";
 import { SectionHeading } from "../SectionHeading";
 import { ArrowRightIcon } from "../icons";
-import { ArticleVisual } from "../blog/ArticleVisual";
-import { getArticleBySlug, getCategoryBySlug, type BlogArticle } from "@/lib/blog/articles";
+import { ArticleImage } from "../blog/ArticleImage";
+import { getArticleBySlug, type BlogArticle } from "@/lib/blog/articles";
 
 // Pevný, ručně kontrolovaný výběr pro homepage - NENÍ automatický podle data
 // ani náhodný (Math.random). Jeden článek z každé ze tří kategorií (pohyb /
@@ -18,20 +18,13 @@ const HOMEPAGE_ARTICLE_SLUGS = [
   "jsem-porad-unavena",
 ] as const;
 
-function getHomepageArticles(): BlogArticle[] {
-  return HOMEPAGE_ARTICLE_SLUGS.map((slug) => {
-    const article = getArticleBySlug(slug);
-
-    if (!article) {
-      throw new Error(`LatestArticles: článek se slugem "${slug}" nebyl nalezen v BLOG_ARTICLES.`);
-    }
-
-    return article;
-  });
+async function getHomepageArticles(): Promise<BlogArticle[]> {
+  const articles = await Promise.all(HOMEPAGE_ARTICLE_SLUGS.map((slug) => getArticleBySlug(slug)));
+  return articles.filter((article): article is BlogArticle => Boolean(article));
 }
 
-export function LatestArticles() {
-  const articles = getHomepageArticles();
+export async function LatestArticles() {
+  const articles = await getHomepageArticles();
 
   return (
     <section id="blog" className="relative overflow-hidden bg-[var(--color-surface-muted)] py-[var(--space-section)]">
@@ -61,14 +54,12 @@ export function LatestArticles() {
 // beze změny. Kategorie je jako štítek přes vizuál (stejná konvence jako
 // dřívější maketa), takže textová část zůstává jen title + excerpt + odkaz.
 function CompactArticleCard({ article }: { article: BlogArticle }) {
-  const categoryName = getCategoryBySlug(article.categorySlug)?.name ?? article.categorySlug;
-
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover)]">
       <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden">
-        <ArticleVisual categorySlug={article.categorySlug} className="h-full w-full" iconClassName="h-9 w-9" />
+        <ArticleImage article={article} className="h-full w-full" iconClassName="h-9 w-9" sizes="(max-width: 640px) 100vw, 33vw" />
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
-          {categoryName}
+          {article.categoryName}
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
