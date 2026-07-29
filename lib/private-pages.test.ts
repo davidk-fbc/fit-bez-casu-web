@@ -8,9 +8,13 @@ const data = root("lib/private-pages.ts");
 const renderer = root("components/private-pages/PrivatePageRenderer.tsx");
 const route = root("app/nabidka-podpory/[[...segments]]/page.tsx");
 const preview = root("app/nabidka-podpory/nahled/[token]/page.tsx");
+const layout = root("app/nabidka-podpory/layout.tsx");
 const sitemap = root("app/sitemap.ts");
 const navigation = root("lib/navigation.ts");
 const footer = root("components/Footer.tsx");
+const header = root("components/Header.tsx");
+const homepage = root("app/page.tsx");
+const blogIndex = root("app/blog/(index)/page.tsx");
 
 test("public and preview data use read-only RPC requests with no-store cache", () => {
   assert.match(data, /rpc\/\$\{/); assert.match(data, /method: "POST"/); assert.match(data, /cache: "no-store"/);
@@ -59,8 +63,37 @@ test("renewal renderer contains price, continuity and safe CTA behavior", () => 
   assert.match(renderer, /Cena pokračování/); assert.match(renderer, /Jak období naváže/); assert.match(renderer, /ctaUrl \?/);
 });
 
-test("renderer uses the unchanged site header and footer through a route layout", () => {
-  const layout = root("app/nabidka-podpory/layout.tsx"); assert.match(layout, /<Header/); assert.match(layout, /<Footer/);
+test("support route layout removes the site header and preserves the shared footer", () => {
+  assert.doesNotMatch(layout, /Header/); assert.match(layout, /import \{ Footer \}/); assert.match(layout, /<Footer/);
+});
+
+test("the nested support layout covers both public and preview routes", () => {
+  assert.match(route, /PrivatePageRenderer/); assert.match(preview, /PrivatePageRenderer/); assert.match(layout, /children/);
+});
+
+test("support hero remains the first route content with its existing safe top padding", () => {
+  assert.match(layout, /<main className="flex-1">\{children\}<\/main>/); assert.match(renderer, /py-20/); assert.match(renderer, /sm:py-24/); assert.match(renderer, /lg:py-28/);
+});
+
+test("regular homepage and blog routes still render the unchanged global header", () => {
+  assert.match(header, /export function Header/); assert.match(homepage, /<Header/); assert.match(blogIndex, /<Header/);
+});
+
+test("detail renderers contain no sidebar or return navigation", () => {
+  assert.doesNotMatch(renderer, /<aside/); assert.doesNotMatch(renderer, /BackLink/); assert.doesNotMatch(renderer, /next\/link/);
+  assert.doesNotMatch(renderer, /Vyber si další krok/); assert.doesNotMatch(renderer, /Zpět na přehled podpory/);
+});
+
+test("detail content is centered in a readable single-column container", () => {
+  assert.match(renderer, /mx-auto max-w-4xl space-y-8/); assert.doesNotMatch(renderer, /lg:grid-cols-\[minmax\(0,1\./);
+});
+
+test("active service CTA and renewal CTA stay available in the main content flow", () => {
+  assert.match(renderer, /content\.sections\.cta && ctaUrl \?/); assert.match(renderer, /Cena pokračování/); assert.match(renderer, /ctaUrl \?/);
+});
+
+test("removed sidebar-only contact copy is not rendered as a replacement panel", () => {
+  assert.doesNotMatch(renderer, /content\.contactText/); assert.doesNotMatch(renderer, /lg:sticky/);
 });
 
 test("responsive classes keep cards stacked on mobile and avoid narrow fixed widths", () => {
