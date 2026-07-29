@@ -1,9 +1,10 @@
 import "server-only";
 
 export type OverviewCard = { id: string; variant: "light" | "gradient" | "dark"; eyebrow: string; title: string; description: string; benefitsHeading: string; benefits: string[]; supportingText: string; price: string; priceNote: string; ctaLabel: string; targetSlug: string; active: boolean; sortOrder: number };
-export type OverviewContent = { eyebrow: string; afterCards: string; finalCta: { active: boolean; label: string; url: string }; cards: OverviewCard[] };
-export type ServiceDetailContent = { eyebrow: string; preparing: boolean; sections: { audience: boolean; benefits: boolean; process: boolean; inclusions: boolean; price: boolean; cta: boolean }; audience: string[]; benefits: string[]; process: string[]; inclusions: string[]; price: string; priceNote: string; cta: { active: boolean; label: string; salesLinkKey: string }; buttonNote: string; additionalInfo: string; contactText: string };
-export type RenewalContent = { eyebrow: string; benefits: string[]; price: string; priceNote: string; continuityText: string; cta: { active: boolean; label: string; salesLinkKey: string }; contactNote: string };
+export type OverviewContent = { eyebrow: string; afterCards: string; closingTitle: string; closingText: string; finalCta: { active: boolean; label: string; url: string }; cards: OverviewCard[] };
+export type PrivatePageDetailItem = string | { title: string; text: string };
+export type ServiceDetailContent = { eyebrow: string; preparing: boolean; sections: { audience: boolean; benefits: boolean; process: boolean; inclusions: boolean; price: boolean; cta: boolean }; audienceTitle: string; audience: string[]; benefitsTitle: string; benefits: PrivatePageDetailItem[]; processTitle: string; process: PrivatePageDetailItem[]; inclusionsTitle: string; inclusions: string[]; closingTitle: string; closingText: string; objectionTitle: string; objectionText: string; price: string; priceNote: string; cta: { active: boolean; label: string; salesLinkKey: string }; buttonNote: string; additionalInfo: string; contactText: string };
+export type RenewalContent = { eyebrow: string; benefitsTitle: string; benefits: string[]; continuityTitle: string; price: string; priceTitle: string; priceNote: string; continuityText: string; cta: { active: boolean; label: string; salesLinkKey: string }; ctaSupportText: string; contactNote: string };
 export type PrivatePage = { id: string; slug: string; pageType: "support_overview" | "service_detail" | "service_renewal"; title: string; subtitle: string; featuredImageUrl: string | null; featuredImageAlt: string | null; updatedAt: string; content: OverviewContent | ServiceDetailContent | RenewalContent; salesLinks: Record<string, string> };
 
 type RawPage = { id: unknown; slug: unknown; page_type: unknown; title: unknown; subtitle: unknown; featured_image_path: unknown; featured_image_alt: unknown; updated_at: unknown; content: unknown };
@@ -27,6 +28,19 @@ const text = (value: unknown, maximum = 3000) => typeof value === "string" && va
 const bool = (value: unknown) => typeof value === "boolean" ? value : null;
 const stringList = (value: unknown, maximum = 12) => Array.isArray(value) && value.length <= maximum && value.every((item) => typeof item === "string" && item.length > 0 && item.length <= 1000) ? value as string[] : null;
 const record = (value: unknown): Record<string, unknown> | null => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+const detailItemList = (value: unknown, maximum = 12): PrivatePageDetailItem[] | null => {
+  if (!Array.isArray(value) || value.length > maximum) return null;
+  const result: PrivatePageDetailItem[] = [];
+  for (const raw of value) {
+    if (typeof raw === "string" && raw.length > 0 && raw.length <= 1500) result.push(raw);
+    else {
+      const item = record(raw); const title = text(item?.title, 300); const itemText = text(item?.text, 1500);
+      if (!item || !title || !itemText) return null;
+      result.push({ title, text: itemText });
+    }
+  }
+  return result;
+};
 const safeUrl = (value: string) => value.startsWith("/") && !value.startsWith("//") || (() => { try { return new URL(value).protocol === "https:"; } catch { return false; } })();
 const safeSlug = (value: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/.test(value);
 
@@ -36,22 +50,22 @@ function overview(value: unknown): OverviewContent | null {
   const cards: OverviewCard[] = [];
   for (const raw of source.cards) { const card = record(raw); if (!card) return null; const benefits = stringList(card.benefits, 8); const variant = card.variant; const targetSlug = text(card.targetSlug, 240); if (!text(card.id, 120) || !["light", "gradient", "dark"].includes(String(variant)) || !text(card.eyebrow, 120) || !text(card.title, 200) || !text(card.description, 1000) || !text(card.benefitsHeading, 120) || !benefits || benefits.length < 3 || text(card.supportingText, 1500) === null || text(card.price, 100) === null || text(card.priceNote, 300) === null || !text(card.ctaLabel, 160) || !targetSlug || !safeSlug(targetSlug) || bool(card.active) === null || typeof card.sortOrder !== "number") return null; cards.push({ id: card.id as string, variant: variant as OverviewCard["variant"], eyebrow: card.eyebrow as string, title: card.title as string, description: card.description as string, benefitsHeading: card.benefitsHeading as string, benefits, supportingText: card.supportingText as string, price: card.price as string, priceNote: card.priceNote as string, ctaLabel: card.ctaLabel as string, targetSlug, active: card.active as boolean, sortOrder: card.sortOrder }); }
   const finalUrl = finalCta.url as string; if (finalCta.active && (!finalUrl || !safeUrl(finalUrl))) return null;
-  return { eyebrow: source.eyebrow as string, afterCards: text(source.afterCards, 2000) ?? "", finalCta: { active: finalCta.active as boolean, label: finalCta.label as string, url: finalUrl }, cards };
+  return { eyebrow: source.eyebrow as string, afterCards: text(source.afterCards, 2000) ?? "", closingTitle: text(source.closingTitle, 300) ?? "", closingText: text(source.closingText, 3000) ?? "", finalCta: { active: finalCta.active as boolean, label: finalCta.label as string, url: finalUrl }, cards };
 }
 
 function detail(value: unknown): ServiceDetailContent | null {
   const source = record(value); const sections = record(source?.sections); const cta = record(source?.cta);
   if (!source || !sections || !cta || !text(source.eyebrow, 120) || bool(source.preparing) === null) return null;
-  const audience = stringList(source.audience), benefits = stringList(source.benefits), process = stringList(source.process, 10), inclusions = stringList(source.inclusions);
+  const audience = stringList(source.audience), benefits = detailItemList(source.benefits), process = detailItemList(source.process, 10), inclusions = stringList(source.inclusions);
   const flags = ["audience", "benefits", "process", "inclusions", "price", "cta"] as const;
   if (!audience || !benefits || !benefits.length || !process || !inclusions || flags.some((key) => bool(sections[key]) === null) || text(source.price, 100) === null || text(source.priceNote, 300) === null || bool(cta.active) === null || text(cta.label, 160) === null || !text(cta.salesLinkKey, 120) || text(source.buttonNote, 700) === null || text(source.additionalInfo, 3000) === null || text(source.contactText, 1000) === null) return null;
-  return { eyebrow: source.eyebrow as string, preparing: source.preparing as boolean, sections: Object.fromEntries(flags.map((key) => [key, sections[key]])) as ServiceDetailContent["sections"], audience, benefits, process, inclusions, price: source.price as string, priceNote: source.priceNote as string, cta: { active: cta.active as boolean, label: cta.label as string, salesLinkKey: cta.salesLinkKey as string }, buttonNote: source.buttonNote as string, additionalInfo: source.additionalInfo as string, contactText: source.contactText as string };
+  return { eyebrow: source.eyebrow as string, preparing: source.preparing as boolean, sections: Object.fromEntries(flags.map((key) => [key, sections[key]])) as ServiceDetailContent["sections"], audienceTitle: text(source.audienceTitle, 300) ?? "", audience, benefitsTitle: text(source.benefitsTitle, 300) ?? "", benefits, processTitle: text(source.processTitle, 300) ?? "", process, inclusionsTitle: text(source.inclusionsTitle, 300) ?? "", inclusions, closingTitle: text(source.closingTitle, 300) ?? "", closingText: text(source.closingText, 3000) ?? "", objectionTitle: text(source.objectionTitle, 300) ?? "", objectionText: text(source.objectionText, 3000) ?? "", price: source.price as string, priceNote: source.priceNote as string, cta: { active: cta.active as boolean, label: cta.label as string, salesLinkKey: cta.salesLinkKey as string }, buttonNote: source.buttonNote as string, additionalInfo: source.additionalInfo as string, contactText: source.contactText as string };
 }
 
 function renewal(value: unknown): RenewalContent | null {
   const source = record(value); const cta = record(source?.cta); const benefits = stringList(source?.benefits);
   if (!source || !cta || !text(source.eyebrow, 120) || !benefits?.length || !text(source.price, 100) || !text(source.priceNote, 300) || !text(source.continuityText, 3000) || bool(cta.active) === null || !text(cta.label, 160) || !text(cta.salesLinkKey, 120) || text(source.contactNote, 1000) === null) return null;
-  return { eyebrow: source.eyebrow as string, benefits, price: source.price as string, priceNote: source.priceNote as string, continuityText: source.continuityText as string, cta: { active: cta.active as boolean, label: cta.label as string, salesLinkKey: cta.salesLinkKey as string }, contactNote: source.contactNote as string };
+  return { eyebrow: source.eyebrow as string, benefitsTitle: text(source.benefitsTitle, 300) ?? "", benefits, continuityTitle: text(source.continuityTitle, 300) ?? "", price: source.price as string, priceTitle: text(source.priceTitle, 300) ?? "", priceNote: source.priceNote as string, continuityText: source.continuityText as string, cta: { active: cta.active as boolean, label: cta.label as string, salesLinkKey: cta.salesLinkKey as string }, ctaSupportText: text(source.ctaSupportText, 1000) ?? "", contactNote: source.contactNote as string };
 }
 
 function mapPayload(payload: RawPayload | null): PrivatePage | null {

@@ -26,6 +26,12 @@ test("runtime parser recognizes exactly the three supported page types", () => {
   assert.doesNotMatch(data, /dangerouslySetInnerHTML/);
 });
 
+test("runtime parser accepts expanded titled copy while preserving legacy string items", () => {
+  assert.match(data, /PrivatePageDetailItem = string \| \{ title: string; text: string \}/);
+  assert.match(data, /detailItemList/);
+  for (const field of ["closingTitle", "closingText", "audienceTitle", "benefitsTitle", "processTitle", "inclusionsTitle", "objectionTitle", "objectionText", "continuityTitle", "priceTitle", "ctaSupportText"]) assert.match(data, new RegExp(field));
+});
+
 test("preview only accepts 64 lowercase hexadecimal characters", () => assert.match(data, /\^\[a-f0-9\]\{64\}\$/));
 
 test("every private page is noindex, nofollow, nocache and noarchive", () => {
@@ -59,8 +65,16 @@ test("service detail supports all fixed sections and only resolves active CTA UR
   assert.match(renderer, /content\.cta\.active \? page\.salesLinks/);
 });
 
+test("expanded service copy uses CMS headings and renders titled result and process items", () => {
+  for (const field of ["audienceTitle", "benefitsTitle", "processTitle", "inclusionsTitle", "objectionTitle", "closingTitle"]) assert.match(renderer, new RegExp(`content\\.${field}`));
+  assert.match(renderer, /<DetailList items=\{content\.benefits\}/);
+  assert.match(renderer, /<DetailList items=\{content\.process\} numbered/);
+  assert.doesNotMatch(renderer, /dangerouslySetInnerHTML/);
+});
+
 test("renewal renderer contains price, continuity and safe CTA behavior", () => {
   assert.match(renderer, /Cena pokračování/); assert.match(renderer, /Jak období naváže/); assert.match(renderer, /ctaUrl \?/);
+  assert.match(renderer, /content\.benefitsTitle/); assert.match(renderer, /content\.continuityTitle/); assert.match(renderer, /content\.priceTitle/); assert.match(renderer, /content\.ctaSupportText/);
 });
 
 test("support route layout removes the site header and preserves the shared footer", () => {
