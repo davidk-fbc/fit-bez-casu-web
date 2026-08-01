@@ -32,6 +32,12 @@ test("runtime parser accepts expanded titled copy while preserving legacy string
   for (const field of ["closingTitle", "closingText", "audienceTitle", "benefitsTitle", "processTitle", "inclusionsTitle", "objectionTitle", "objectionText", "continuityTitle", "priceTitle", "ctaSupportText"]) assert.match(data, new RegExp(field));
 });
 
+test("runtime parser isolates safe structured contact links from generic sales URLs", () => {
+  assert.match(data, /PrivatePageContact/); assert.match(data, /safeContactEmailUrl/); assert.match(data, /structuredContact/);
+  assert.match(data, /instagramUrl\.startsWith\("https:\/\/"\)/); assert.match(data, /\^mailto:/);
+  assert.doesNotMatch(data, /safeUrl\s*=.*mailto/);
+});
+
 test("preview only accepts 64 lowercase hexadecimal characters", () => assert.match(data, /\^\[a-f0-9\]\{64\}\$/));
 
 test("every private page is noindex, nofollow, nocache and noarchive", () => {
@@ -108,6 +114,13 @@ test("active service CTA and renewal CTA stay available in the main content flow
 
 test("removed sidebar-only contact copy is not rendered as a replacement panel", () => {
   assert.doesNotMatch(renderer, /content\.contactText/); assert.doesNotMatch(renderer, /lg:sticky/);
+});
+
+test("individual contact renders as accessible text links without hard-coded destinations", () => {
+  assert.match(renderer, /<ContactBlock contact=\{content\.contact\}/); assert.match(renderer, /href=\{contact\.instagramUrl\}/); assert.match(renderer, /href=\{contact\.emailUrl\}/);
+  assert.match(renderer, /target="_blank" rel="noopener noreferrer"/); assert.match(renderer, /focus-visible:outline/);
+  assert.doesNotMatch(renderer, /form\.simpleshop\.cz/); assert.doesNotMatch(renderer, /instagram\.com\/fitbezcasu/); assert.doesNotMatch(renderer, /mailto:info@fitbezcasu\.cz/);
+  assert.doesNotMatch(renderer, /dangerouslySetInnerHTML/);
 });
 
 test("responsive classes keep cards stacked on mobile and avoid narrow fixed widths", () => {

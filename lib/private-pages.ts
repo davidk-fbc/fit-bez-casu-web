@@ -3,7 +3,8 @@ import "server-only";
 export type OverviewCard = { id: string; variant: "light" | "gradient" | "dark"; eyebrow: string; title: string; description: string; benefitsHeading: string; benefits: string[]; supportingText: string; price: string; priceNote: string; ctaLabel: string; targetSlug: string; active: boolean; sortOrder: number };
 export type OverviewContent = { eyebrow: string; afterCards: string; closingTitle: string; closingText: string; finalCta: { active: boolean; label: string; url: string }; cards: OverviewCard[] };
 export type PrivatePageDetailItem = string | { title: string; text: string };
-export type ServiceDetailContent = { eyebrow: string; preparing: boolean; sections: { audience: boolean; benefits: boolean; process: boolean; inclusions: boolean; price: boolean; cta: boolean }; audienceTitle: string; audience: string[]; benefitsTitle: string; benefits: PrivatePageDetailItem[]; processTitle: string; process: PrivatePageDetailItem[]; inclusionsTitle: string; inclusions: string[]; closingTitle: string; closingText: string; objectionTitle: string; objectionText: string; price: string; priceNote: string; cta: { active: boolean; label: string; salesLinkKey: string }; buttonNote: string; additionalInfo: string; contactText: string };
+export type PrivatePageContact = { text: string; instagramLabel: string; instagramUrl: string; emailLabel: string; emailUrl: string };
+export type ServiceDetailContent = { eyebrow: string; preparing: boolean; sections: { audience: boolean; benefits: boolean; process: boolean; inclusions: boolean; price: boolean; cta: boolean }; audienceTitle: string; audience: string[]; benefitsTitle: string; benefits: PrivatePageDetailItem[]; processTitle: string; process: PrivatePageDetailItem[]; inclusionsTitle: string; inclusions: string[]; closingTitle: string; closingText: string; objectionTitle: string; objectionText: string; price: string; priceNote: string; cta: { active: boolean; label: string; salesLinkKey: string }; buttonNote: string; additionalInfo: string; contactText: string; contact: PrivatePageContact | null };
 export type RenewalContent = { eyebrow: string; benefitsTitle: string; benefits: string[]; continuityTitle: string; price: string; priceTitle: string; priceNote: string; continuityText: string; cta: { active: boolean; label: string; salesLinkKey: string }; ctaSupportText: string; contactNote: string };
 export type PrivatePage = { id: string; slug: string; pageType: "support_overview" | "service_detail" | "service_renewal"; title: string; subtitle: string; featuredImageUrl: string | null; featuredImageAlt: string | null; updatedAt: string; content: OverviewContent | ServiceDetailContent | RenewalContent; salesLinks: Record<string, string> };
 
@@ -42,7 +43,20 @@ const detailItemList = (value: unknown, maximum = 12): PrivatePageDetailItem[] |
   return result;
 };
 const safeUrl = (value: string) => value.startsWith("/") && !value.startsWith("//") || (() => { try { return new URL(value).protocol === "https:"; } catch { return false; } })();
+const safeContactEmailUrl = (value: string) => /^mailto:[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/iu.test(value);
 const safeSlug = (value: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/.test(value);
+
+function contact(value: unknown): PrivatePageContact | null | undefined {
+  if (value === undefined) return null;
+  const source = record(value); if (!source) return undefined;
+  const contactText = text(source.text, 1000), instagramLabel = text(source.instagramLabel, 160), instagramUrl = text(source.instagramUrl, 2000), emailLabel = text(source.emailLabel, 160), emailUrl = text(source.emailUrl, 320);
+  if ([contactText, instagramLabel, instagramUrl, emailLabel, emailUrl].some((field) => field === null)) return undefined;
+  if (![contactText, instagramLabel, instagramUrl, emailLabel, emailUrl].some(Boolean)) return null;
+  if (!contactText || !instagramLabel || !instagramUrl || !emailLabel || !emailUrl || !instagramUrl.startsWith("https://") || !safeUrl(instagramUrl) || !safeContactEmailUrl(emailUrl)) return undefined;
+  const instagramAt = contactText.indexOf(instagramLabel), emailAt = contactText.indexOf(emailLabel);
+  if (instagramAt < 0 || emailAt < instagramAt + instagramLabel.length) return undefined;
+  return { text: contactText, instagramLabel, instagramUrl, emailLabel, emailUrl };
+}
 
 function overview(value: unknown): OverviewContent | null {
   const source = record(value); const finalCta = record(source?.finalCta);
@@ -58,8 +72,9 @@ function detail(value: unknown): ServiceDetailContent | null {
   if (!source || !sections || !cta || !text(source.eyebrow, 120) || bool(source.preparing) === null) return null;
   const audience = stringList(source.audience), benefits = detailItemList(source.benefits), process = detailItemList(source.process, 10), inclusions = stringList(source.inclusions);
   const flags = ["audience", "benefits", "process", "inclusions", "price", "cta"] as const;
-  if (!audience || !benefits || !benefits.length || !process || !inclusions || flags.some((key) => bool(sections[key]) === null) || text(source.price, 100) === null || text(source.priceNote, 300) === null || bool(cta.active) === null || text(cta.label, 160) === null || !text(cta.salesLinkKey, 120) || text(source.buttonNote, 700) === null || text(source.additionalInfo, 3000) === null || text(source.contactText, 1000) === null) return null;
-  return { eyebrow: source.eyebrow as string, preparing: source.preparing as boolean, sections: Object.fromEntries(flags.map((key) => [key, sections[key]])) as ServiceDetailContent["sections"], audienceTitle: text(source.audienceTitle, 300) ?? "", audience, benefitsTitle: text(source.benefitsTitle, 300) ?? "", benefits, processTitle: text(source.processTitle, 300) ?? "", process, inclusionsTitle: text(source.inclusionsTitle, 300) ?? "", inclusions, closingTitle: text(source.closingTitle, 300) ?? "", closingText: text(source.closingText, 3000) ?? "", objectionTitle: text(source.objectionTitle, 300) ?? "", objectionText: text(source.objectionText, 3000) ?? "", price: source.price as string, priceNote: source.priceNote as string, cta: { active: cta.active as boolean, label: cta.label as string, salesLinkKey: cta.salesLinkKey as string }, buttonNote: source.buttonNote as string, additionalInfo: source.additionalInfo as string, contactText: source.contactText as string };
+  const structuredContact = contact(source.contact);
+  if (!audience || !benefits || !benefits.length || !process || !inclusions || structuredContact === undefined || flags.some((key) => bool(sections[key]) === null) || text(source.price, 100) === null || text(source.priceNote, 300) === null || bool(cta.active) === null || text(cta.label, 160) === null || !text(cta.salesLinkKey, 120) || text(source.buttonNote, 700) === null || text(source.additionalInfo, 3000) === null || text(source.contactText, 1000) === null) return null;
+  return { eyebrow: source.eyebrow as string, preparing: source.preparing as boolean, sections: Object.fromEntries(flags.map((key) => [key, sections[key]])) as ServiceDetailContent["sections"], audienceTitle: text(source.audienceTitle, 300) ?? "", audience, benefitsTitle: text(source.benefitsTitle, 300) ?? "", benefits, processTitle: text(source.processTitle, 300) ?? "", process, inclusionsTitle: text(source.inclusionsTitle, 300) ?? "", inclusions, closingTitle: text(source.closingTitle, 300) ?? "", closingText: text(source.closingText, 3000) ?? "", objectionTitle: text(source.objectionTitle, 300) ?? "", objectionText: text(source.objectionText, 3000) ?? "", price: source.price as string, priceNote: source.priceNote as string, cta: { active: cta.active as boolean, label: cta.label as string, salesLinkKey: cta.salesLinkKey as string }, buttonNote: source.buttonNote as string, additionalInfo: source.additionalInfo as string, contactText: source.contactText as string, contact: structuredContact };
 }
 
 function renewal(value: unknown): RenewalContent | null {
