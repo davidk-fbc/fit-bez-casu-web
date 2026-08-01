@@ -6,6 +6,7 @@ import test from "node:test";
 const root = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), "utf8");
 const data = root("lib/private-pages.ts");
 const renderer = root("components/private-pages/PrivatePageRenderer.tsx");
+const icons = root("components/icons.tsx");
 const route = root("app/nabidka-podpory/[[...segments]]/page.tsx");
 const preview = root("app/nabidka-podpory/nahled/[token]/page.tsx");
 const layout = root("app/nabidka-podpory/layout.tsx");
@@ -56,6 +57,30 @@ test("support pages remain outside sitemap, navigation and footer", () => {
 test("overview renders the three visual variants in equal-height cards with bottom CTA", () => {
   assert.match(renderer, /grid-cols-1 items-stretch/); assert.match(renderer, /flex h-full min-w-0 flex-col/); assert.match(renderer, /mt-auto pt-6/);
   assert.match(renderer, /linear-gradient\(135deg,#2f6bff,#9b3ddb\)/); assert.match(renderer, /linear-gradient\(135deg,#10163a,#2a1b57\)/); assert.match(renderer, /bg-white/);
+});
+
+test("overview CTAs use contrast-specific private-page tones at one shared size", () => {
+  assert.match(renderer, /light: .*ctaTone: "brand"/);
+  assert.match(renderer, /gradient: .*ctaTone: "on-gradient"/);
+  assert.match(renderer, /dark: .*ctaTone: "on-dark"/);
+  assert.match(renderer, /<PrivatePageCta href=\{`\/\$\{card\.targetSlug\}`\} tone=\{style\.ctaTone\} className="w-full justify-center">/);
+  assert.match(renderer, /min-h-14/);
+  assert.match(renderer, /sm:min-h-16/);
+});
+
+test("private-page primary CTAs have premium interactive and reduced-motion states", () => {
+  for (const token of [
+    "shadow-[0_18px_42px",
+    "0_0_28px",
+    "motion-safe:hover:-translate-y-0.5",
+    "motion-safe:active:translate-y-px",
+    "focus-visible:outline-4",
+    "focus-visible:outline-offset-4",
+    "motion-reduce:transform-none",
+    "motion-reduce:transition-none",
+    "motion-safe:hover:[&>svg]:translate-x-1",
+  ]) assert.ok(renderer.includes(token), `missing CTA state ${token}`);
+  assert.match(icons, /ArrowRightIcon[\s\S]*aria-hidden="true"/);
 });
 
 test("overview benefits use semantic lists and visible circular markers", () => {
@@ -110,6 +135,14 @@ test("detail content is centered in a readable single-column container", () => {
 
 test("active service CTA and renewal CTA stay available in the main content flow", () => {
   assert.match(renderer, /content\.sections\.cta && ctaUrl \?/); assert.match(renderer, /Cena pokračování/); assert.match(renderer, /ctaUrl \?/);
+  assert.match(renderer, /<PrivatePageCta href=\{ctaUrl\}[\s\S]*sm:min-w-80/);
+  assert.match(renderer, /w-full justify-center sm:w-auto/);
+  assert.match(renderer, /whitespace-normal break-words/);
+});
+
+test("renewal final note is omitted completely when the CMS value is empty", () => {
+  assert.match(renderer, /content\.contactNote \? <p className="rounded-2xl/);
+  assert.match(renderer, /\{content\.contactNote\}<\/p> : null/);
 });
 
 test("removed sidebar-only contact copy is not rendered as a replacement panel", () => {
@@ -119,6 +152,7 @@ test("removed sidebar-only contact copy is not rendered as a replacement panel",
 test("individual contact renders as accessible text links without hard-coded destinations", () => {
   assert.match(renderer, /<ContactBlock contact=\{content\.contact\}/); assert.match(renderer, /href=\{contact\.instagramUrl\}/); assert.match(renderer, /href=\{contact\.emailUrl\}/);
   assert.match(renderer, /target="_blank" rel="noopener noreferrer"/); assert.match(renderer, /focus-visible:outline/);
+  assert.doesNotMatch(renderer.match(/function ContactBlock[\s\S]*?function Renewal/)?.[0] ?? "", /PrivatePageCta|<Button/);
   assert.doesNotMatch(renderer, /form\.simpleshop\.cz/); assert.doesNotMatch(renderer, /instagram\.com\/fitbezcasu/); assert.doesNotMatch(renderer, /mailto:info@fitbezcasu\.cz/);
   assert.doesNotMatch(renderer, /dangerouslySetInnerHTML/);
 });
