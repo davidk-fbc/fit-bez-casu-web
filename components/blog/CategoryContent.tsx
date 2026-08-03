@@ -52,6 +52,7 @@ export function CategoryContent({ category, articles, categories }: CategoryCont
             title={`Všechny články: ${category.name}`}
             description="Řazeno od nejnovějšího."
           />
+          <p className="text-center text-sm text-[var(--color-text-muted)]">Prozkoumej i další témata na blogu</p>
           <CategoryBadges categories={otherCategories} />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (
