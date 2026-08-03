@@ -2,7 +2,7 @@ import { cache } from "react";
 
 export type CategorySlug = string;
 export type ArticleCtaType = "challenge" | "meal-plan" | "community";
-export type BlogCategory = { id: string; slug: string; name: string; description: string; active: boolean; sortOrder: number };
+export type BlogCategory = { id: string; slug: string; name: string; description: string; longDescription: string | null; active: boolean; sortOrder: number };
 export type BlogAuthor = { id: string; displayName: string; bio: string; avatarPath: string | null };
 export type BlogBlock = { id: string; type: string; position: number; content: Record<string, unknown> };
 export type BlogArticle = {
@@ -31,7 +31,11 @@ export type BlogArticle = {
 
 export type ArticleClosingSections = { smallStep: string[]; reflection: string[]; eveningTask: string[]; finalQuote: string };
 
-type RawCategory = { id: string; slug: string; name: string; description: string; active: boolean; sort_order: number };
+// long_description is optional in this type (not just nullable) because the
+// column may not exist yet in a given environment - see the migration
+// comment in supabase/migrations for why the categories query's `select=*`
+// tolerates that safely instead of erroring.
+type RawCategory = { id: string; slug: string; name: string; description: string; long_description?: string | null; active: boolean; sort_order: number };
 type RawAuthor = { id: string; display_name: string; bio: string; avatar_path: string | null };
 type RawArticle = { id: string; title: string; slug: string; excerpt: string | null; category_id: string | null; author_id: string | null; status: string; featured_image_path: string | null; featured_image_alt: string | null; featured_image_caption: string | null; seo_title: string | null; seo_description: string | null; social_image_path: string | null; canonical_url: string | null; indexing_enabled: boolean; recommended: boolean; published_at: string | null; scheduled_at: string | null; updated_at: string };
 type RawBlock = { id: string; article_id: string; block_type: string; position: number; content: Record<string, unknown> };
@@ -54,6 +58,28 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!response.ok) throw new Error("Published blog content could not be loaded.");
   return response.json() as Promise<T>;
+}
+
+// Normalizes blog_categories.long_description into a single "has real
+// content or not" shape: missing (pre-migration), null, empty string and
+// whitespace-only all collapse to null so callers only ever need one check
+// (`category.longDescription != null`) to decide whether to render the
+// expanded section at all.
+export function normalizeLongDescription(value: string | null | undefined): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+// Splits plain-text category copy into paragraphs on blank lines. Not
+// HTML/Markdown - never rendered with dangerouslySetInnerHTML. Blank lines
+// from repeated newlines are dropped rather than producing empty
+// paragraphs.
+export function splitIntoParagraphs(text: string): string[] {
+  return text
+    .split(/\n\s*\n/u)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0);
 }
 
 function publicImageUrl(path: string | null) {
@@ -113,7 +139,7 @@ const loadDataset = cache(async (): Promise<Dataset> => {
     request<RawBlock[]>("blog_article_blocks?select=*&order=article_id.asc,position.asc"),
     request<RawRelation[]>("blog_article_relations?select=*&order=article_id.asc,position.asc"),
   ]);
-  const categories = rawCategories.map((item) => ({ id: item.id, slug: item.slug, name: item.name, description: item.description, active: item.active, sortOrder: item.sort_order }));
+  const categories = rawCategories.map((item) => ({ id: item.id, slug: item.slug, name: item.name, description: item.description, longDescription: normalizeLongDescription(item.long_description), active: item.active, sortOrder: item.sort_order }));
   const categoryMap = new Map(categories.map((item) => [item.id, item]));
   const authorMap = new Map(rawAuthors.map((item) => [item.id, { id: item.id, displayName: item.display_name, bio: item.bio, avatarPath: item.avatar_path }]));
   const articles = rawArticles.map((item) => mapArticle(item, categoryMap, authorMap, rawBlocks));
@@ -142,13 +168,13 @@ export const getPreviewArticle = cache(async (token: string) => {
   const payload = await request<{ article: RawArticle; category: RawCategory | null; author: RawAuthor | null; blocks: RawBlock[]; relations: Array<{ article: RawArticle; category: RawCategory | null; author: RawAuthor | null }> } | null>("rpc/get_blog_preview", { method: "POST", body: JSON.stringify({ p_token: token }) });
   if (!payload?.article) return null;
   const categories = new Map<string, BlogCategory>();
-  if (payload.category) categories.set(payload.category.id, { id: payload.category.id, slug: payload.category.slug, name: payload.category.name, description: payload.category.description, active: payload.category.active, sortOrder: payload.category.sort_order });
+  if (payload.category) categories.set(payload.category.id, { id: payload.category.id, slug: payload.category.slug, name: payload.category.name, description: payload.category.description, longDescription: normalizeLongDescription(payload.category.long_description), active: payload.category.active, sortOrder: payload.category.sort_order });
   const authors = new Map<string, BlogAuthor>();
   if (payload.author) authors.set(payload.author.id, { id: payload.author.id, displayName: payload.author.display_name, bio: payload.author.bio, avatarPath: payload.author.avatar_path });
   const article = mapArticle(payload.article, categories, authors, payload.blocks ?? []);
   article.relatedArticles = (payload.relations ?? []).map((relation) => {
     const relatedCategories = new Map<string, BlogCategory>();
-    if (relation.category) relatedCategories.set(relation.category.id, { id: relation.category.id, slug: relation.category.slug, name: relation.category.name, description: relation.category.description, active: relation.category.active, sortOrder: relation.category.sort_order });
+    if (relation.category) relatedCategories.set(relation.category.id, { id: relation.category.id, slug: relation.category.slug, name: relation.category.name, description: relation.category.description, longDescription: normalizeLongDescription(relation.category.long_description), active: relation.category.active, sortOrder: relation.category.sort_order });
     const relatedAuthors = new Map<string, BlogAuthor>();
     if (relation.author) relatedAuthors.set(relation.author.id, { id: relation.author.id, displayName: relation.author.display_name, bio: relation.author.bio, avatarPath: relation.author.avatar_path });
     return mapArticle(relation.article, relatedCategories, relatedAuthors, []);

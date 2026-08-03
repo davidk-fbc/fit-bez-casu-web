@@ -6,7 +6,7 @@ import { DarkSectionGlow } from "../DarkSectionGlow";
 import { EmailSignupPlaceholder } from "../EmailSignupPlaceholder";
 import { LatestArticleCard } from "./LatestArticleCard";
 import { CategoryBadges } from "./CategoryBadges";
-import type { BlogArticle, BlogCategory } from "@/lib/blog/articles";
+import { splitIntoParagraphs, type BlogArticle, type BlogCategory } from "@/lib/blog/articles";
 
 type CategoryContentProps = {
   category: BlogCategory;
@@ -18,6 +18,10 @@ type CategoryContentProps = {
 // všech článků dané kategorie, blok pro budoucí e-mail a CTA do komunity.
 export function CategoryContent({ category, articles, categories }: CategoryContentProps) {
   const otherCategories = categories.filter((item) => item.slug !== category.slug);
+  // category.longDescription is already normalized to null when missing,
+  // empty or whitespace-only (see lib/blog/articles.ts) - a non-null value
+  // here always has real, splittable content.
+  const longDescriptionParagraphs = category.longDescription ? splitIntoParagraphs(category.longDescription) : [];
   return (
     <>
       <section className="relative overflow-hidden bg-[var(--color-dark)]">
@@ -60,6 +64,15 @@ export function CategoryContent({ category, articles, categories }: CategoryCont
             ))}
           </div>
           {articles.length === 0 && <p className="rounded-[var(--radius-card)] bg-white p-8 text-center text-[var(--color-text-muted)]">V této kategorii zatím nejsou žádné veřejné články.</p>}
+          {longDescriptionParagraphs.length > 0 && (
+            <div className="mx-auto flex max-w-2xl flex-col gap-4">
+              {longDescriptionParagraphs.map((paragraph, index) => (
+                <p key={index} className="text-base leading-relaxed text-[var(--color-text-muted)]">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          )}
         </Container>
       </section>
 
