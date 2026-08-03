@@ -6,25 +6,42 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { CommunityCta } from "@/components/CommunityCta";
 import { AboutHero } from "@/components/sections/AboutHero";
 import { AboutStoryBlock } from "@/components/AboutStoryBlock";
+import { JsonLd } from "@/components/JsonLd";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { getBreadcrumbListSchema, getPageSchema } from "@/lib/structured-data";
+
+const PAGE_TITLE = "O nás | Fit bez času";
+const PAGE_DESCRIPTION =
+  "Poznej Kláru a Davida a zjisti, proč vzniklo Fit bez času a jak pomáhá ženám začít s jídlem a pohybem bez extrémů.";
 
 export const metadata: Metadata = {
-  title: "O nás | Fit bez času",
-  description:
-    "Poznej Kláru a Davida a zjisti, proč vzniklo Fit bez času a jak pomáhá ženám začít s jídlem a pohybem bez extrémů.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   alternates: {
     canonical: "/o-nas",
   },
   openGraph: {
-    title: "O nás | Fit bez času",
-    description:
-      "Poznej Kláru a Davida a zjisti, proč vzniklo Fit bez času a jak pomáhá ženám začít s jídlem a pohybem bez extrémů.",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
     url: "/o-nas",
     locale: "cs_CZ",
     type: "website",
     images: [DEFAULT_OG_IMAGE],
   },
 };
+
+const ABOUT_PAGE_SCHEMA = getPageSchema({
+  type: "AboutPage",
+  path: "/o-nas",
+  name: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  breadcrumbPath: "/o-nas",
+});
+
+const ABOUT_PAGE_BREADCRUMB = getBreadcrumbListSchema("/o-nas", [
+  { name: "Domů", path: "/" },
+  { name: "O nás", path: "/o-nas" },
+]);
 
 // Reálné oblasti z původní sekce "Naše mise" (fitbezcasu.cz/o-nas) — beze změny obsahu.
 const MISSION_AREAS = [
@@ -64,6 +81,8 @@ const COMMUNITY_PILLARS = [
 export default function AboutPage() {
   return (
     <>
+      <JsonLd data={ABOUT_PAGE_SCHEMA} />
+      <JsonLd data={ABOUT_PAGE_BREADCRUMB} />
       <Header />
       <main className="flex-1">
         <AboutHero />

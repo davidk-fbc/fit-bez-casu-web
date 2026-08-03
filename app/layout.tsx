@@ -5,7 +5,9 @@ import { ConsentMode } from "@/components/analytics/consent-mode";
 import { ConsentProvider } from "@/components/consent/consent-provider";
 import { ConsentBanner } from "@/components/consent/consent-banner";
 import { ConsentSettingsDialog } from "@/components/consent/consent-settings-dialog";
-import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structured-data";
 import "./globals.css";
 
 // Read once at module scope - NEXT_PUBLIC_* vars are inlined at build time
@@ -30,12 +32,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Fit bez času",
-  description: "Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.",
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
   openGraph: {
-    title: "Fit bez času",
-    description: "Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.",
-    siteName: "Fit bez času",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
     locale: "cs_CZ",
     type: "website",
     images: [DEFAULT_OG_IMAGE],
@@ -62,6 +64,10 @@ export default function RootLayout({
     >
       {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
       <body className="flex min-h-full flex-col font-sans">
+        {/* Rendered once here (not per-page) so Organization/WebSite never
+            duplicate - every page-level schema below references these two
+            by @id instead of redeclaring them. */}
+        <JsonLd data={[getOrganizationSchema(), getWebSiteSchema()]} />
         <ConsentProvider>
           {children}
           <ConsentMode />

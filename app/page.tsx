@@ -8,7 +8,9 @@ import { HowWeHelp } from "@/components/sections/HowWeHelp";
 import { AppShowcase } from "@/components/sections/AppShowcase";
 import { AboutUs } from "@/components/sections/AboutUs";
 import { LatestArticles } from "@/components/sections/LatestArticles";
-import { DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
+import { getPageSchema } from "@/lib/structured-data";
 
 // Title intentionally omitted - inherited as-is from the root layout's
 // metadata. openGraph.description is homepage-specific (not inherited) and
@@ -30,9 +32,18 @@ export const metadata: Metadata = {
   },
 };
 
+const HOMEPAGE_SCHEMA = getPageSchema({
+  type: "WebPage",
+  path: "/",
+  name: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  primaryImage: true,
+});
+
 export default function Home() {
   return (
     <>
+      <JsonLd data={HOMEPAGE_SCHEMA} />
       <Header />
       <main className="flex-1">
         <Hero />

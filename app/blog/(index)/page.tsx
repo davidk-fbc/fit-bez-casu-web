@@ -10,19 +10,22 @@ import { CategoryBadges } from "@/components/blog/CategoryBadges";
 import { LatestArticleCard } from "@/components/blog/LatestArticleCard";
 import { SimpleArticleCard } from "@/components/blog/SimpleArticleCard";
 import { getAllCategories, getLatestArticles, getRecommendedArticles } from "@/lib/blog/articles";
+import { JsonLd } from "@/components/JsonLd";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { getBreadcrumbListSchema, getPageSchema } from "@/lib/structured-data";
+
+const PAGE_TITLE = "Blog | Fit bez času";
+const PAGE_DESCRIPTION = "Praktické články o jídle, cvičení, motivaci a zdravějších návycích pro ženy, které mají plný diář.";
 
 export const metadata: Metadata = {
-  title: "Blog | Fit bez času",
-  description:
-    "Praktické články o jídle, cvičení, motivaci a zdravějších návycích pro ženy, které mají plný diář.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   alternates: {
     canonical: "/blog",
   },
   openGraph: {
-    title: "Blog | Fit bez času",
-    description:
-      "Praktické články o jídle, cvičení, motivaci a zdravějších návycích pro ženy, které mají plný diář.",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
     url: "/blog",
     locale: "cs_CZ",
     type: "website",
@@ -32,11 +35,26 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+const BLOG_INDEX_SCHEMA = getPageSchema({
+  type: "CollectionPage",
+  path: "/blog",
+  name: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  breadcrumbPath: "/blog",
+});
+
+const BLOG_INDEX_BREADCRUMB = getBreadcrumbListSchema("/blog", [
+  { name: "Domů", path: "/" },
+  { name: "Blog", path: "/blog" },
+]);
+
 export default async function BlogPage() {
   const [latestArticles, recommendedArticles, categories] = await Promise.all([getLatestArticles(3), getRecommendedArticles(3), getAllCategories()]);
 
   return (
     <>
+      <JsonLd data={BLOG_INDEX_SCHEMA} />
+      <JsonLd data={BLOG_INDEX_BREADCRUMB} />
       <Header />
       <main className="flex-1">
         <BlogHero />

@@ -5,8 +5,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleContent } from "@/components/blog/ArticleContent";
 import { CategoryContent } from "@/components/blog/CategoryContent";
+import { JsonLd } from "@/components/JsonLd";
 import { getAllCategories, getArticleBySlug, getArticlesByCategory, getCategoryBySlug } from "@/lib/blog/articles";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { getBlogPostingSchema, getBreadcrumbListSchema, getPageSchema } from "@/lib/structured-data";
 
 type PageProps = { params: Promise<{ identifier: string }> };
 export const dynamic = "force-dynamic";
@@ -35,11 +37,33 @@ export default async function BlogIdentifierPage({ params }: PageProps) {
   const category = await getCategoryBySlug(identifier);
   if (category) {
     const [articles, categories] = await Promise.all([getArticlesByCategory(category.slug), getAllCategories()]);
-    return <><Header /><main className="flex-1"><CategoryContent category={category} articles={articles} categories={categories} /></main><Footer /></>;
+    const categoryPath = `/blog/${category.slug}`;
+    const categorySchema = getPageSchema({ type: "CollectionPage", path: categoryPath, name: category.name, description: category.description, breadcrumbPath: categoryPath });
+    const categoryBreadcrumb = getBreadcrumbListSchema(categoryPath, [
+      { name: "Domů", path: "/" },
+      { name: "Blog", path: "/blog" },
+      { name: category.name, path: categoryPath },
+    ]);
+    return <><JsonLd data={categorySchema} /><JsonLd data={categoryBreadcrumb} /><Header /><main className="flex-1"><CategoryContent category={category} articles={articles} categories={categories} /></main><Footer /></>;
   }
   const article = await getArticleBySlug(identifier);
   if (!article) notFound();
   const canonical = article.canonicalUrl ?? `${SITE_URL}/blog/${article.slug}`;
-  const jsonLd = { "@context": "https://schema.org", "@type": "BlogPosting", headline: article.title, description: article.seoDescription, ...(article.socialImageUrl ? { image: [article.socialImageUrl] } : {}), datePublished: article.publishedAt, dateModified: article.updatedAt, ...(article.author ? { author: { "@type": "Person", name: article.author.displayName } } : {}), publisher: { "@type": "Organization", name: "Fit bez času", url: SITE_URL }, mainEntityOfPage: canonical };
-  return <><script type="application/ld+json">{JSON.stringify(jsonLd).replace(/</g, "\\u003c")}</script><Header /><main className="flex-1"><ArticleContent article={article} /></main><Footer /></>;
+  const articlePath = `/blog/${article.slug}`;
+  const hasReliableCategory = article.categorySlug !== "" && article.categoryName !== "Blog";
+  const articleBreadcrumbItems = hasReliableCategory
+    ? [
+        { name: "Domů", path: "/" },
+        { name: "Blog", path: "/blog" },
+        { name: article.categoryName, path: `/blog/${article.categorySlug}` },
+        { name: article.title, path: articlePath },
+      ]
+    : [
+        { name: "Domů", path: "/" },
+        { name: "Blog", path: "/blog" },
+        { name: article.title, path: articlePath },
+      ];
+  const articleSchema = getBlogPostingSchema(article, canonical, articlePath);
+  const articleBreadcrumb = getBreadcrumbListSchema(articlePath, articleBreadcrumbItems);
+  return <><JsonLd data={articleSchema} /><JsonLd data={articleBreadcrumb} /><Header /><main className="flex-1"><ArticleContent article={article} /></main><Footer /></>;
 }
