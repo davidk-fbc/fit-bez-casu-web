@@ -10,6 +10,19 @@ import { UsersIcon } from "../icons";
 import { ArticleImage } from "./ArticleImage";
 import { BlogArticleCard } from "./BlogArticleCard";
 import { formatArticleDate, getRelatedArticles, type BlogArticle, type BlogBlock } from "@/lib/blog/articles";
+import { EXTERNAL_LINKS } from "@/lib/links";
+
+// "cta" blocks store their own href as free text in the CMS (blog_article_blocks.content.url),
+// authored per article - it does not read from lib/links.ts. These three exact legacy product
+// URLs are known to still be stored on existing published articles (retired "/p/..." paths that
+// now 404); rewriting them here at render time fixes every existing article immediately without
+// requiring a content edit in the CMS for each one. Anything else stored in `url` (a URL that
+// isn't one of these three) passes through unchanged.
+const LEGACY_CTA_URL_MAP: Record<string, string> = {
+  "https://www.fitbezcasu.cz/p/komunita-fit-bez-casu": EXTERNAL_LINKS.community,
+  "https://www.fitbezcasu.cz/p/jidelnicek-pro-zdrave-hubnuti": EXTERNAL_LINKS.mealPlan,
+  "https://www.fitbezcasu.cz/p/vyzva-na-cviceni": EXTERNAL_LINKS.challenge,
+};
 
 export function ArticleContent({ article, preview = false }: { article: BlogArticle; preview?: boolean }) {
   const relatedArticles = getRelatedArticles(article, 3);
@@ -55,7 +68,7 @@ export function BlogBlockRenderer({ blocks }: { blocks: BlogBlock[] }) {
   });
 }
 
-function CtaBlock({ block }: { block: BlogBlock }) { const c = block.content; const href = safeUrl(c.url); if (!href) return null; const external = href.startsWith("https://"); return <Container><div className="relative overflow-hidden rounded-[2rem] px-8 py-12 sm:px-12 sm:py-14" style={{ background: "radial-gradient(120% 160% at 100% 0%, #34179a 0%, #150746 55%, #0a0322 100%)" }}><div className="pointer-events-none absolute -right-16 -top-24 h-96 w-96 rounded-full bg-[var(--color-accent-purple)] opacity-40 blur-3xl" /><div className="relative flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between"><div className="flex flex-col gap-2"><span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple-soft)]">{text(c.eyebrow)}</span><h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">{text(c.title)}</h2><p className="max-w-xl text-sm leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-base">{text(c.text)}</p></div><Button href={href} target={c.new_window === true ? "_blank" : undefined} rel={external || c.new_window === true ? "noopener noreferrer" : undefined} variant="gradient" className="shrink-0 px-7 py-3.5">{text(c.button_label)}</Button></div></div></Container>; }
+function CtaBlock({ block }: { block: BlogBlock }) { const c = block.content; const rawHref = safeUrl(c.url); const href = rawHref ? (LEGACY_CTA_URL_MAP[rawHref] ?? rawHref) : rawHref; if (!href) return null; const external = href.startsWith("https://"); return <Container><div className="relative overflow-hidden rounded-[2rem] px-8 py-12 sm:px-12 sm:py-14" style={{ background: "radial-gradient(120% 160% at 100% 0%, #34179a 0%, #150746 55%, #0a0322 100%)" }}><div className="pointer-events-none absolute -right-16 -top-24 h-96 w-96 rounded-full bg-[var(--color-accent-purple)] opacity-40 blur-3xl" /><div className="relative flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between"><div className="flex flex-col gap-2"><span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple-soft)]">{text(c.eyebrow)}</span><h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">{text(c.title)}</h2><p className="max-w-xl text-sm leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-base">{text(c.text)}</p></div><Button href={href} target={c.new_window === true ? "_blank" : undefined} rel={external || c.new_window === true ? "noopener noreferrer" : undefined} variant="gradient" className="shrink-0 px-7 py-3.5">{text(c.button_label)}</Button></div></div></Container>; }
 
 function AuthorCard({ article }: { article: BlogArticle }) { const author = article.author!; return <aside className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-[var(--color-border-light)] bg-[var(--color-surface-muted)] p-6 sm:flex-row sm:items-center"><div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-white">{author.avatarPath ? <Image src={author.avatarPath} alt="" fill className="object-cover" sizes="64px" /> : <span className="flex h-full items-center justify-center text-xl font-bold text-[var(--color-accent-purple)]">{author.displayName.slice(0, 1)}</span>}</div><div><p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">Autor článku</p><h2 className="mt-1 text-lg font-bold text-[var(--color-text)]">{author.displayName}</h2><p className="mt-1 text-sm leading-relaxed text-[var(--color-text-muted)]">{author.bio}</p></div></aside>; }
 function text(value: unknown) { return typeof value === "string" ? value : ""; }
