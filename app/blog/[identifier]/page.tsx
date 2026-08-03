@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleContent } from "@/components/blog/ArticleContent";
 import { CategoryContent } from "@/components/blog/CategoryContent";
-import { getArticleBySlug, getArticlesByCategory, getCategoryBySlug } from "@/lib/blog/articles";
+import { getAllCategories, getArticleBySlug, getArticlesByCategory, getCategoryBySlug } from "@/lib/blog/articles";
 import { SITE_URL } from "@/lib/seo";
 
 type PageProps = { params: Promise<{ identifier: string }> };
@@ -34,8 +34,8 @@ export default async function BlogIdentifierPage({ params }: PageProps) {
   const { identifier } = await params;
   const category = await getCategoryBySlug(identifier);
   if (category) {
-    const articles = await getArticlesByCategory(category.slug);
-    return <><Header /><main className="flex-1"><CategoryContent category={category} articles={articles} /></main><Footer /></>;
+    const [articles, categories] = await Promise.all([getArticlesByCategory(category.slug), getAllCategories()]);
+    return <><Header /><main className="flex-1"><CategoryContent category={category} articles={articles} categories={categories} /></main><Footer /></>;
   }
   const article = await getArticleBySlug(identifier);
   if (!article) notFound();

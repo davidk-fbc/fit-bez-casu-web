@@ -5,16 +5,19 @@ import { CommunityCta } from "../CommunityCta";
 import { DarkSectionGlow } from "../DarkSectionGlow";
 import { EmailSignupPlaceholder } from "../EmailSignupPlaceholder";
 import { LatestArticleCard } from "./LatestArticleCard";
+import { CategoryBadges } from "./CategoryBadges";
 import type { BlogArticle, BlogCategory } from "@/lib/blog/articles";
 
 type CategoryContentProps = {
   category: BlogCategory;
   articles: BlogArticle[];
+  categories: BlogCategory[];
 };
 
 // Obsah stránky kategorie blogu: menší tmavý hero s breadcrumbem, přehled
 // všech článků dané kategorie, blok pro budoucí e-mail a CTA do komunity.
-export function CategoryContent({ category, articles }: CategoryContentProps) {
+export function CategoryContent({ category, articles, categories }: CategoryContentProps) {
+  const otherCategories = categories.filter((item) => item.slug !== category.slug);
   return (
     <>
       <section className="relative overflow-hidden bg-[var(--color-dark)]">
@@ -49,6 +52,7 @@ export function CategoryContent({ category, articles }: CategoryContentProps) {
             title={`Všechny články: ${category.name}`}
             description="Řazeno od nejnovějšího."
           />
+          <CategoryBadges categories={otherCategories} />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (
               <LatestArticleCard key={article.slug} article={article} />
