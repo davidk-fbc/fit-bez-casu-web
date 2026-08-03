@@ -40,6 +40,12 @@ const HOMEPAGE_SCHEMA = getPageSchema({
   primaryImage: true,
 });
 
+// Route-level ceiling matching the 3600s revalidate already set on
+// components/sections/LatestArticles.tsx's cached article lookup - this
+// page has no other dynamic data source of its own, so the two together
+// keep the whole route static/ISR instead of dynamic on every request.
+export const revalidate = 3600;
+
 export default function Home() {
   return (
     <>

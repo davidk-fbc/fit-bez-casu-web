@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { Button } from "../Button";
 import { Container } from "../Container";
 import { SectionHeading } from "../SectionHeading";
@@ -18,10 +19,33 @@ const HOMEPAGE_ARTICLE_SLUGS = [
   "jsem-porad-unavena",
 ] as const;
 
-async function getHomepageArticles(): Promise<BlogArticle[]> {
-  const articles = await Promise.all(HOMEPAGE_ARTICLE_SLUGS.map((slug) => getArticleBySlug(slug)));
-  return articles.filter((article): article is BlogArticle => Boolean(article));
-}
+// getArticleBySlug ultimately reaches lib/blog/articles.ts's request(), whose
+// fetch() uses cache: "no-store" - that's deliberate there (it also backs
+// /blog, categories and articles, which already force fully dynamic
+// rendering of their own). Left untouched, that no-store would make this
+// homepage section - and therefore the whole homepage, since it has no other
+// dynamic API of its own - dynamically render on every request too.
+// Wrapping just this homepage-only lookup in unstable_cache caches its
+// result independently of the inner fetch's own cache mode, so the homepage
+// can be statically generated with its own 3600s revalidation window
+// (matches app/page.tsx's `export const revalidate = 3600`) while
+// /blog/[identifier] keeps calling getArticleBySlug directly, unaffected.
+const getHomepageArticles = unstable_cache(
+  async (): Promise<BlogArticle[]> => {
+    const articles = await Promise.all(HOMEPAGE_ARTICLE_SLUGS.map((slug) => getArticleBySlug(slug)));
+    return articles
+      .filter((article): article is BlogArticle => Boolean(article))
+      // unstable_cache serializes its return value to persist it. BlogArticle's
+      // relatedArticles can hold mutual back-references between articles (A's
+      // related list includes B, whose own related list includes A back),
+      // which JSON.stringify cannot represent. This section never reads
+      // relatedArticles, so it's dropped here only - the shared data layer
+      // and every other caller keep the full, unmodified shape.
+      .map((article) => ({ ...article, relatedArticles: [] }));
+  },
+  ["homepage-latest-articles"],
+  { revalidate: 3600 }
+);
 
 export async function LatestArticles() {
   const articles = await getHomepageArticles();
