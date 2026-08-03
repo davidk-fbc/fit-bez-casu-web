@@ -5,7 +5,7 @@ import { ConsentMode } from "@/components/analytics/consent-mode";
 import { ConsentProvider } from "@/components/consent/consent-provider";
 import { ConsentBanner } from "@/components/consent/consent-banner";
 import { ConsentSettingsDialog } from "@/components/consent/consent-settings-dialog";
-import { SITE_URL } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 // Read once at module scope - NEXT_PUBLIC_* vars are inlined at build time
@@ -35,8 +35,18 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Fit bez času",
     description: "Pomáháme ženám cítit se lépe ve svém těle, i když mají plný diář.",
+    siteName: "Fit bez času",
     locale: "cs_CZ",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
+  },
+  // Every route segment below inherits this as-is unless it defines its own
+  // `twitter` object (none currently do except blog articles) - see
+  // lib/seo.ts's DEFAULT_OG_IMAGE comment and the audit notes in this repo's
+  // SEO report for why this only needs to be declared once here.
+  twitter: {
+    card: "summary_large_image",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { ArticleContent } from "@/components/blog/ArticleContent";
 import { CategoryContent } from "@/components/blog/CategoryContent";
 import { getAllCategories, getArticleBySlug, getArticlesByCategory, getCategoryBySlug } from "@/lib/blog/articles";
-import { SITE_URL } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 type PageProps = { params: Promise<{ identifier: string }> };
 export const dynamic = "force-dynamic";
@@ -16,17 +16,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const category = await getCategoryBySlug(identifier);
   if (category) {
     const canonicalPath = `/blog/${category.slug}`;
-    return { title: `${category.name} | Blog Fit bez času`, description: category.description, alternates: { canonical: canonicalPath }, openGraph: { title: `${category.name} | Blog Fit bez času`, description: category.description, url: canonicalPath, locale: "cs_CZ", type: "website" } };
+    return { title: `${category.name} | Blog Fit bez času`, description: category.description, alternates: { canonical: canonicalPath }, openGraph: { title: `${category.name} | Blog Fit bez času`, description: category.description, url: canonicalPath, locale: "cs_CZ", type: "website", images: [DEFAULT_OG_IMAGE] } };
   }
   const article = await getArticleBySlug(identifier);
   if (!article) notFound();
   const canonical = article.canonicalUrl ?? `${SITE_URL}/blog/${article.slug}`;
-  const images = article.socialImageUrl ? [{ url: article.socialImageUrl, alt: article.featuredImageAlt }] : undefined;
+  const images = article.socialImageUrl ? [{ url: article.socialImageUrl, alt: article.featuredImageAlt }] : [DEFAULT_OG_IMAGE];
   return {
     title: `${article.seoTitle} | Fit bez času`, description: article.seoDescription,
     alternates: { canonical }, robots: article.indexingEnabled ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: { title: article.seoTitle, description: article.seoDescription, url: canonical, locale: "cs_CZ", type: "article", publishedTime: article.publishedAt, modifiedTime: article.updatedAt, authors: article.author ? [article.author.displayName] : undefined, images },
-    twitter: { card: article.socialImageUrl ? "summary_large_image" : "summary", title: article.seoTitle, description: article.seoDescription, images: article.socialImageUrl ? [article.socialImageUrl] : undefined },
+    twitter: { card: "summary_large_image", title: article.seoTitle, description: article.seoDescription, images },
   };
 }
 

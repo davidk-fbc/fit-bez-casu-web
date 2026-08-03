@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { CommunityCta } from "@/components/CommunityCta";
 import { AboutHero } from "@/components/sections/AboutHero";
 import { AboutStoryBlock } from "@/components/AboutStoryBlock";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "O nás | Fit bez času",
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     url: "/o-nas",
     locale: "cs_CZ",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

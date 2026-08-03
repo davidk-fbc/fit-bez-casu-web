@@ -10,6 +10,7 @@ import { CategoryBadges } from "@/components/blog/CategoryBadges";
 import { LatestArticleCard } from "@/components/blog/LatestArticleCard";
 import { SimpleArticleCard } from "@/components/blog/SimpleArticleCard";
 import { getAllCategories, getLatestArticles, getRecommendedArticles } from "@/lib/blog/articles";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Blog | Fit bez času",
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     url: "/blog",
     locale: "cs_CZ",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

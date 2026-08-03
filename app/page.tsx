@@ -8,6 +8,7 @@ import { HowWeHelp } from "@/components/sections/HowWeHelp";
 import { AppShowcase } from "@/components/sections/AppShowcase";
 import { AboutUs } from "@/components/sections/AboutUs";
 import { LatestArticles } from "@/components/sections/LatestArticles";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 // Title intentionally omitted - inherited as-is from the root layout's
 // metadata. openGraph.description is homepage-specific (not inherited) and
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     url: "/",
     locale: "cs_CZ",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
