@@ -4,7 +4,7 @@ import test from "node:test";
 
 // Node's built-in TypeScript test runner needs the explicit extension.
 // @ts-expect-error TS5097 is intentionally limited to this Node-only test entry.
-import { formatArticleDate, normalizeLongDescription, splitIntoParagraphs } from "./articles.ts";
+import { formatArticleDate, getAuthorProfileUrl, normalizeLongDescription, splitIntoParagraphs } from "./articles.ts";
 
 test("formats article dates consistently in Czech", () => {
   assert.equal(formatArticleDate("2026-07-29T12:00:00Z"), "29. července 2026");
@@ -57,4 +57,24 @@ test("category page only renders the expanded section when there is real content
   const source = await readFile(new URL("../../components/blog/CategoryContent.tsx", import.meta.url), "utf8");
   assert.match(source, /longDescriptionParagraphs\.length > 0/);
   assert.doesNotMatch(source, /dangerouslySetInnerHTML/);
+});
+
+test("getAuthorProfileUrl maps the Fit bez času brand author to /o-nas", () => {
+  assert.equal(getAuthorProfileUrl({ id: "a", displayName: "Fit bez času", bio: "", avatarPath: null }), "/o-nas");
+});
+
+test("getAuthorProfileUrl never invents a profile page for any other author name", () => {
+  assert.equal(getAuthorProfileUrl({ id: "b", displayName: "Klárka a David", bio: "", avatarPath: null }), null);
+  assert.equal(getAuthorProfileUrl({ id: "c", displayName: "Někdo jiný", bio: "", avatarPath: null }), null);
+});
+
+test("article detail renders the author name as a Link only when a profile url exists, never a dedicated /blog/autor page", async () => {
+  const source = await readFile(new URL("../../components/blog/ArticleContent.tsx", import.meta.url), "utf8");
+  const heroLink = source.match(/authorProfileUrl \? <Link href={authorProfileUrl} className="[^"]*">/)?.[0];
+  const cardLink = source.match(/profileUrl \? <Link href={profileUrl} className="[^"]*">/)?.[0];
+  assert.ok(heroLink, "expected the hero meta row to conditionally render an author Link");
+  assert.ok(cardLink, "expected the AuthorCard heading to conditionally render an author Link");
+  assert.doesNotMatch(heroLink ?? "", /target=/);
+  assert.doesNotMatch(cardLink ?? "", /target=/);
+  assert.doesNotMatch(source, /\/blog\/autor/);
 });

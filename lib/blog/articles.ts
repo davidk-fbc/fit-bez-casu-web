@@ -1,4 +1,9 @@
 import { cache } from "react";
+// Extensioned relative import required so this file still resolves when
+// lib/blog/articles.test.ts runs it directly via Node's native test runner
+// (see the same pattern/rationale in lib/structured-data.ts).
+// @ts-expect-error TS5097
+import { SITE_NAME } from "../seo.ts";
 
 export type CategorySlug = string;
 export type ArticleCtaType = "challenge" | "meal-plan" | "community";
@@ -80,6 +85,16 @@ export function splitIntoParagraphs(text: string): string[] {
     .split(/\n\s*\n/u)
     .map((paragraph) => paragraph.trim())
     .filter((paragraph) => paragraph.length > 0);
+}
+
+// "Fit bez času" publishes under the brand's own name rather than a named
+// person, so it is the one author with a real public profile: the /o-nas
+// page. There is no dedicated per-author URL column in blog_authors (and
+// none is added here for a single internal link) - the mapping is done
+// purely by display name, which also means any other author name safely
+// gets no profile link instead of an invented one.
+export function getAuthorProfileUrl(author: BlogAuthor): string | null {
+  return author.displayName === SITE_NAME ? "/o-nas" : null;
 }
 
 function publicImageUrl(path: string | null) {
