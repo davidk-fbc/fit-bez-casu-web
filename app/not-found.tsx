@@ -62,7 +62,7 @@ export default function NotFound() {
 
             <div className="mt-8 flex flex-col items-center gap-4">
               <p className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-on-dark-muted)]">
-                Nebo si vyber téma
+                Nebo pokračuj tématem, které tě zajímá
               </p>
               <ul className="flex flex-wrap justify-center gap-3">
                 {CATEGORIES.map((category) => (
