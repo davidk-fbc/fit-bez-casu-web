@@ -9,23 +9,46 @@ import { AppShowcase } from "@/components/sections/AppShowcase";
 import { AboutUs } from "@/components/sections/AboutUs";
 import { LatestArticles } from "@/components/sections/LatestArticles";
 import { JsonLd } from "@/components/JsonLd";
-import { DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
-import { getPageSchema } from "@/lib/structured-data";
+import { DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
+import { absoluteUrl, getPageSchema } from "@/lib/structured-data";
 
-// Title intentionally omitted - inherited as-is from the root layout's
-// metadata. openGraph.description is homepage-specific (not inherited) and
-// is kept in sync with the actual visible Hero message below - the root
-// layout's own description is left untouched since it is shared by every
-// page, not homepage-only.
+// The root layout has no title template (each page sets its own full,
+// literal title - see app/blog/(index)/page.tsx and app/o-nas/page.tsx for
+// the same "X | Fit bez času" convention), so this is assigned as a plain
+// string, never title.absolute - there is no template to override.
+const PAGE_TITLE = "Fit bez času | Hubnutí, jídelníček a cvičení pro ženy";
+// Kept in sync with what the homepage actually offers (Hero's own promise
+// below is "jasný systém pro jídlo, krátká cvičení a podporu komunity" -
+// this is the same offer in SEO-friendly phrasing, not invented copy).
+const PAGE_DESCRIPTION =
+  "Pomáháme ženám, které mají málo času, zhubnout bez diet a extrémů. Najdeš tu jídelníček, krátká cvičení, praktické tipy a podporu komunity Fit bez času.";
+// Same absolute URL reused for canonical, openGraph.url and the WebPage
+// JSON-LD below, so all three always agree. Note: Next.js's own metadata
+// resolver (resolveAbsoluteUrlWithPathname in next/dist/lib/metadata/
+// resolvers/resolve-url.js) always renders the *root* path's resolved
+// canonical/og:url without a trailing slash (using `origin`, not `href`)
+// unless next.config's `trailingSlash` is enabled project-wide - passing an
+// absolute vs. relative "/" here makes no difference to that. The WebPage
+// JSON-LD is unaffected (it doesn't go through that resolver) and keeps its
+// trailing slash.
+const PAGE_URL = absoluteUrl("/");
+
+// title/description are set directly here (the root layout's own title/
+// description are the shared fallback for every other page, not homepage-
+// only) - openGraph is its own full object because Next.js does not merge
+// nested metadata objects key-by-key, it replaces them, so every field the
+// root layout's openGraph sets (siteName included) must be repeated here.
 export const metadata: Metadata = {
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   alternates: {
-    canonical: "/",
+    canonical: PAGE_URL,
   },
   openGraph: {
-    title: "Fit bez času",
-    description:
-      "Pomáháme ženám, které mají málo času, zhubnout a cítit se lépe bez diet, výčitek a začínání pořád od nuly.",
-    url: "/",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: PAGE_URL,
+    siteName: SITE_NAME,
     locale: "cs_CZ",
     type: "website",
     images: [DEFAULT_OG_IMAGE],
@@ -35,8 +58,8 @@ export const metadata: Metadata = {
 const HOMEPAGE_SCHEMA = getPageSchema({
   type: "WebPage",
   path: "/",
-  name: SITE_NAME,
-  description: SITE_DESCRIPTION,
+  name: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   primaryImage: true,
 });
 
