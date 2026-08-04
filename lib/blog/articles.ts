@@ -97,6 +97,42 @@ export function getAuthorProfileUrl(author: BlogAuthor): string | null {
   return author.displayName === SITE_NAME ? "/o-nas" : null;
 }
 
+// Only `/blog/{slug}` article/category paths are ever considered safe here -
+// no protocol, no protocol-relative `//`, no backslash, no control
+// characters, nothing outside this exact allow-listed shape. Anything else
+// (an external URL, `javascript:`, `data:`, a malformed path) fails this
+// check and the caller falls back to plain text instead of a link.
+export function isSafeInternalArticleUrl(url: string): boolean {
+  return /^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(url);
+}
+
+export type ParsedTextSegment = { type: "text"; value: string } | { type: "link"; label: string; href: string };
+
+// Parses the one supported inline-link syntax allowed inside a paragraph
+// block's plain-text `content.text`: `[anchor text](/blog/target-slug)`.
+// This is intentionally not a general Markdown parser - it only recognizes
+// this single bracket-paren shape, and only turns it into a `link` segment
+// when both the label is non-empty and the href passes
+// isSafeInternalArticleUrl. Anything else (no match, empty label, unsafe
+// href, a malformed/unclosed tag) is preserved byte-for-byte as a `text`
+// segment, so a broken or rejected link never disappears or gets mangled -
+// it just renders as the original plain text.
+export function parseInternalArticleLinks(value: string): ParsedTextSegment[] {
+  const pattern = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+  const segments: ParsedTextSegment[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(value)) !== null) {
+    const [full, rawLabel, href] = match;
+    if (match.index > lastIndex) segments.push({ type: "text", value: value.slice(lastIndex, match.index) });
+    const label = rawLabel.trim();
+    segments.push(label.length > 0 && isSafeInternalArticleUrl(href) ? { type: "link", label, href } : { type: "text", value: full });
+    lastIndex = match.index + full.length;
+  }
+  if (lastIndex < value.length) segments.push({ type: "text", value: value.slice(lastIndex) });
+  return segments;
+}
+
 function publicImageUrl(path: string | null) {
   if (!path) return null;
   if (path.startsWith("/")) return path;

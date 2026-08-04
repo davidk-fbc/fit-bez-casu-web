@@ -9,7 +9,7 @@ import { DarkSectionGlow } from "../DarkSectionGlow";
 import { UsersIcon } from "../icons";
 import { ArticleImage } from "./ArticleImage";
 import { BlogArticleCard } from "./BlogArticleCard";
-import { formatArticleDate, getAuthorProfileUrl, getRelatedArticles, type BlogArticle, type BlogBlock } from "@/lib/blog/articles";
+import { formatArticleDate, getAuthorProfileUrl, getRelatedArticles, parseInternalArticleLinks, type BlogArticle, type BlogBlock } from "@/lib/blog/articles";
 import { EXTERNAL_LINKS } from "@/lib/links";
 
 // "cta" blocks store their own href as free text in the CMS (blog_article_blocks.content.url),
@@ -44,7 +44,7 @@ export function ArticleContent({ article, preview = false }: { article: BlogArti
 export function BlogBlockRenderer({ blocks }: { blocks: BlogBlock[] }) {
   return blocks.map((block) => {
     const c = block.content;
-    if (block.type === "paragraph") return text(c.text).split(/\n\s*\n/u).filter(Boolean).map((paragraph, index) => <p key={`${block.id}-${index}`} className="whitespace-pre-line text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">{paragraph}</p>);
+    if (block.type === "paragraph") return text(c.text).split(/\n\s*\n/u).filter(Boolean).map((paragraph, index) => <p key={`${block.id}-${index}`} className="whitespace-pre-line text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">{parseInternalArticleLinks(paragraph).map((segment, segIndex) => segment.type === "link" ? <Link key={segIndex} href={segment.href} className="font-semibold text-[var(--color-accent-purple)] underline decoration-2 underline-offset-4 transition hover:text-[var(--color-accent-purple-soft)] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-purple)]">{segment.label}</Link> : segment.value)}</p>);
     if (block.type === "heading") { const Tag = c.level === "h3" ? "h3" : "h2"; const anchor = safeAnchor(c.anchor); return <Tag key={block.id} id={anchor || undefined} className={Tag === "h2" ? "mt-4 scroll-mt-24 text-2xl font-bold tracking-tight text-[var(--color-text)]" : "mt-3 scroll-mt-24 text-xl font-bold tracking-tight text-[var(--color-text)]"}>{text(c.text)}</Tag>; }
     if (block.type === "highlight") return <blockquote key={block.id} className="border-l-4 border-[var(--color-accent-purple)] pl-6 text-lg font-semibold italic leading-relaxed text-[var(--color-text)]">{text(c.text)}</blockquote>;
     if (block.type === "bullet_list") return <ul key={block.id} className="flex list-disc flex-col gap-2 pl-6 text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">{strings(c.items).map((item, index) => <li key={index}>{item}</li>)}</ul>;
