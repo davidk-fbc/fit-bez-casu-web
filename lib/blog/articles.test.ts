@@ -79,6 +79,41 @@ test("article detail renders the author name as a Link only when a profile url e
   assert.doesNotMatch(source, /\/blog\/autor/);
 });
 
+test("AuthorCard shows the real brand logo for the Fit bez času author instead of a letter avatar", async () => {
+  const source = await readFile(new URL("../../components/blog/ArticleContent.tsx", import.meta.url), "utf8");
+  const authorCard = source.match(/function AuthorCard.+/)?.[0] ?? "";
+  assert.match(authorCard, /isBrandAuthor = author\.displayName === SITE_NAME/);
+  assert.match(authorCard, /src="\/images\/brand\/logo-fbc\.png"/);
+  assert.match(authorCard, /alt="Fit bez času"/);
+  // The letter-fallback (first character of the display name) must still
+  // exist for any other, real named author with no avatar of their own.
+  assert.match(authorCard, /author\.displayName\.slice\(0, 1\)/);
+});
+
+test("share box has the new, more specific copy and a real functional share button, not just informational text", async () => {
+  const source = await readFile(new URL("../../components/blog/ArticleContent.tsx", import.meta.url), "utf8");
+  assert.match(source, /Pošli článek někomu, komu může pomoct/);
+  assert.doesNotMatch(source, /Sdílej článek, pokud může pomoct někomu dalšímu/);
+  assert.match(source, /<ShareArticleButton articleTitle={article\.title} \/>/);
+});
+
+test("ShareArticleButton is a small isolated client component using the Web Share API with a clipboard fallback", async () => {
+  const source = await readFile(new URL("../../components/blog/ShareArticleButton.tsx", import.meta.url), "utf8");
+  assert.match(source, /^"use client";/);
+  assert.match(source, /navigator\.share/);
+  assert.match(source, /navigator\.clipboard\.writeText/);
+  assert.match(source, /window\.location\.href/);
+  assert.doesNotMatch(source, /https:\/\/web\.fitbezcasu\.cz/, "must never hardcode the domain - always use the page's own current URL");
+  assert.match(source, /<button\s/);
+  assert.match(source, /type="button"/);
+  assert.doesNotMatch(source, /target="_blank"/);
+  assert.match(source, /aria-live="polite"/);
+  assert.match(source, /"Sdílet článek"/);
+  assert.match(source, /"Odkaz zkopírován"/);
+  assert.match(source, /"Odkaz se nepodařilo zkopírovat"/);
+  assert.doesNotMatch(source, /\balert\(/);
+});
+
 test("isSafeInternalArticleUrl accepts only a plain /blog/{slug} shape", () => {
   assert.equal(isSafeInternalArticleUrl("/blog/jak-zacit-cvicit-kdyz-nemas-cas"), true);
   assert.equal(isSafeInternalArticleUrl("/blog/a"), true);

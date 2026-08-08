@@ -177,6 +177,17 @@ export function UsersIcon({ className }: IconProps) {
   );
 }
 
+export function ShareIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden="true">
+      <circle cx="18" cy="5" r="2.5" />
+      <circle cx="6" cy="12" r="2.5" />
+      <circle cx="18" cy="19" r="2.5" />
+      <path d="M8.3 10.7 15.7 6.6M8.3 13.3l7.4 4.4" />
+    </svg>
+  );
+}
+
 export function FacebookIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
