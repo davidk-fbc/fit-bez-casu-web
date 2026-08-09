@@ -138,6 +138,90 @@ test("personal diet review copy contains all six requested benefits and preserve
   assert.doesNotMatch(supportCopy, /targetSlug:\s*"nabidka-podpory\/osobni-rozbor/);
 });
 
+test("personal diet review detail has the approved hero, audience and price", () => {
+  for (const text of [
+    "PŘESTAŇ HÁDAT, CO DĚLÁŠ ŠPATNĚ",
+    "Zjisti, co ve tvém jídelníčku opravdu brzdí výsledky",
+    "Možná se snažíš jíst lépe, hlídáš si porce a vybíráš zdravější jídla.",
+    "Z pěti běžných dní zjistíme, kde může být skutečný problém, co už děláš dobře",
+    "Je osobní rozbor vhodný právě pro tebe?",
+    "490 Kč",
+  ]) assert.ok(supportCopy.includes(text), `missing personal diet review copy: ${text}`);
+  for (const text of [
+    "Snažíš se jíst zdravě, ale nejsi si jistá, jestli máš jídelníček sestavený správně.",
+    "Nevíš, proč máš během dne hlad, chutě nebo potřebu večer něco dojíst.",
+    "Máš za sebou několik pokusů, ale nechceš znovu začínat další přísnou dietou.",
+    "Potřebuješ odlišit důležité chyby od drobností, které teď nemusíš řešit.",
+    "Chceš konkrétní doporučení podle svého skutečného jídelníčku, ne další obecný návod.",
+  ]) assert.ok(supportCopy.includes(text), `missing audience point: ${text}`);
+  assert.match(renderer, /<PersonalDietReviewHeroCopy \/>/);
+  assert.match(renderer, /<h1 className=/);
+  assert.equal((renderer.match(/<h1 /g) ?? []).length, 1);
+});
+
+test("personal diet review detail contains all six outcomes and all five process steps", () => {
+  for (const title of [
+    "Zhodnocení pěti běžných dní",
+    "3 věci, které už děláš dobře",
+    "3 hlavní brzdy",
+    "3 konkrétní první kroky",
+    "Akční plán na 7 dní",
+    "Osobní výstup",
+  ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing outcome: ${title}`);
+  for (const title of [
+    "Vyplníš vstupní dotazník",
+    "Zapíšeš pět běžných dní",
+    "Podklady důkladně projdeme",
+    "Dostaneš osobní rozbor",
+    "Začneš třemi jasnými kroky",
+  ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing process step: ${title}`);
+  assert.match(supportCopy, /Na konci nebudeš mít jen seznam toho, co děláš špatně/);
+  assert.match(renderer, /<DetailList items=\{content\.process\} numbered \/>/);
+});
+
+test("personal diet review has the approved purchase, FAQ and final CTA blocks", () => {
+  assert.match(supportCopy, /purchaseTitle: "Osobní rozbor jídelníčku za 490 Kč"/);
+  for (const item of [
+    "Zhodnocení 5 běžných dní",
+    "3 věci, které už děláš dobře",
+    "3 hlavní brzdy",
+    "3 konkrétní první kroky",
+    "Akční plán na 7 dní",
+    "Přehledný osobní výstup",
+  ]) assert.ok(supportCopy.includes(`"${item}"`), `missing purchase item: ${item}`);
+  for (const question of [
+    "Co vám budu posílat?",
+    "Musím si kvůli rozboru všechno připravit „ukázkově“?",
+    "Mám zaznamenat i víkend?",
+    "Dostanu jen seznam chyb?",
+    "Je rozbor vhodný, i když už si hlídám kalorie?",
+    "Je osobní rozbor vhodný při zdravotních problémech?",
+  ]) assert.ok(supportCopy.includes(`question: "${question}"`), `missing FAQ question: ${question}`);
+  assert.match(renderer, /<dl className=/);
+  assert.match(renderer, /<dt className=/);
+  assert.match(renderer, /<dd className=/);
+  assert.match(supportCopy, /Nemusíš jíst dokonale\. Potřebuješ vědět, co má smysl řešit jako první\./);
+  assert.match(supportCopy, /Chceš konečně vědět, co ve svém jídelníčku změnit\?/);
+  assert.doesNotMatch(supportCopy, /doba dodání|dobu dodání/iu);
+});
+
+test("all personal diet review purchase CTAs reuse the existing resolved sales link", () => {
+  assert.match(renderer, /personalDietReviewCtaUrl = personalDietReview\?\.cta\.active \? page\.salesLinks\[personalDietReview\.cta\.salesLinkKey\]/);
+  assert.match(renderer, /const ctaUrl = content\.cta\.active \? page\.salesLinks\[content\.cta\.salesLinkKey\]/);
+  assert.match(renderer, /<PersonalDietReviewCta href=\{personalDietReviewCtaUrl\}/);
+  assert.equal((renderer.match(/<PersonalDietReviewCta href=\{ctaUrl\}/g) ?? []).length, 2);
+  assert.match(renderer, /Chci svůj osobní rozbor/);
+  assert.doesNotMatch(renderer, /form\.simpleshop\.cz/);
+});
+
+test("personal diet review preserves its disclaimer and responsive safeguards", () => {
+  assert.match(renderer, /content\.additionalInfo \? <p className="rounded-2xl/);
+  assert.match(renderer, /overflow-hidden bg-white/);
+  assert.match(renderer, /min-w-0 break-words/);
+  assert.match(renderer, /w-full justify-center sm:w-auto sm:min-w-80/);
+  assert.match(renderer, /min-h-14/);
+});
+
 test("four-week support copy contains all six requested benefits including WhatsApp", () => {
   for (const text of [
     "Pravidelnou týdenní zpětnou vazbu",

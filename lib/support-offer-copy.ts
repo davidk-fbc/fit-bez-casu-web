@@ -1,6 +1,7 @@
-import type { OverviewCard, OverviewContent, PrivatePage } from "@/lib/private-pages";
+import type { OverviewCard, OverviewContent, PrivatePage, ServiceDetailContent } from "@/lib/private-pages";
 
 export const SUPPORT_OFFER_SLUG = "nabidka-podpory";
+export const PERSONAL_DIET_REVIEW_SLUG = "nabidka-podpory/osobni-rozbor-jidelnicku";
 export const SUPPORT_OFFER_TITLE = "Potřebuješ poradit s tím, co řešíš právě teď?";
 export const SUPPORT_OFFER_SUBTITLE =
   "Nemusíš na všechno přicházet sama. Vyber si podle toho, jestli chceš jednorázově zjistit, co můžeš ve svém jídelníčku zlepšit, nebo chceš průběžnou podporu během několika týdnů.";
@@ -32,6 +33,30 @@ export type SupportOfferPage = Omit<PrivatePage, "content" | "pageType"> & {
   pageType: "support_overview";
   content: SupportOfferOverviewContent;
 };
+
+export type PersonalDietReviewContent = ServiceDetailContent & {
+  benefitsIntro: string;
+  purchaseTitle: string;
+  purchaseText: string;
+  purchaseItems: string[];
+  purchaseSupportText: string;
+  faq: Array<{ question: string; answer: string }>;
+  finalTitle: string;
+  finalText: string;
+  finalCtaTitle: string;
+  finalPriceText: string;
+  heroCtaSupportText: string;
+};
+
+export type PersonalDietReviewPage = Omit<PrivatePage, "content" | "pageType"> & {
+  pageType: "service_detail";
+  content: PersonalDietReviewContent;
+};
+
+const PERSONAL_DIET_REVIEW_CTA_LABEL = "Chci svůj osobní rozbor";
+const PERSONAL_DIET_REVIEW_PRICE = "490 Kč";
+const PERSONAL_DIET_REVIEW_SUPPORT_TEXT =
+  "Po objednávce ti pošleme vstupní dotazník a přesný postup pro zapsání pěti dní.";
 
 const CARD_COPY: Record<OverviewCard["variant"], Omit<SupportOfferCard, keyof OverviewCard>> = {
   light: {
@@ -72,6 +97,10 @@ const CARD_COPY: Record<OverviewCard["variant"], Omit<SupportOfferCard, keyof Ov
 };
 
 export function applySupportOfferCopy(page: PrivatePage): PrivatePage {
+  if (page.pageType === "service_detail" && page.slug === PERSONAL_DIET_REVIEW_SLUG) {
+    return applyPersonalDietReviewCopy(page);
+  }
+
   if (page.pageType !== "support_overview" || page.slug !== SUPPORT_OFFER_SLUG) return page;
 
   const content = page.content as OverviewContent;
@@ -94,6 +123,157 @@ export function applySupportOfferCopy(page: PrivatePage): PrivatePage {
       cards,
     },
   } satisfies SupportOfferPage;
+}
+
+export function isPersonalDietReviewPage(page: PrivatePage): page is PersonalDietReviewPage {
+  return page.pageType === "service_detail" && page.slug === PERSONAL_DIET_REVIEW_SLUG;
+}
+
+function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage {
+  const content = page.content as ServiceDetailContent;
+
+  return {
+    ...page,
+    pageType: "service_detail",
+    title: "Zjisti, co ve tvém jídelníčku opravdu brzdí výsledky",
+    subtitle:
+      "Možná se snažíš jíst lépe, hlídáš si porce a vybíráš zdravější jídla. Přesto máš večer hlad, honí tě chutě nebo se váha nehýbe tak, jak sis představovala.\n\nZ pěti běžných dní zjistíme, kde může být skutečný problém, co už děláš dobře a které změny pro tebe mají největší smysl.",
+    content: {
+      ...content,
+      eyebrow: "PŘESTAŇ HÁDAT, CO DĚLÁŠ ŠPATNĚ",
+      sections: {
+        ...content.sections,
+        audience: true,
+        benefits: true,
+        process: true,
+        inclusions: false,
+        price: true,
+        cta: true,
+      },
+      audienceTitle: "Je osobní rozbor vhodný právě pro tebe?",
+      audience: [
+        "Snažíš se jíst zdravě, ale nejsi si jistá, jestli máš jídelníček sestavený správně.",
+        "Nevíš, proč máš během dne hlad, chutě nebo potřebu večer něco dojíst.",
+        "Máš za sebou několik pokusů, ale nechceš znovu začínat další přísnou dietou.",
+        "Potřebuješ odlišit důležité chyby od drobností, které teď nemusíš řešit.",
+        "Chceš konkrétní doporučení podle svého skutečného jídelníčku, ne další obecný návod.",
+      ],
+      benefitsTitle: "Co přesně z rozboru získáš",
+      benefitsIntro:
+        "Na konci nebudeš mít jen seznam toho, co děláš špatně. Budeš vědět, co ponechat, co změnit a na co se zaměřit jako první.",
+      benefits: [
+        {
+          title: "Zhodnocení pěti běžných dní",
+          text: "Nebudeme hodnotit jeden ukázkový „dokonalý“ den. Podíváme se na to, jak jíš v práci, doma, během náročnějších dní i o víkendu.",
+        },
+        {
+          title: "3 věci, které už děláš dobře",
+          text: "Nezačneš s pocitem, že musíš všechno překopat. Ukážeme ti, na čem už můžeš stavět.",
+        },
+        {
+          title: "3 hlavní brzdy",
+          text: "Pojmenujeme problémy, které mohou mít největší vliv na hlad, chutě, energii nebo hubnutí.",
+        },
+        {
+          title: "3 konkrétní první kroky",
+          text: "Dostaneš změny, které můžeš začít používat hned. Žádný seznam dvaceti pravidel, který tě jen zahltí.",
+        },
+        {
+          title: "Akční plán na 7 dní",
+          text: "Budeš přesně vědět, na co se během následujícího týdne zaměřit a co si v praxi vyzkoušet.",
+        },
+        {
+          title: "Osobní výstup",
+          text: "Všechno dostaneš přehledně sepsané, aby ses k doporučením mohla kdykoliv vrátit.",
+        },
+      ],
+      processTitle: "Jak osobní rozbor probíhá",
+      process: [
+        {
+          title: "Vyplníš vstupní dotazník",
+          text: "Napíšeš nám svůj cíl, běžný režim, zkušenosti, omezení a to, s čím si teď nejvíc nevíš rady.",
+        },
+        {
+          title: "Zapíšeš pět běžných dní",
+          text: "Nechceme pět dokonale připravených dní. Potřebujeme vidět realitu, ze které můžeme vycházet.",
+        },
+        {
+          title: "Podklady důkladně projdeme",
+          text: "Budeme hledat opakující se souvislosti, slabá místa i věci, které už máš nastavené dobře.",
+        },
+        {
+          title: "Dostaneš osobní rozbor",
+          text: "Ne obecné rady pro každého, ale zpětnou vazbu postavenou na tvém jídelníčku a běžném životě.",
+        },
+        {
+          title: "Začneš třemi jasnými kroky",
+          text: "Nebudeš muset měnit všechno najednou. Začneš tím, co pro tebe může mít největší přínos.",
+        },
+      ],
+      closingTitle: "",
+      closingText: "",
+      objectionTitle: "",
+      objectionText: "",
+      price: PERSONAL_DIET_REVIEW_PRICE,
+      cta: {
+        ...content.cta,
+        active: true,
+        label: PERSONAL_DIET_REVIEW_CTA_LABEL,
+      },
+      buttonNote: PERSONAL_DIET_REVIEW_SUPPORT_TEXT,
+      heroCtaSupportText:
+        "Osobní rozbor jídelníčku za 490 Kč. Po objednávce ti pošleme vstupní dotazník a přesný postup.",
+      purchaseTitle: "Osobní rozbor jídelníčku za 490 Kč",
+      purchaseText:
+        "Za jednu cenu získáš kompletní zhodnocení pěti běžných dní a konkrétní doporučení, se kterými můžeš začít pracovat hned.",
+      purchaseItems: [
+        "Zhodnocení 5 běžných dní",
+        "3 věci, které už děláš dobře",
+        "3 hlavní brzdy",
+        "3 konkrétní první kroky",
+        "Akční plán na 7 dní",
+        "Přehledný osobní výstup",
+      ],
+      purchaseSupportText: PERSONAL_DIET_REVIEW_SUPPORT_TEXT,
+      faq: [
+        {
+          question: "Co vám budu posílat?",
+          answer:
+            "Po objednávce dostaneš vstupní dotazník a přesné instrukce k zapisování. Následně nám pošleš záznam pěti běžných dní, abychom viděli, jak vypadá tvoje stravování v reálném životě.",
+        },
+        {
+          question: "Musím si kvůli rozboru všechno připravit „ukázkově“?",
+          answer:
+            "Ne. Právě naopak. Potřebujeme vidět běžné dny tak, jak skutečně vypadají. Jen tak dokážeme najít věci, které mají smysl řešit právě u tebe.",
+        },
+        {
+          question: "Mám zaznamenat i víkend?",
+          answer:
+            "Ano, ideální je, aby mezi pěti dny byl alespoň jeden víkendový den. Víkend často vypadá jinak než pracovní týden a pro celkový obrázek je důležitý.",
+        },
+        {
+          question: "Dostanu jen seznam chyb?",
+          answer:
+            "Ne. Součástí rozboru jsou také věci, které už děláš dobře. Cílem není překopat celý jídelníček, ale najít několik změn, které pro tebe mohou mít největší přínos.",
+        },
+        {
+          question: "Je rozbor vhodný, i když už si hlídám kalorie?",
+          answer:
+            "Ano. Samotný energetický příjem je jen jedna část celého obrazu. Podíváme se také na rozložení jídel během dne, skladbu jídelníčku a další souvislosti, které mohou ovlivňovat hlad, chutě, energii nebo to, jak se ti plán dlouhodobě dodržuje.",
+        },
+        {
+          question: "Je osobní rozbor vhodný při zdravotních problémech?",
+          answer:
+            "Osobní rozbor je praktickým zhodnocením běžného jídelníčku. Nenahrazuje lékařskou péči ani individuální doporučení nutričního terapeuta při zdravotních obtížích.",
+        },
+      ],
+      finalTitle: "Nemusíš jíst dokonale. Potřebuješ vědět, co má smysl řešit jako první.",
+      finalText:
+        "Rozbor ti nedá další přísný režim ani seznam zákazů. Dá ti jasno v tom, co už funguje, co upravit a kde začít, aby ses nemusela snažit měnit všechno najednou.",
+      finalCtaTitle: "Chceš konečně vědět, co ve svém jídelníčku změnit?",
+      finalPriceText: "Osobní rozbor jídelníčku za 490 Kč",
+    },
+  };
 }
 
 export function isSupportOfferPage(page: PrivatePage): page is SupportOfferPage {
