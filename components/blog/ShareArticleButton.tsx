@@ -11,8 +11,21 @@ const LABELS: Record<ShareStatus, string> = {
   error: "Odkaz se nepodařilo zkopírovat",
 };
 
-const SOCIAL_ICON_CLASS =
-  "flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-light)] bg-white text-[var(--color-text-muted)] transition hover:border-[var(--color-accent-purple)] hover:text-[var(--color-accent-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-purple)]";
+// Shared layout, size and focus-visible treatment - identical to before,
+// unrelated to which network a link is for. Only background/border/icon
+// color are network-specific (see SOCIAL_ICON_VARIANT below).
+const SOCIAL_ICON_BASE =
+  "flex h-9 w-9 items-center justify-center rounded-full border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-purple)]";
+
+// Very light per-network tint (~8% background, ~20% border) so the 3
+// icons are distinguishable at a glance without competing with the main
+// gradient button - hover only turns the same tint slightly stronger,
+// never a color swap.
+const SOCIAL_ICON_VARIANT = {
+  facebook: "border-[#1877F2]/20 bg-[#1877F2]/8 text-[#1877F2] hover:border-[#1877F2]/35 hover:bg-[#1877F2]/14",
+  linkedin: "border-[#0A66C2]/20 bg-[#0A66C2]/8 text-[#0A66C2] hover:border-[#0A66C2]/35 hover:bg-[#0A66C2]/14",
+  whatsapp: "border-[#25D366]/20 bg-[#25D366]/8 text-[#25D366] hover:border-[#25D366]/35 hover:bg-[#25D366]/14",
+};
 
 // The current page URL never changes for the lifetime of this component
 // (a new article page is a fresh mount), so there is nothing to subscribe
@@ -86,13 +99,13 @@ export function ShareArticleButton({ articleTitle }: { articleTitle: string }) {
       </button>
 
       <div className="flex items-center gap-2">
-        <a href={facebookHref} target="_blank" rel="noopener noreferrer" aria-label="Sdílet na Facebooku" className={SOCIAL_ICON_CLASS}>
+        <a href={facebookHref} target="_blank" rel="noopener noreferrer" aria-label="Sdílet na Facebooku" className={`${SOCIAL_ICON_BASE} ${SOCIAL_ICON_VARIANT.facebook}`}>
           <FacebookIcon className="h-4 w-4" />
         </a>
-        <a href={linkedInHref} target="_blank" rel="noopener noreferrer" aria-label="Sdílet na LinkedIn" className={SOCIAL_ICON_CLASS}>
+        <a href={linkedInHref} target="_blank" rel="noopener noreferrer" aria-label="Sdílet na LinkedIn" className={`${SOCIAL_ICON_BASE} ${SOCIAL_ICON_VARIANT.linkedin}`}>
           <LinkedInIcon className="h-4 w-4" />
         </a>
-        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label="Sdílet přes WhatsApp" className={SOCIAL_ICON_CLASS}>
+        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label="Sdílet přes WhatsApp" className={`${SOCIAL_ICON_BASE} ${SOCIAL_ICON_VARIANT.whatsapp}`}>
           <WhatsappIcon className="h-4 w-4" />
         </a>
       </div>
