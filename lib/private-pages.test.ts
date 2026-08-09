@@ -111,6 +111,19 @@ test("support offer applies the requested intro only to the root support overvie
   assert.match(preview, /applySupportOfferCopy/);
 });
 
+test("support offer uses the final selection copy with restrained service-name emphasis", () => {
+  assert.match(supportCopy, /Každá služba řeší jinou situaci\. Vyber si podle toho, co potřebuješ právě teď\./);
+  assert.match(supportCopy, /Pokud si nejsi jistá, kde začít, pomůže ti jednoduché rozdělení\./);
+  assert.match(supportCopy, /Osobní rozbor jídelníčku je pro chvíli, kdy chceš zjistit, co konkrétně ve svém jídelníčku změnit\./);
+  assert.match(supportCopy, /4týdenní podpora se hodí, když chceš mít během několika týdnů pravidelnou zpětnou vazbu/);
+  assert.match(supportCopy, /Osobní vedení 1:1 připravujeme pro ženy, které chtějí dlouhodobější individuální spolupráci/);
+  assert.match(supportCopy, /skutečně posouvaly k výsledkům, kterých chtějí dosáhnout\./);
+  assert.match(renderer, /emphasizeServiceNames=\{isSupportOfferPage\(page\)\}/);
+  assert.match(renderer, /SUPPORT_SERVICE_NAMES/);
+  assert.match(renderer, /font-semibold text-\[var\(--color-text\)\]/);
+  assert.match(renderer, /text\.split\("\\n\\n"\)/);
+});
+
 test("personal diet review copy contains all six requested benefits and preserves its existing detail target", () => {
   for (const text of [
     "Jasné zhodnocení tvého běžného jídelníčku",

@@ -7,7 +7,7 @@ import type { OverviewCard, OverviewContent, PrivatePage, PrivatePageContact, Pr
 import { isSupportOfferPage, type SupportOfferCard } from "@/lib/support-offer-copy";
 
 export function PrivatePageRenderer({ page, preview = false }: { page: PrivatePage; preview?: boolean }) {
-  return <><Hero page={page} preview={preview} />{page.pageType === "support_overview" ? <Overview content={page.content as OverviewContent} /> : page.pageType === "service_detail" ? <ServiceDetail page={page} content={page.content as ServiceDetailContent} /> : <Renewal page={page} content={page.content as RenewalContent} />}</>;
+  return <><Hero page={page} preview={preview} />{page.pageType === "support_overview" ? <Overview content={page.content as OverviewContent} emphasizeServiceNames={isSupportOfferPage(page)} /> : page.pageType === "service_detail" ? <ServiceDetail page={page} content={page.content as ServiceDetailContent} /> : <Renewal page={page} content={page.content as RenewalContent} />}</>;
 }
 
 function Hero({ page, preview }: { page: PrivatePage; preview: boolean }) {
@@ -20,10 +20,17 @@ function SupportOfferSubtitle() {
   return <>Nemusíš na všechno přicházet sama. Vyber si podle toho, jestli chceš <strong className="font-semibold text-white">jednorázově zjistit, co můžeš ve svém jídelníčku zlepšit</strong>, nebo chceš <strong className="font-semibold text-white">průběžnou podporu během několika týdnů</strong>.</>;
 }
 
-function Overview({ content }: { content: OverviewContent }) {
+function Overview({ content, emphasizeServiceNames }: { content: OverviewContent; emphasizeServiceNames: boolean }) {
   const cards = content.cards.filter((card) => card.active).sort((a, b) => a.sortOrder - b.sortOrder);
   const closingText = content.closingText || content.afterCards;
-  return <section className="bg-[var(--color-surface-muted)] py-[var(--space-section)]"><Container><div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">{cards.map((card) => <SupportCard key={card.id} card={card} />)}</div>{content.closingTitle || closingText ? <div className="mx-auto mt-12 max-w-3xl text-center">{content.closingTitle ? <h2 className="text-balance text-2xl font-black sm:text-3xl">{content.closingTitle}</h2> : null}{closingText ? <p className={`${content.closingTitle ? "mt-4" : ""} text-lg leading-relaxed text-[var(--color-text-muted)]`}>{closingText}</p> : null}</div> : null}{content.finalCta.active ? <div className="mt-9 flex justify-center"><Button href={content.finalCta.url} className="px-8 py-4">{content.finalCta.label}</Button></div> : null}</Container></section>;
+  return <section className="bg-[var(--color-surface-muted)] py-[var(--space-section)]"><Container><div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">{cards.map((card) => <SupportCard key={card.id} card={card} />)}</div>{content.closingTitle || closingText ? <div className="mx-auto mt-12 max-w-3xl text-center">{content.closingTitle ? <h2 className="text-balance text-2xl font-black sm:text-3xl">{content.closingTitle}</h2> : null}{closingText ? emphasizeServiceNames ? <SupportSelectionCopy text={closingText} hasTitle={Boolean(content.closingTitle)} /> : <p className={`${content.closingTitle ? "mt-4" : ""} text-lg leading-relaxed text-[var(--color-text-muted)]`}>{closingText}</p> : null}</div> : null}{content.finalCta.active ? <div className="mt-9 flex justify-center"><Button href={content.finalCta.url} className="px-8 py-4">{content.finalCta.label}</Button></div> : null}</Container></section>;
+}
+
+const SUPPORT_SERVICE_NAMES = new Set(["Osobní rozbor jídelníčku", "4týdenní podpora", "Osobní vedení 1:1"]);
+const SUPPORT_SERVICE_PATTERN = /(Osobní rozbor jídelníčku|4týdenní podpora|Osobní vedení 1:1)/g;
+
+function SupportSelectionCopy({ text, hasTitle }: { text: string; hasTitle: boolean }) {
+  return <div className={`${hasTitle ? "mt-4" : ""} space-y-4 text-lg leading-relaxed text-[var(--color-text-muted)]`}>{text.split("\n\n").map((paragraph) => <p key={paragraph}>{paragraph.split(SUPPORT_SERVICE_PATTERN).map((part, index) => SUPPORT_SERVICE_NAMES.has(part) ? <strong key={`${part}-${index}`} className="font-semibold text-[var(--color-text)]">{part}</strong> : part)}</p>)}</div>;
 }
 
 type PrivateCtaTone = "brand" | "on-gradient" | "on-dark";

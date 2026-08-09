@@ -4,6 +4,10 @@ export const SUPPORT_OFFER_SLUG = "nabidka-podpory";
 export const SUPPORT_OFFER_TITLE = "Potřebuješ poradit s tím, co řešíš právě teď?";
 export const SUPPORT_OFFER_SUBTITLE =
   "Nemusíš na všechno přicházet sama. Vyber si podle toho, jestli chceš jednorázově zjistit, co můžeš ve svém jídelníčku zlepšit, nebo chceš průběžnou podporu během několika týdnů.";
+export const SUPPORT_OFFER_CLOSING_TITLE =
+  "Každá služba řeší jinou situaci. Vyber si podle toho, co potřebuješ právě teď.";
+export const SUPPORT_OFFER_CLOSING_TEXT =
+  "Pokud si nejsi jistá, kde začít, pomůže ti jednoduché rozdělení. Osobní rozbor jídelníčku je pro chvíli, kdy chceš zjistit, co konkrétně ve svém jídelníčku změnit. 4týdenní podpora se hodí, když chceš mít během několika týdnů pravidelnou zpětnou vazbu a prostor řešit otázky, které přicházejí v běžném životě.\n\nOsobní vedení 1:1 připravujeme pro ženy, které chtějí dlouhodobější individuální spolupráci a osobní vedení zaměřené na to, aby se skutečně posouvaly k výsledkům, kterých chtějí dosáhnout.";
 
 export type SupportOfferAction = {
   label: string;
@@ -85,7 +89,8 @@ export function applySupportOfferCopy(page: PrivatePage): PrivatePage {
     content: {
       ...content,
       afterCards: renameEmailConsultation(content.afterCards),
-      closingText: renameEmailConsultation(content.closingText),
+      closingTitle: SUPPORT_OFFER_CLOSING_TITLE,
+      closingText: SUPPORT_OFFER_CLOSING_TEXT,
       cards,
     },
   } satisfies SupportOfferPage;
