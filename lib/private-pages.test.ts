@@ -5,6 +5,7 @@ import test from "node:test";
 
 const root = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), "utf8");
 const data = root("lib/private-pages.ts");
+const supportCopy = root("lib/support-offer-copy.ts");
 const renderer = root("components/private-pages/PrivatePageRenderer.tsx");
 const icons = root("components/icons.tsx");
 const route = root("app/nabidka-podpory/[[...segments]]/page.tsx");
@@ -55,9 +56,78 @@ test("support pages remain outside sitemap, navigation and footer", () => {
 });
 
 test("overview renders the three visual variants in equal-height cards with bottom CTA", () => {
-  assert.match(renderer, /grid-cols-1 items-stretch/); assert.match(renderer, /flex h-full min-w-0 flex-col/); assert.match(renderer, /mt-auto pt-6/);
+  assert.match(renderer, /grid-cols-1 items-stretch/); assert.match(renderer, /md:grid-cols-2/); assert.match(renderer, /lg:grid-cols-3/); assert.match(renderer, /flex h-full min-w-0 flex-col/); assert.match(renderer, /mt-auto pt-6/);
   assert.match(renderer, /linear-gradient\(135deg,#2f6bff,#9b3ddb\)/); assert.match(renderer, /linear-gradient\(135deg,#10163a,#2a1b57\)/); assert.match(renderer, /bg-white/);
 });
+
+test("support offer applies the requested intro only to the root support overview", () => {
+  assert.match(supportCopy, /SUPPORT_OFFER_SLUG = "nabidka-podpory"/);
+  assert.match(supportCopy, /Potřebuješ poradit s tím, co řešíš právě teď\?/);
+  assert.match(supportCopy, /Nemusíš na všechno přicházet sama/);
+  assert.match(renderer, /jednorázově zjistit, co můžeš ve svém jídelníčku zlepšit/);
+  assert.match(renderer, /průběžnou podporu během několika týdnů/);
+  assert.match(renderer, /<strong className="font-semibold text-white">/);
+  assert.match(route, /applySupportOfferCopy/);
+  assert.match(preview, /applySupportOfferCopy/);
+});
+
+test("personal diet review copy contains all six requested benefits and preserves its existing detail target", () => {
+  for (const text of [
+    "Jasné zhodnocení tvého běžného jídelníčku",
+    "3 věci, které už děláš dobře",
+    "3 hlavní důvody, které mohou brzdit tvůj posun",
+    "3 konkrétní změny, na které se zaměřit",
+    "Jednoduchý plán pro další dny",
+    "Přehledný osobní výstup, ke kterému se můžeš vracet",
+  ]) assert.ok(supportCopy.includes(text), `missing diet review benefit: ${text}`);
+  assert.match(supportCopy, /Zjistit více o osobním rozboru/);
+  assert.match(supportCopy, /\.\.\.card/);
+  assert.doesNotMatch(supportCopy, /targetSlug:\s*"nabidka-podpory\/osobni-rozbor/);
+});
+
+test("four-week support copy contains all six requested benefits including WhatsApp", () => {
+  for (const text of [
+    "Pravidelnou týdenní zpětnou vazbu",
+    "Odpovědi na otázky, které se objeví v praxi",
+    "Pomoc s konkrétními situacemi z tvého týdne",
+    "Doporučení upravená podle toho, co právě řešíš",
+    "Jasnou prioritu, na kterou se zaměřit dál",
+    "Možnost průběžně se ptát i ve WhatsApp skupině",
+  ]) assert.ok(supportCopy.includes(text), `missing four-week support benefit: ${text}`);
+  assert.match(supportCopy, /title: "4týdenní podpora"/);
+  assert.match(supportCopy, /Zjistit více o 4týdenní podpoře/);
+});
+
+test("personal guidance stays the dark third-card variant and is clearly marked as upcoming", () => {
+  assert.match(supportCopy, /case "dark"/);
+  assert.match(supportCopy, /PŘIPRAVUJEME OD ZÁŘÍ 2026/);
+  assert.match(supportCopy, /Připravujeme 3měsíční program osobního vedení/);
+  assert.match(supportCopy, /Start připravujeme od září 2026\./);
+  for (const text of [
+    "Pravidelnou individuální podporu",
+    "Řešit svou konkrétní situaci více do hloubky",
+    "Mít prostor průběžně konzultovat další kroky",
+    "Dlouhodobější spolupráci během 3 měsíců",
+    "Podporu přizpůsobenou tomu, co právě řeší",
+  ]) assert.ok(supportCopy.includes(text), `missing personal guidance benefit: ${text}`);
+  assert.match(supportCopy, /content\.cards\.map/);
+  assert.doesNotMatch(renderer, /lg:grid-cols-2/);
+});
+
+test("personal guidance contact actions use the existing public channels safely", () => {
+  assert.match(supportCopy, /info@fitbezcasu\.cz/);
+  assert.match(supportCopy, /@fitbezcasu/);
+  assert.match(supportCopy, /href: "mailto:info@fitbezcasu\.cz"/);
+  assert.match(supportCopy, /href: "https:\/\/www\.instagram\.com\/fitbezcasu\/"/);
+  assert.match(footer, /href: "https:\/\/www\.instagram\.com\/fitbezcasu\/"/);
+  assert.match(renderer, /target=\{action\.external \? "_blank" : undefined\}/);
+  assert.match(renderer, /rel=\{action\.external \? "noopener noreferrer" : undefined\}/);
+  assert.match(renderer, /aria-label=\{action\.ariaLabel\}/);
+  assert.match(renderer, /flex min-w-0 flex-wrap gap-3/);
+  assert.match(renderer, /withArrow=\{false\}/);
+});
+
+test("new support offer copy contains no long dash", () => assert.equal(supportCopy.includes("\u2014"), false));
 
 test("overview CTAs use contrast-specific private-page tones at one shared size", () => {
   assert.match(renderer, /light: .*ctaTone: "brand"/);
