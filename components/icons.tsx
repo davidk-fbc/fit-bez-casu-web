@@ -196,6 +196,22 @@ export function FacebookIcon({ className }: IconProps) {
   );
 }
 
+export function LinkedInIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <path d="M6.94 8.5H4V20h2.94V8.5ZM5.47 4a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4ZM20 20h-2.94v-6.28c0-1.5-.03-3.43-2.09-3.43-2.1 0-2.42 1.64-2.42 3.32V20H9.61V8.5h2.82v1.57h.04c.39-.74 1.36-1.53 2.8-1.53 3 0 3.73 1.97 3.73 4.54V20Z" />
+    </svg>
+  );
+}
+
+export function WhatsappIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <path d="M12 3.5a8.5 8.5 0 0 0-7.35 12.77L3.5 20.5l4.36-1.14A8.5 8.5 0 1 0 12 3.5Zm0 1.7a6.8 6.8 0 1 1-3.47 12.65l-.28-.17-2.53.66.68-2.46-.18-.29A6.8 6.8 0 0 1 12 5.2Zm-2.9 3.4c-.17 0-.44.06-.67.32-.23.26-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.73 2.75 4.28 3.75 2.12.83 2.55.67 3.01.63.46-.04 1.49-.61 1.7-1.2.21-.59.21-1.09.15-1.2-.06-.11-.23-.17-.48-.29-.25-.13-1.49-.74-1.72-.82-.23-.09-.4-.13-.57.13-.17.26-.65.82-.8 1-.15.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.26-.02-.4.11-.52.11-.11.25-.29.37-.44.12-.15.16-.25.24-.42.08-.17.04-.32-.02-.44-.06-.13-.55-1.36-.76-1.86-.2-.48-.4-.42-.55-.42Z" />
+    </svg>
+  );
+}
+
 export function InstagramIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className} aria-hidden="true">

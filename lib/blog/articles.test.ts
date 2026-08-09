@@ -97,21 +97,45 @@ test("share box has the new, more specific copy and a real functional share butt
   assert.match(source, /<ShareArticleButton articleTitle={article\.title} \/>/);
 });
 
-test("ShareArticleButton is a small isolated client component using the Web Share API with a clipboard fallback", async () => {
+test("ShareArticleButton's main button is unchanged: still the Web Share API with a clipboard fallback, opens nothing in a new tab itself", async () => {
   const source = await readFile(new URL("../../components/blog/ShareArticleButton.tsx", import.meta.url), "utf8");
   assert.match(source, /^"use client";/);
   assert.match(source, /navigator\.share/);
   assert.match(source, /navigator\.clipboard\.writeText/);
   assert.match(source, /window\.location\.href/);
   assert.doesNotMatch(source, /https:\/\/web\.fitbezcasu\.cz/, "must never hardcode the domain - always use the page's own current URL");
-  assert.match(source, /<button\s/);
-  assert.match(source, /type="button"/);
-  assert.doesNotMatch(source, /target="_blank"/);
-  assert.match(source, /aria-live="polite"/);
+  const mainButton = source.match(/<button[^>]*>/)?.[0] ?? "";
+  assert.match(mainButton, /type="button"/);
+  assert.doesNotMatch(mainButton, /target=/, "the main share button itself must not carry a target attribute");
+  assert.match(mainButton, /aria-live="polite"/);
   assert.match(source, /"Sdílet článek"/);
   assert.match(source, /"Odkaz zkopírován"/);
   assert.match(source, /"Odkaz se nepodařilo zkopírovat"/);
   assert.doesNotMatch(source, /\balert\(/);
+});
+
+test("adds direct Facebook, LinkedIn and WhatsApp share links, each with an encoded current URL and a clear aria-label", async () => {
+  const source = await readFile(new URL("../../components/blog/ShareArticleButton.tsx", import.meta.url), "utf8");
+  assert.match(source, /https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=\$\{encodeURIComponent\(pageUrl\)\}/);
+  assert.match(source, /https:\/\/www\.linkedin\.com\/sharing\/share-offsite\/\?url=\$\{encodeURIComponent\(pageUrl\)\}/);
+  assert.match(source, /https:\/\/wa\.me\/\?text=\$\{encodeURIComponent\(`\$\{articleTitle\} \$\{pageUrl\}`\)\}/);
+  assert.match(source, /aria-label="Sdílet na Facebooku"/);
+  assert.match(source, /aria-label="Sdílet na LinkedIn"/);
+  assert.match(source, /aria-label="Sdílet přes WhatsApp"/);
+  const socialLinksBlock = source.match(/<a href=\{facebookHref\}[\s\S]+<\/a>\s*<\/div>/)?.[0] ?? "";
+  const targetCount = (socialLinksBlock.match(/target="_blank"/g) ?? []).length;
+  const relCount = (socialLinksBlock.match(/rel="noopener noreferrer"/g) ?? []).length;
+  assert.equal(targetCount, 3, "all 3 social links must open in a new tab");
+  assert.equal(relCount, 3, "all 3 social links must use rel=\"noopener noreferrer\"");
+  // Instagram has no standard share-URL for a plain link, so it must not be added.
+  assert.doesNotMatch(source, /instagram/i);
+});
+
+test("the social row's current URL is read via useSyncExternalStore, never available or used during server render", async () => {
+  const source = await readFile(new URL("../../components/blog/ShareArticleButton.tsx", import.meta.url), "utf8");
+  assert.match(source, /useSyncExternalStore/);
+  assert.match(source, /function getServerPageUrl\(\)\s*\{\s*return "";\s*\}/, "the SSR snapshot must be empty so server and first client render match - no hydration mismatch");
+  assert.match(source, /function getPageUrl\(\)\s*\{\s*return window\.location\.href;\s*\}/);
 });
 
 test("isSafeInternalArticleUrl accepts only a plain /blog/{slug} shape", () => {
