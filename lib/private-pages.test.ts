@@ -3,6 +3,10 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
+// Node's built-in TypeScript test runner needs the explicit extension.
+// @ts-expect-error TS5097 is intentionally limited to this Node-only test entry.
+import { getSupportOfferSeo, SUPPORT_OFFER_INDEXABLE_SLUGS } from "./support-offer-seo.ts";
+
 const root = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), "utf8");
 const data = root("lib/private-pages.ts");
 const supportCopy = root("lib/support-offer-copy.ts");
@@ -42,8 +46,16 @@ test("runtime parser isolates safe structured contact links from generic sales U
 
 test("preview only accepts 64 lowercase hexadecimal characters", () => assert.match(data, /\^\[a-f0-9\]\{64\}\$/));
 
-test("every private page is noindex, nofollow, nocache and noarchive", () => {
-  for (const source of [route, preview]) { assert.match(source, /index: false/); assert.match(source, /follow: false/); assert.match(source, /nocache: true/); assert.match(source, /noarchive: true/); }
+test("only the three approved public support pages are indexable", () => {
+  assert.deepEqual([...SUPPORT_OFFER_INDEXABLE_SLUGS], [
+    "nabidka-podpory",
+    "nabidka-podpory/osobni-rozbor-jidelnicku",
+    "nabidka-podpory/emailova-konzultace",
+  ]);
+  assert.match(route, /seo \? \{ index: true, follow: true \}/);
+  assert.match(route, /\{ index: false, follow: false, nocache: true, noarchive: true \}/);
+  assert.equal(getSupportOfferSeo("nabidka-podpory/pokracovani-podpory"), null);
+  assert.equal(getSupportOfferSeo("nabidka-podpory/nahled/token"), null);
 });
 
 test("private page routes are dynamic and missing data triggers a real not-found", () => {
@@ -51,8 +63,36 @@ test("private page routes are dynamic and missing data triggers a real not-found
   assert.match(preview, /if \(!page\) notFound\(\)/);
 });
 
-test("support pages remain outside sitemap, navigation and footer", () => {
-  for (const source of [sitemap, navigation, footer]) assert.doesNotMatch(source, /nabidka-podpory/);
+test("approved support pages are in the sitemap while preview and internal variants stay out", () => {
+  assert.match(sitemap, /SUPPORT_OFFER_INDEXABLE_SLUGS/);
+  assert.match(sitemap, /supportOfferPages/);
+  assert.doesNotMatch(sitemap, /nahled|token|pokracovani-podpory/);
+  for (const source of [navigation, footer]) assert.doesNotMatch(source, /nabidka-podpory/);
+});
+
+test("approved support pages have unique SEO titles, descriptions and self-referencing canonicals", () => {
+  const entries = SUPPORT_OFFER_INDEXABLE_SLUGS.map((slug) => ({ slug, seo: getSupportOfferSeo(slug) }));
+  assert.equal(new Set(entries.map(({ seo }) => seo?.title)).size, 3);
+  assert.equal(new Set(entries.map(({ seo }) => seo?.description)).size, 3);
+  assert.deepEqual(entries.map(({ seo }) => seo?.title), [
+    "Podpora při hubnutí | Fit bez času",
+    "Osobní rozbor jídelníčku | Fit bez času",
+    "4týdenní podpora při hubnutí | Fit bez času",
+  ]);
+  for (const { slug, seo } of entries) {
+    assert.ok(seo);
+    assert.ok(seo.title.endsWith("| Fit bez času"));
+    assert.ok(seo.description.length > 80);
+    assert.ok(slug.startsWith("nabidka-podpory"));
+  }
+  assert.match(route, /const canonical = `\$\{SITE_URL\}\/\$\{displayPage\.slug\}`/);
+});
+
+test("preview pages remain noindex, nofollow, nocache and noarchive", () => {
+  assert.match(preview, /index: false/);
+  assert.match(preview, /follow: false/);
+  assert.match(preview, /nocache: true/);
+  assert.match(preview, /noarchive: true/);
 });
 
 test("overview renders the three visual variants in equal-height cards with bottom CTA", () => {
