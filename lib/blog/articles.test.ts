@@ -4,7 +4,31 @@ import test from "node:test";
 
 // Node's built-in TypeScript test runner needs the explicit extension.
 // @ts-expect-error TS5097 is intentionally limited to this Node-only test entry.
-import { formatArticleDate, getAuthorProfileUrl, isSafeInternalArticleUrl, normalizeLongDescription, parseInternalArticleLinks, splitIntoParagraphs } from "./articles.ts";
+import { formatArticleDate, getAuthorProfileUrl, isSafeInternalArticleUrl, normalizeLongDescription, parseInternalArticleLinks, requestAllPages, splitIntoParagraphs } from "./articles.ts";
+
+// requestAllPages() goes through request(), which reads these two env vars
+// and calls the real global fetch. These tests replace global fetch with a
+// stub for their duration and restore it afterwards, so no real network call
+// is ever made; the env vars just need to be present so env() doesn't throw.
+function withMockedFetch<T>(handler: (input: string) => { ok: boolean; json?: () => Promise<unknown> }, run: () => Promise<T>): Promise<T> {
+  const realFetch = globalThis.fetch;
+  const realUrl = process.env.BLOG_SUPABASE_URL;
+  const realKey = process.env.BLOG_SUPABASE_PUBLISHABLE_KEY;
+  process.env.BLOG_SUPABASE_URL = "https://example.test";
+  process.env.BLOG_SUPABASE_PUBLISHABLE_KEY = "test-key";
+  // @ts-expect-error test stub deliberately narrower than the full fetch signature
+  globalThis.fetch = async (input: string) => handler(String(input));
+  return run().finally(() => {
+    globalThis.fetch = realFetch;
+    if (realUrl === undefined) delete process.env.BLOG_SUPABASE_URL; else process.env.BLOG_SUPABASE_URL = realUrl;
+    if (realKey === undefined) delete process.env.BLOG_SUPABASE_PUBLISHABLE_KEY; else process.env.BLOG_SUPABASE_PUBLISHABLE_KEY = realKey;
+  });
+}
+
+function parseOffsetLimit(url: string) {
+  const query = new URL(url).searchParams;
+  return { offset: Number(query.get("offset")), limit: Number(query.get("limit")) };
+}
 
 test("formats article dates consistently in Czech", () => {
   assert.equal(formatArticleDate("2026-07-29T12:00:00Z"), "29. července 2026");
@@ -201,6 +225,69 @@ test("parseInternalArticleLinks preserves the original text unchanged for a malf
   const emptyLabelResult = parseInternalArticleLinks(emptyLabel);
   assert.ok(emptyLabelResult.every((segment) => segment.type === "text"), "must not produce a link segment for a whitespace-only label");
   assert.equal(emptyLabelResult.map((segment) => segment.value).join(""), emptyLabel);
+});
+
+test("requestAllPages follows a dataset across the PostgREST 1000-row response cap instead of silently truncating it (regression for the 1247-block production bug)", async () => {
+  const total = 1247;
+  const allRows = Array.from({ length: total }, (_, index) => ({ id: index }));
+  const calls: Array<{ offset: number; limit: number }> = [];
+
+  const result = await withMockedFetch(
+    (url) => {
+      const { offset, limit } = parseOffsetLimit(url);
+      calls.push({ offset, limit });
+      return { ok: true, json: async () => allRows.slice(offset, offset + limit) };
+    },
+    () => requestAllPages<{ id: number }>("blog_article_blocks?select=*&order=article_id.asc,position.asc"),
+  );
+
+  assert.equal(calls.length, 2, "1247 rows at page size 1000 must take exactly two requests");
+  assert.deepEqual(calls[0], { offset: 0, limit: 1000 });
+  assert.deepEqual(calls[1], { offset: 1000, limit: 1000 });
+  assert.equal(result.length, total, "every row must come back, none silently dropped past row 1000");
+  assert.equal(new Set(result.map((row) => row.id)).size, total, "no row may be duplicated across pages");
+  assert.deepEqual(result.map((row) => row.id), allRows.map((row) => row.id), "rows must stay in the exact order the server returned them, page after page");
+});
+
+test("requestAllPages stops after an exact-multiple-of-page-size dataset instead of looping forever", async () => {
+  const total = 1000;
+  const allRows = Array.from({ length: total }, (_, index) => ({ id: index }));
+  const calls: Array<{ offset: number; limit: number }> = [];
+
+  const result = await withMockedFetch(
+    (url) => {
+      const { offset, limit } = parseOffsetLimit(url);
+      calls.push({ offset, limit });
+      return { ok: true, json: async () => allRows.slice(offset, offset + limit) };
+    },
+    () => requestAllPages<{ id: number }>("blog_article_blocks?select=*&order=article_id.asc,position.asc"),
+  );
+
+  assert.equal(calls.length, 2, "a full first page must always be followed by one confirming (short) page before stopping");
+  assert.equal(calls[1].offset, 1000);
+  assert.equal(result.length, total);
+  assert.deepEqual(result.map((row) => row.id), allRows.map((row) => row.id));
+});
+
+test("requestAllPages fails the whole call when any page fails, instead of returning a partial dataset", async () => {
+  const firstPage = Array.from({ length: 1000 }, (_, index) => ({ id: index }));
+  const calls: Array<{ offset: number; limit: number }> = [];
+
+  await assert.rejects(
+    () =>
+      withMockedFetch(
+        (url) => {
+          const { offset, limit } = parseOffsetLimit(url);
+          calls.push({ offset, limit });
+          if (offset === 0) return { ok: true, json: async () => firstPage };
+          return { ok: false };
+        },
+        () => requestAllPages<{ id: number }>("blog_article_blocks?select=*&order=article_id.asc,position.asc"),
+      ),
+    /Published blog content could not be loaded\./,
+  );
+
+  assert.equal(calls.length, 2, "the failing second page must actually have been attempted");
 });
 
 test("paragraph renderer turns a valid internal link into a real next/link, with no target or nofollow, and leaves other blocks untouched", async () => {

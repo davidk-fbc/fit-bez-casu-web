@@ -65,6 +65,28 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+// PostgREST caps any single response at a server-side row limit (1000 for
+// this project) no matter how large the underlying table has grown, so a
+// plain `request<T[]>(...)` silently truncates once a resource passes that
+// many rows. Every array-shaped resource loadDataset() reads is fetched
+// through this instead: it keeps requesting limit/offset pages, in the same
+// order the caller asked for, until a page comes back shorter than
+// PAGE_SIZE - which is what actually ends the loop, not a hardcoded total.
+// A failing page rejects the whole call (the same as the old single
+// request's failure mode) so a caller never silently receives a partial
+// dataset for one page having failed after others already succeeded.
+const PAGE_SIZE = 1000;
+
+export async function requestAllPages<T>(path: string): Promise<T[]> {
+  const separator = path.includes("?") ? "&" : "?";
+  const rows: T[] = [];
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const page = await request<T[]>(`${path}${separator}limit=${PAGE_SIZE}&offset=${offset}`);
+    rows.push(...page);
+    if (page.length < PAGE_SIZE) return rows;
+  }
+}
+
 // Normalizes blog_categories.long_description into a single "has real
 // content or not" shape: missing (pre-migration), null, empty string and
 // whitespace-only all collapse to null so callers only ever need one check
@@ -184,11 +206,11 @@ function mapArticle(raw: RawArticle, categories: Map<string, BlogCategory>, auth
 
 const loadDataset = cache(async (): Promise<Dataset> => {
   const [rawCategories, rawAuthors, rawArticles, rawBlocks, rawRelations] = await Promise.all([
-    request<RawCategory[]>("blog_categories?select=*&order=sort_order.asc"),
-    request<RawAuthor[]>("blog_authors?select=*&order=display_name.asc"),
-    request<RawArticle[]>("blog_articles?select=*&order=published_at.desc.nullslast,scheduled_at.desc.nullslast,updated_at.desc"),
-    request<RawBlock[]>("blog_article_blocks?select=*&order=article_id.asc,position.asc"),
-    request<RawRelation[]>("blog_article_relations?select=*&order=article_id.asc,position.asc"),
+    requestAllPages<RawCategory>("blog_categories?select=*&order=sort_order.asc"),
+    requestAllPages<RawAuthor>("blog_authors?select=*&order=display_name.asc"),
+    requestAllPages<RawArticle>("blog_articles?select=*&order=published_at.desc.nullslast,scheduled_at.desc.nullslast,updated_at.desc"),
+    requestAllPages<RawBlock>("blog_article_blocks?select=*&order=article_id.asc,position.asc"),
+    requestAllPages<RawRelation>("blog_article_relations?select=*&order=article_id.asc,position.asc"),
   ]);
   const categories = rawCategories.map((item) => ({ id: item.id, slug: item.slug, name: item.name, description: item.description, longDescription: normalizeLongDescription(item.long_description), active: item.active, sortOrder: item.sort_order }));
   const categoryMap = new Map(categories.map((item) => [item.id, item]));
