@@ -162,15 +162,31 @@ test("the social row's current URL is read via useSyncExternalStore, never avail
   assert.match(source, /function getPageUrl\(\)\s*\{\s*return window\.location\.href;\s*\}/);
 });
 
-test("isSafeInternalArticleUrl accepts only a plain /blog/{slug} shape", () => {
+test("isSafeInternalArticleUrl accepts a plain /blog/{slug} shape", () => {
   assert.equal(isSafeInternalArticleUrl("/blog/jak-zacit-cvicit-kdyz-nemas-cas"), true);
   assert.equal(isSafeInternalArticleUrl("/blog/a"), true);
 });
 
+test("isSafeInternalArticleUrl also accepts the three known, already-live support-offer routes", () => {
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory"), true);
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory/osobni-rozbor-jidelnicku"), true);
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory/emailova-konzultace"), true);
+});
+
+test("isSafeInternalArticleUrl rejects any support-offer path outside the exact allow-list, not just the pattern's general shape", () => {
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory/neexistujici-nepovolena-cesta"), false);
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory/"), false);
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory/osobni-rozbor-jidelnicku/"), false);
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory/osobni-rozbor-jidelnicku/../secret"), false);
+  assert.equal(isSafeInternalArticleUrl("/nabidka-podpory-jina-stranka"), false);
+});
+
 test("isSafeInternalArticleUrl rejects protocol-relative, external, dangerous and malformed URLs", () => {
   assert.equal(isSafeInternalArticleUrl("//example.com"), false);
+  assert.equal(isSafeInternalArticleUrl("//nabidka-podpory"), false);
   assert.equal(isSafeInternalArticleUrl("https://example.com"), false);
   assert.equal(isSafeInternalArticleUrl("http://web.fitbezcasu.cz/blog/x"), false);
+  assert.equal(isSafeInternalArticleUrl("https://web.fitbezcasu.cz/nabidka-podpory"), false);
   assert.equal(isSafeInternalArticleUrl("javascript:alert(1)"), false);
   assert.equal(isSafeInternalArticleUrl("data:text/html,hi"), false);
   assert.equal(isSafeInternalArticleUrl("/blog/\\evil"), false);
@@ -194,6 +210,15 @@ test("parseInternalArticleLinks recognizes one valid internal link with text bef
     { type: "text", value: "Nejdřív si přečti " },
     { type: "link", label: "jak začít cvičit", href: "/blog/jak-zacit-cvicit-kdyz-nemas-cas" },
     { type: "text", value: " a pak pokračuj dál." },
+  ]);
+});
+
+test("parseInternalArticleLinks also turns a support-offer route into a real link, same as a /blog/{slug} link", () => {
+  const result = parseInternalArticleLinks("Přehled najdeš na stránce [Nabídka podpory Fit bez času](/nabidka-podpory).");
+  assert.deepEqual(result, [
+    { type: "text", value: "Přehled najdeš na stránce " },
+    { type: "link", label: "Nabídka podpory Fit bez času", href: "/nabidka-podpory" },
+    { type: "text", value: "." },
   ]);
 });
 

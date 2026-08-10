@@ -4,6 +4,8 @@ import { cache } from "react";
 // (see the same pattern/rationale in lib/structured-data.ts).
 // @ts-expect-error TS5097
 import { SITE_NAME } from "../seo.ts";
+// @ts-expect-error TS5097
+import { FOUR_WEEK_SUPPORT_SLUG, PERSONAL_DIET_REVIEW_SLUG, SUPPORT_OFFER_SLUG } from "../support-offer-copy.ts";
 
 export type CategorySlug = string;
 export type ArticleCtaType = "challenge" | "meal-plan" | "community";
@@ -119,13 +121,22 @@ export function getAuthorProfileUrl(author: BlogAuthor): string | null {
   return author.displayName === SITE_NAME ? "/o-nas" : null;
 }
 
-// Only `/blog/{slug}` article/category paths are ever considered safe here -
+// The three support-offer routes are served by this same app but, unlike
+// /blog/{slug}, don't follow one predictable shape - so rather than widen the
+// regex below (which would also start accepting any as-yet-unverified path
+// under /nabidka-podpory/...), only these specific, already-live routes are
+// allow-listed by exact string match. Sourced from lib/support-offer-copy.ts
+// so this list can never drift from the routes that actually exist.
+const SAFE_INTERNAL_ARTICLE_URLS = new Set<string>([`/${SUPPORT_OFFER_SLUG}`, `/${PERSONAL_DIET_REVIEW_SLUG}`, `/${FOUR_WEEK_SUPPORT_SLUG}`]);
+
+// `/blog/{slug}` article/category paths, plus the exact allow-listed
+// support-offer routes above, are the only URLs ever considered safe here -
 // no protocol, no protocol-relative `//`, no backslash, no control
-// characters, nothing outside this exact allow-listed shape. Anything else
-// (an external URL, `javascript:`, `data:`, a malformed path) fails this
-// check and the caller falls back to plain text instead of a link.
+// characters, nothing outside these exact allow-listed shapes. Anything else
+// (an external URL, `javascript:`, `data:`, a malformed or unverified path)
+// fails this check and the caller falls back to plain text instead of a link.
 export function isSafeInternalArticleUrl(url: string): boolean {
-  return /^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(url);
+  return /^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(url) || SAFE_INTERNAL_ARTICLE_URLS.has(url);
 }
 
 export type ParsedTextSegment = { type: "text"; value: string } | { type: "link"; label: string; href: string };
