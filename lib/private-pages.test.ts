@@ -222,6 +222,92 @@ test("personal diet review preserves its disclaimer and responsive safeguards", 
   assert.match(renderer, /min-h-14/);
 });
 
+test("four-week support detail has the approved hero, audience and price", () => {
+  for (const text of [
+    "KDYŽ NECHCEŠ VŠECHNO ŘEŠIT SAMA",
+    "4 týdny podpory, během kterých můžeš průběžně řešit, co se ti daří i kde tápeš",
+    "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace",
+    "Po dobu 4 týdnů s námi můžeš pravidelně řešit, co se právě děje",
+    "Je 4týdenní podpora vhodná právě pro tebe?",
+    "990 Kč",
+  ]) assert.ok(supportCopy.includes(text), `missing four-week support copy: ${text}`);
+  for (const text of [
+    "Chceš mít během hubnutí někoho, s kým můžeš pravidelně probrat svůj postup.",
+    "Často si nejsi jistá, jestli děláš správné změny nebo jestli máš něco upravit.",
+    "Potřebuješ řešit konkrétní situace, které přicházejí během běžného týdne.",
+    "Nechceš čekat několik týdnů s otázkou, která tě právě teď brzdí.",
+    "Pomohlo by ti mít každý týden jasnou prioritu, na kterou se zaměřit dál.",
+    "Chceš podporu, která reaguje na to, co se u tebe skutečně děje, ne další obecný plán.",
+  ]) assert.ok(supportCopy.includes(text), `missing four-week audience point: ${text}`);
+  assert.match(renderer, /<FourWeekSupportHeroCopy \/>/);
+  assert.match(renderer, /<FourWeekSupportCta href=\{fourWeekSupportCtaUrl\}/);
+  assert.equal((renderer.match(/<h1 /g) ?? []).length, 1);
+});
+
+test("four-week support detail contains all six outcomes, five steps and WhatsApp", () => {
+  for (const title of [
+    "Pravidelná týdenní zpětná vazba",
+    "Jasná priorita pro další týden",
+    "Odpovědi na konkrétní otázky",
+    "Průběžná podpora přes WhatsApp",
+    "Doporučení podle toho, co se skutečně děje",
+    "Čtyři týdny, během kterých na to nejsi sama",
+  ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing four-week outcome: ${title}`);
+  for (const title of [
+    "Po objednávce dostaneš informace k zahájení",
+    "Každý týden nám pošleš krátké shrnutí",
+    "Dostaneš osobní zpětnou vazbu",
+    "Během týdne můžeš využít WhatsApp skupinu",
+    "Postupně upravujeme další kroky",
+  ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing four-week process step: ${title}`);
+  assert.match(supportCopy, /WhatsApp skupiny/);
+  assert.match(supportCopy, /Průběžné otázky ve WhatsApp skupině/);
+});
+
+test("four-week support has the purchase, everyday-life and seven-question FAQ blocks", () => {
+  assert.match(supportCopy, /purchaseTitle: "4týdenní podpora za 990 Kč"/);
+  for (const item of [
+    "4 týdny podpory",
+    "Pravidelná týdenní zpětná vazba",
+    "Konkrétní doporučení podle tvé situace",
+    "Jasná priorita pro další týden",
+    "Odpovědi na otázky z běžného života",
+    "Průběžné otázky ve WhatsApp skupině",
+  ]) assert.ok(supportCopy.includes(`"${item}"`), `missing four-week purchase item: ${item}`);
+  assert.match(supportCopy, /Vědět, co dělat, je jedna věc\. Zvládnout to v běžném životě je druhá\./);
+  assert.match(supportCopy, /Hubnutí většinou nekomplikuje jeden špatný den\./);
+  for (const question of [
+    "Jak dlouho podpora trvá?",
+    "Jak probíhá týdenní zpětná vazba?",
+    "Můžu se ptát i během týdne?",
+    "Musím každý týden všechno dodržet dokonale?",
+    "Je 4týdenní podpora vhodná i tehdy, když už mám jídelníček?",
+    "Co když budu chtít pokračovat i po 4 týdnech?",
+    "Je podpora vhodná při zdravotních problémech?",
+  ]) assert.ok(supportCopy.includes(`question: "${question}"`), `missing four-week FAQ question: ${question}`);
+  assert.match(renderer, /function FourWeekSupportFaq/);
+  assert.match(renderer, /<dl className=/);
+});
+
+test("four-week support includes continuation, final CTA and health disclaimer copy", () => {
+  assert.match(supportCopy, /objednat další 4 týdny a plynule pokračovat/);
+  assert.match(supportCopy, /Nemusíš mít každý týden perfektní\. Důležité je vědět, jak pokračovat dál\./);
+  assert.match(supportCopy, /Chceš mít během dalších 4 týdnů pravidelnou podporu\?/);
+  assert.match(supportCopy, /Nenahrazuje lékařskou péči ani individuální doporučení nutričního terapeuta/);
+  assert.doesNotMatch(supportCopy, /odpovíme do|odpověď do \d+|do \d+ hodin/iu);
+});
+
+test("all four-week purchase CTAs reuse the existing resolved sales link and slug", () => {
+  assert.match(supportCopy, /FOUR_WEEK_SUPPORT_SLUG = "nabidka-podpory\/emailova-konzultace"/);
+  assert.match(renderer, /fourWeekSupportCtaUrl = fourWeekSupport\?\.cta\.active \? page\.salesLinks\[fourWeekSupport\.cta\.salesLinkKey\]/);
+  assert.match(renderer, /<FourWeekSupportCta href=\{fourWeekSupportCtaUrl\}/);
+  assert.equal((renderer.match(/<FourWeekSupportCta href=\{ctaUrl\}/g) ?? []).length, 2);
+  assert.match(renderer, /Chci 4týdenní podporu/);
+  assert.doesNotMatch(renderer, /form\.simpleshop\.cz/);
+  assert.match(renderer, /overflow-hidden bg-white/);
+  assert.match(renderer, /w-full justify-center sm:w-auto sm:min-w-80/);
+});
+
 test("four-week support copy contains all six requested benefits including WhatsApp", () => {
   for (const text of [
     "Pravidelnou týdenní zpětnou vazbu",

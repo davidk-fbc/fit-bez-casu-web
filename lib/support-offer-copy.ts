@@ -2,6 +2,7 @@ import type { OverviewCard, OverviewContent, PrivatePage, ServiceDetailContent }
 
 export const SUPPORT_OFFER_SLUG = "nabidka-podpory";
 export const PERSONAL_DIET_REVIEW_SLUG = "nabidka-podpory/osobni-rozbor-jidelnicku";
+export const FOUR_WEEK_SUPPORT_SLUG = "nabidka-podpory/emailova-konzultace";
 export const SUPPORT_OFFER_TITLE = "Potřebuješ poradit s tím, co řešíš právě teď?";
 export const SUPPORT_OFFER_SUBTITLE =
   "Nemusíš na všechno přicházet sama. Vyber si podle toho, jestli chceš jednorázově zjistit, co můžeš ve svém jídelníčku zlepšit, nebo chceš průběžnou podporu během několika týdnů.";
@@ -53,10 +54,35 @@ export type PersonalDietReviewPage = Omit<PrivatePage, "content" | "pageType"> &
   content: PersonalDietReviewContent;
 };
 
+export type FourWeekSupportContent = ServiceDetailContent & {
+  benefitsIntro: string;
+  purchaseTitle: string;
+  purchaseText: string;
+  purchaseItems: string[];
+  purchaseSupportText: string;
+  everydayLifeTitle: string;
+  everydayLifeText: string[];
+  faq: Array<{ question: string; answer: string }>;
+  finalTitle: string;
+  finalText: string;
+  finalCtaTitle: string;
+  finalPriceText: string;
+  heroCtaSupportText: string;
+};
+
+export type FourWeekSupportPage = Omit<PrivatePage, "content" | "pageType"> & {
+  pageType: "service_detail";
+  content: FourWeekSupportContent;
+};
+
 const PERSONAL_DIET_REVIEW_CTA_LABEL = "Chci svůj osobní rozbor";
 const PERSONAL_DIET_REVIEW_PRICE = "490 Kč";
 const PERSONAL_DIET_REVIEW_SUPPORT_TEXT =
   "Po objednávce ti pošleme vstupní dotazník a přesný postup pro zapsání pěti dní.";
+const FOUR_WEEK_SUPPORT_CTA_LABEL = "Chci 4týdenní podporu";
+const FOUR_WEEK_SUPPORT_PRICE = "990 Kč";
+const FOUR_WEEK_SUPPORT_SUPPORT_TEXT =
+  "Po objednávce ti pošleme informace k zahájení 4týdenní spolupráce.";
 
 const CARD_COPY: Record<OverviewCard["variant"], Omit<SupportOfferCard, keyof OverviewCard>> = {
   light: {
@@ -101,6 +127,10 @@ export function applySupportOfferCopy(page: PrivatePage): PrivatePage {
     return applyPersonalDietReviewCopy(page);
   }
 
+  if (page.pageType === "service_detail" && page.slug === FOUR_WEEK_SUPPORT_SLUG) {
+    return applyFourWeekSupportCopy(page);
+  }
+
   if (page.pageType !== "support_overview" || page.slug !== SUPPORT_OFFER_SLUG) return page;
 
   const content = page.content as OverviewContent;
@@ -127,6 +157,10 @@ export function applySupportOfferCopy(page: PrivatePage): PrivatePage {
 
 export function isPersonalDietReviewPage(page: PrivatePage): page is PersonalDietReviewPage {
   return page.pageType === "service_detail" && page.slug === PERSONAL_DIET_REVIEW_SLUG;
+}
+
+export function isFourWeekSupportPage(page: PrivatePage): page is FourWeekSupportPage {
+  return page.pageType === "service_detail" && page.slug === FOUR_WEEK_SUPPORT_SLUG;
 }
 
 function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage {
@@ -272,6 +306,164 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
         "Rozbor ti nedá další přísný režim ani seznam zákazů. Dá ti jasno v tom, co už funguje, co upravit a kde začít, aby ses nemusela snažit měnit všechno najednou.",
       finalCtaTitle: "Chceš konečně vědět, co ve svém jídelníčku změnit?",
       finalPriceText: "Osobní rozbor jídelníčku za 490 Kč",
+    },
+  };
+}
+
+function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
+  const content = page.content as ServiceDetailContent;
+
+  return {
+    ...page,
+    pageType: "service_detail",
+    title: "4 týdny podpory, během kterých můžeš průběžně řešit, co se ti daří i kde tápeš",
+    subtitle:
+      "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace, se kterými si nejsi jistá. Jeden týden se daří, další přijde hlad, chutě, náročný víkend nebo pocit, že se nikam neposouváš.\n\nPo dobu 4 týdnů s námi můžeš pravidelně řešit, co se právě děje, získávat zpětnou vazbu a podle potřeby upravovat další kroky.",
+    content: {
+      ...content,
+      eyebrow: "KDYŽ NECHCEŠ VŠECHNO ŘEŠIT SAMA",
+      sections: {
+        ...content.sections,
+        audience: true,
+        benefits: true,
+        process: true,
+        inclusions: false,
+        price: true,
+        cta: true,
+      },
+      audienceTitle: "Je 4týdenní podpora vhodná právě pro tebe?",
+      audience: [
+        "Chceš mít během hubnutí někoho, s kým můžeš pravidelně probrat svůj postup.",
+        "Často si nejsi jistá, jestli děláš správné změny nebo jestli máš něco upravit.",
+        "Potřebuješ řešit konkrétní situace, které přicházejí během běžného týdne.",
+        "Nechceš čekat několik týdnů s otázkou, která tě právě teď brzdí.",
+        "Pomohlo by ti mít každý týden jasnou prioritu, na kterou se zaměřit dál.",
+        "Chceš podporu, která reaguje na to, co se u tebe skutečně děje, ne další obecný plán.",
+      ],
+      benefitsTitle: "Co během 4 týdnů získáš",
+      benefitsIntro:
+        "Nebudeš dostávat další obecné rady, které si musíš sama převést do praxe. Budeme společně řešit to, co se děje právě u tebe, a každý týden budeš vědět, na co se zaměřit dál.",
+      benefits: [
+        {
+          title: "Pravidelná týdenní zpětná vazba",
+          text: "Každý týden nám pošleš shrnutí toho, co se dařilo, co bylo náročné a co potřebuješ vyřešit. Dostaneš konkrétní zpětnou vazbu podle své aktuální situace.",
+        },
+        {
+          title: "Jasná priorita pro další týden",
+          text: "Nebudeš se snažit měnit deset věcí najednou. Pomůžeme ti vybrat to, na co má největší smysl zaměřit se právě teď.",
+        },
+        {
+          title: "Odpovědi na konkrétní otázky",
+          text: "Můžeš řešit situace, které přicházejí v běžném životě, a nemusíš všechno hledat sama nebo postupovat metodou pokus-omyl.",
+        },
+        {
+          title: "Průběžná podpora přes WhatsApp",
+          text: "Když se během týdne objeví otázka, můžeš nám napsat do WhatsApp skupiny a nemusíš čekat až na další týdenní shrnutí.",
+        },
+        {
+          title: "Doporučení podle toho, co se skutečně děje",
+          text: "Když něco nefunguje podle plánu, můžeme další kroky upravit podle reality místo toho, abys měla pocit, že jsi „selhala“.",
+        },
+        {
+          title: "Čtyři týdny, během kterých na to nejsi sama",
+          text: "Budeš mít prostor pravidelně svůj postup vyhodnocovat, řešit problémy včas a udržet směr i ve chvílích, kdy běžný život nejde podle plánu.",
+        },
+      ],
+      processTitle: "Jak 4týdenní podpora probíhá",
+      process: [
+        {
+          title: "Po objednávce dostaneš informace k zahájení",
+          text: "Vysvětlíme ti, jak bude spolupráce během následujících 4 týdnů fungovat a co od tebe budeme potřebovat.",
+        },
+        {
+          title: "Každý týden nám pošleš krátké shrnutí",
+          text: "Napíšeš, co se ti dařilo, co bylo náročné, co se změnilo a s čím potřebuješ poradit.",
+        },
+        {
+          title: "Dostaneš osobní zpětnou vazbu",
+          text: "Odpovíme na to, co právě řešíš, a doporučíme konkrétní další kroky podle tvé situace.",
+        },
+        {
+          title: "Během týdne můžeš využít WhatsApp skupinu",
+          text: "Pokud se objeví otázka nebo situace, se kterou si nejsi jistá, můžeš ji průběžně řešit i mezi týdenními shrnutími.",
+        },
+        {
+          title: "Postupně upravujeme další kroky",
+          text: "Každý týden navazujeme na to, co se podařilo, co nefungovalo a co má teď největší smysl řešit dál.",
+        },
+      ],
+      closingTitle: "",
+      closingText: "",
+      objectionTitle: "",
+      objectionText: "",
+      price: FOUR_WEEK_SUPPORT_PRICE,
+      cta: {
+        ...content.cta,
+        active: true,
+        label: FOUR_WEEK_SUPPORT_CTA_LABEL,
+      },
+      buttonNote: FOUR_WEEK_SUPPORT_SUPPORT_TEXT,
+      heroCtaSupportText:
+        "4 týdny osobní podpory za 990 Kč. Po objednávce ti pošleme informace k zahájení spolupráce.",
+      purchaseTitle: "4týdenní podpora za 990 Kč",
+      purchaseText:
+        "Po dobu 4 týdnů budeš mít pravidelnou zpětnou vazbu, prostor řešit konkrétní otázky a podporu při situacích, které přicházejí v běžném životě.",
+      purchaseItems: [
+        "4 týdny podpory",
+        "Pravidelná týdenní zpětná vazba",
+        "Konkrétní doporučení podle tvé situace",
+        "Jasná priorita pro další týden",
+        "Odpovědi na otázky z běžného života",
+        "Průběžné otázky ve WhatsApp skupině",
+      ],
+      purchaseSupportText: FOUR_WEEK_SUPPORT_SUPPORT_TEXT,
+      everydayLifeTitle: "Vědět, co dělat, je jedna věc. Zvládnout to v běžném životě je druhá.",
+      everydayLifeText: [
+        "Hubnutí většinou nekomplikuje jeden špatný den. Náročnější bývají chvíle, kdy se změní režim, přijde stres, víkend, návštěva, větší hlad nebo období, kdy motivace není tak silná.",
+        "Právě v těchto chvílích může být užitečné mít možnost situaci probrat, zjistit, co má smysl upravit, a pokračovat dál bez pocitu, že musíš začínat znovu od začátku.",
+      ],
+      faq: [
+        {
+          question: "Jak dlouho podpora trvá?",
+          answer:
+            "Podpora trvá 4 týdny. Během této doby získáš pravidelnou týdenní zpětnou vazbu a můžeš průběžně řešit otázky také ve WhatsApp skupině.",
+        },
+        {
+          question: "Jak probíhá týdenní zpětná vazba?",
+          answer:
+            "Každý týden nám pošleš krátké shrnutí toho, co se dařilo, co bylo náročné a co potřebuješ řešit. Na základě toho dostaneš osobní zpětnou vazbu a doporučení, na co se zaměřit v dalším týdnu.",
+        },
+        {
+          question: "Můžu se ptát i během týdne?",
+          answer:
+            "Ano. Součástí podpory je WhatsApp skupina, kde můžeš průběžně psát otázky, které se během týdne objeví.",
+        },
+        {
+          question: "Musím každý týden všechno dodržet dokonale?",
+          answer:
+            "Ne. Smyslem podpory není kontrolovat, jestli jsi byla „dokonalá“. Naopak chceme pracovat s tím, jak vypadá tvůj skutečný život, a podle toho hledat další kroky, které jsou pro tebe reálně použitelné.",
+        },
+        {
+          question: "Je 4týdenní podpora vhodná i tehdy, když už mám jídelníček?",
+          answer:
+            "Ano. Jídelníček ti může ukázat, co a kolik jíst, zatímco 4týdenní podpora ti pomáhá řešit situace, které přicházejí při jeho používání v běžném životě.",
+        },
+        {
+          question: "Co když budu chtít pokračovat i po 4 týdnech?",
+          answer:
+            "Pokud ti spolupráce bude dávat smysl, můžeš si po skončení podpory objednat další 4 týdny a plynule pokračovat.",
+        },
+        {
+          question: "Je podpora vhodná při zdravotních problémech?",
+          answer:
+            "4týdenní podpora je zaměřená na praktickou podporu při změně stravovacích a režimových návyků. Nenahrazuje lékařskou péči ani individuální doporučení nutričního terapeuta při zdravotních obtížích.",
+        },
+      ],
+      finalTitle: "Nemusíš mít každý týden perfektní. Důležité je vědět, jak pokračovat dál.",
+      finalText:
+        "Během 4 týdnů nebudeš na každou otázku a problém sama. Když se něco nepovede podle plánu, společně se podíváme na to, co upravit a na co se zaměřit dál.",
+      finalCtaTitle: "Chceš mít během dalších 4 týdnů pravidelnou podporu?",
+      finalPriceText: "4týdenní podpora za 990 Kč",
     },
   };
 }
