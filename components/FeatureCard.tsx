@@ -7,9 +7,19 @@ type FeatureCardProps = {
   description: ReactNode;
   href: string;
   linkLabel?: string;
+  linkAriaLabel?: string;
+  linkClassName?: string;
 };
 
-export function FeatureCard({ icon, title, description, href, linkLabel = "Zjistit více" }: FeatureCardProps) {
+export function FeatureCard({
+  icon,
+  title,
+  description,
+  href,
+  linkLabel = "Zjistit více",
+  linkAriaLabel,
+  linkClassName = "",
+}: FeatureCardProps) {
   return (
     <div className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-7 shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
       <div
@@ -22,7 +32,8 @@ export function FeatureCard({ icon, title, description, href, linkLabel = "Zjist
       <p className="text-sm leading-relaxed text-[var(--color-text-muted)]">{description}</p>
       <a
         href={href}
-        className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110"
+        aria-label={linkAriaLabel}
+        className={`mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110 ${linkClassName}`}
       >
         {linkLabel}
         <ArrowRightIcon className="h-4 w-4" />

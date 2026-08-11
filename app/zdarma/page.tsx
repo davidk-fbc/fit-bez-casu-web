@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
+import { FeatureCard } from "@/components/FeatureCard";
 import { JsonLd } from "@/components/JsonLd";
-import { CheckIcon } from "@/components/icons";
+import { CheckIcon, ForkKnifeIcon, PencilIcon, PhoneIcon } from "@/components/icons";
 import { FreeLeadMagnetCta } from "@/components/free-resources/FreeLeadMagnetCta";
 import { FreeLeadMagnetPreview } from "@/components/free-resources/FreeLeadMagnetPreview";
 import { FREE_LEAD_MAGNETS } from "@/lib/free-lead-magnets";
+import { EXTERNAL_LINKS } from "@/lib/links";
 import { DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
 import { absoluteUrl, getBreadcrumbListSchema, getPageSchema } from "@/lib/structured-data";
 
@@ -66,6 +68,36 @@ const DECISION_ITEMS = [
   {
     question: "Snažíš se, ale nevíš, co ve svém jídelníčku změnit?",
     answer: "Projdi si 7 chyb, které mohou brzdit hubnutí.",
+  },
+] as const;
+
+const PAID_NEXT_STEPS = [
+  {
+    icon: <ForkKnifeIcon className="h-full w-full" />,
+    title: "Jídelníček pro zdravé hubnutí",
+    description:
+      "Když chceš vědět, co a kolik jíst během celého dne, a mít jasný plán z běžných potravin.",
+    href: EXTERNAL_LINKS.mealPlan,
+    linkLabel: "Zjistit více",
+    linkAriaLabel: "Zjistit více o Jídelníčku pro zdravé hubnutí",
+  },
+  {
+    icon: <PhoneIcon className="h-full w-full" />,
+    title: "Aplikace Fit bez času",
+    description:
+      "Když chceš mít jídlo, pohyb a svůj progres přehledně na jednom místě a jednoduše se v tom vyznat i v nabitém dni.",
+    href: EXTERNAL_LINKS.app,
+    linkLabel: "Zjistit více",
+    linkAriaLabel: "Zjistit více o Aplikaci Fit bez času",
+  },
+  {
+    icon: <PencilIcon className="h-full w-full" />,
+    title: "Osobní rozbor jídelníčku",
+    description:
+      "Když chceš zjistit, co už ve tvém jídelníčku funguje, co tě může brzdit a co má smysl změnit jako první.",
+    href: "/nabidka-podpory/osobni-rozbor-jidelnicku",
+    linkLabel: "Zjistit více",
+    linkAriaLabel: "Zjistit více o osobním rozboru jídelníčku",
   },
 ] as const;
 
@@ -195,6 +227,39 @@ export default function FreeResourcesPage() {
                   <h3 className="text-lg font-bold text-[var(--color-text)]">{item.question}</h3>
                   <p className="mt-2 text-base leading-relaxed text-[var(--color-text-muted)]">{item.answer}</p>
                 </div>
+              ))}
+            </div>
+          </Container>
+        </section>
+
+        <section
+          aria-labelledby="paid-next-steps-heading"
+          className="bg-[var(--color-surface)] py-[var(--space-section)]"
+        >
+          <Container>
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-sm font-bold tracking-[0.18em] text-[var(--color-accent-blue)]">
+                CHCEŠ JÍT O KROK DÁL?
+              </p>
+              <h2
+                id="paid-next-steps-heading"
+                className="mt-4 text-balance text-3xl font-bold tracking-[-0.03em] text-[var(--color-text)] sm:text-5xl"
+              >
+                Vyber si podporu podle toho, co právě potřebuješ
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
+                Materiály zdarma ti můžou pomoct udělat si jasno. Když ale chceš konkrétní plán, nástroj pro každý den nebo
+                osobní zpětnou vazbu, můžeš pokračovat tady.
+              </p>
+            </div>
+
+            <div className="mt-12 grid items-stretch gap-6 md:grid-cols-3">
+              {PAID_NEXT_STEPS.map((card) => (
+                <FeatureCard
+                  key={card.title}
+                  {...card}
+                  linkClassName="min-h-11 rounded-sm py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-blue)]"
+                />
               ))}
             </div>
           </Container>

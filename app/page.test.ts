@@ -4,6 +4,10 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const source = readFileSync(fileURLToPath(new URL("./page.tsx", import.meta.url)), "utf8");
+const introCardsSource = readFileSync(
+  fileURLToPath(new URL("../components/sections/IntroCards.tsx", import.meta.url)),
+  "utf8",
+);
 
 const PAGE_TITLE = "Fit bez času | Hubnutí, jídelníček a cvičení pro ženy";
 const PAGE_DESCRIPTION =
@@ -46,4 +50,13 @@ test("does not set any robots override - homepage stays indexable via the framew
 
 test("WebPage structured data uses the same title and description as the rendered metadata", () => {
   assert.match(source, /getPageSchema\(\{\s*type:\s*"WebPage",\s*path:\s*"\/",\s*name:\s*PAGE_TITLE,\s*description:\s*PAGE_DESCRIPTION,\s*primaryImage:\s*true,?\s*\}\)/);
+});
+
+test("homepage intro cards keep their existing destinations and Zdarma points to /zdarma", () => {
+  assert.match(introCardsSource, /title: "Jídelníček",[\s\S]*?href: EXTERNAL_LINKS\.mealPlan/);
+  assert.match(introCardsSource, /title: "Aplikace",[\s\S]*?href: EXTERNAL_LINKS\.app/);
+  assert.match(introCardsSource, /title: "Zdarma",[\s\S]*?href: "\/zdarma"/);
+  assert.match(introCardsSource, /title: "Blog",[\s\S]*?href: "\/blog"/);
+  assert.equal(introCardsSource.match(/title: "/g)?.length, 4);
+  assert.doesNotMatch(introCardsSource, /href: "#zdarma"/);
 });

@@ -8,6 +8,7 @@ const configSource = readFileSync(fileURLToPath(new URL("../../lib/free-lead-mag
 const ctaSource = readFileSync(fileURLToPath(new URL("../../components/free-resources/FreeLeadMagnetCta.tsx", import.meta.url)), "utf8");
 const navigationSource = readFileSync(fileURLToPath(new URL("../../lib/navigation.ts", import.meta.url)), "utf8");
 const sitemapSource = readFileSync(fileURLToPath(new URL("../sitemap.ts", import.meta.url)), "utf8");
+const linksSource = readFileSync(fileURLToPath(new URL("../../lib/links.ts", import.meta.url)), "utf8");
 
 const TITLES = [
   "15 rychlých jídel, když nestíháš",
@@ -70,4 +71,37 @@ test("metadata is indexable and canonical points to the production /zdarma route
 test("navigation and sitemap expose /zdarma", () => {
   assert.match(navigationSource, /\{ label: "Zdarma", href: "\/zdarma" \}/);
   assert.match(sitemapSource, /url: `\$\{SITE_URL\}\/zdarma`/);
+});
+
+test("paid next steps follow the decision section and contain exactly three cards", () => {
+  const decisionIndex = pageSource.indexOf("Začni tím, co řešíš právě teď");
+  const paidSectionIndex = pageSource.indexOf("CHCEŠ JÍT O KROK DÁL?");
+  const footerIndex = pageSource.indexOf("</main>");
+  const paidStepsSource = pageSource.slice(
+    pageSource.indexOf("const PAID_NEXT_STEPS = ["),
+    pageSource.indexOf("] as const;", pageSource.indexOf("const PAID_NEXT_STEPS = [")),
+  );
+
+  assert.ok(decisionIndex >= 0 && paidSectionIndex > decisionIndex && footerIndex > paidSectionIndex);
+  assert.match(pageSource, /Vyber si podporu podle toho, co právě potřebuješ/);
+  assert.match(
+    pageSource,
+    /Materiály zdarma ti můžou pomoct udělat si jasno\.[\s\S]*?osobní zpětnou vazbu, můžeš pokračovat tady\./,
+  );
+  assert.equal(paidStepsSource.match(/title: "/g)?.length, 3);
+  assert.equal(paidStepsSource.match(/linkLabel: "Zjistit více"/g)?.length, 3);
+});
+
+test("paid next-step cards reuse the project product links and internal review route", () => {
+  assert.match(linksSource, /app: "https:\/\/platforma\.fitbezcasu\.cz\/"/);
+  assert.match(
+    linksSource,
+    /mealPlan: "https:\/\/www\.fitbezcasu\.cz\/jidelnicek-pro-zdrave-hubnuti"/,
+  );
+  assert.match(pageSource, /title: "Jídelníček pro zdravé hubnutí",[\s\S]*?href: EXTERNAL_LINKS\.mealPlan/);
+  assert.match(pageSource, /title: "Aplikace Fit bez času",[\s\S]*?href: EXTERNAL_LINKS\.app/);
+  assert.match(
+    pageSource,
+    /title: "Osobní rozbor jídelníčku",[\s\S]*?href: "\/nabidka-podpory\/osobni-rozbor-jidelnicku"/,
+  );
 });

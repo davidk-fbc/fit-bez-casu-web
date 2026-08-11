@@ -23,10 +23,7 @@ const CARDS = [
     title: "Zdarma",
     description:
       "Stáhni si e-booky, tipy a návody zdarma, které ti pomůžou začít lépe jíst, více se hýbat a udělat první krok.",
-    // Zatím vede zpět na sekci, ve které karta samotná leží (self-reference,
-    // ne skutečný obsah zdarma) - viz report. Cíl neměníme, dokud nebude
-    // potvrzená skutečná cílová stránka.
-    href: "#zdarma",
+    href: "/zdarma",
   },
   {
     icon: <PencilIcon className="h-full w-full" />,
