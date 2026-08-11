@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test app/not-found.test.ts app/page.test.ts lib/blog/articles.test.ts lib/private-pages.test.ts lib/structured-data.test.ts"
+    "test": "node --experimental-strip-types --test app/not-found.test.ts app/page.test.ts app/zdarma/page.test.ts lib/blog/articles.test.ts lib/private-pages.test.ts lib/structured-data.test.ts"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.10",

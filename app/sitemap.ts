@@ -18,5 +18,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const articlePages: MetadataRoute.Sitemap = articles.filter((article) => article.indexingEnabled).map((article) => ({ url: article.canonicalUrl ?? `${SITE_URL}/blog/${article.slug}`, lastModified: new Date(article.updatedAt), changeFrequency: "monthly", priority: 0.8 }));
   const supportOfferPages: MetadataRoute.Sitemap = supportOffers.flatMap((page, index) => page ? [{ url: `${SITE_URL}/${SUPPORT_OFFER_INDEXABLE_SLUGS[index]}`, lastModified: new Date(page.updatedAt) }] : []);
-  return [{ url: `${SITE_URL}/` }, { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 }, { url: `${SITE_URL}/o-nas` }, ...supportOfferPages, ...categoryPages, ...articlePages];
+  return [{ url: `${SITE_URL}/` }, { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 }, { url: `${SITE_URL}/o-nas` }, { url: `${SITE_URL}/zdarma`, changeFrequency: "monthly", priority: 0.8 }, ...supportOfferPages, ...categoryPages, ...articlePages];
 }

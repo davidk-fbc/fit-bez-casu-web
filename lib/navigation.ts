@@ -6,17 +6,17 @@ export type NavLink = {
 };
 
 // Single source of truth for header/footer nav. Jídelníček a Aplikace vedou
-// na externí produktové URL (viz lib/links.ts). Zdarma zatím nemá vlastní
-// podstránku, proto míří na homepage kotvu (funguje i z /blog a /o-nas).
+// na externí produktové URL (viz lib/links.ts), ostatní položky na veřejné
+// stránky tohoto webu.
 export const NAV_LINKS: NavLink[] = [
   { label: "Jídelníček", href: EXTERNAL_LINKS.mealPlan },
   { label: "Aplikace", href: EXTERNAL_LINKS.app },
-  { label: "Zdarma", href: "/#zdarma" },
+  { label: "Zdarma", href: "/zdarma" },
   { label: "Blog", href: "/blog" },
   { label: "O nás", href: "/o-nas" },
 ];
 
-// Odvozeno z jediného centrálního zdroje (lib/links.ts) — žádná URL se
+// Odvozeno z jediného centrálního zdroje (lib/links.ts), žádná URL se
 // nezadává ručně na dvou místech.
 export const COMMUNITY_URL = EXTERNAL_LINKS.community;
 
