@@ -239,6 +239,7 @@ svg {
 .storage-panel,
 .meal-panel,
 .rescue-panel,
+.sample-panel,
 .foundation-panel,
 .principle-panel,
 .sweet-panel,
@@ -767,6 +768,86 @@ svg {
 
 .rescue-page .page-callout {
   margin-top: 7mm;
+}
+
+/* Sample shopping list */
+
+.sample-shopping-page .page-title {
+  max-width: 660px;
+}
+
+.sample-intro {
+  display: grid;
+  max-width: 690px;
+  gap: 7px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.sample-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 10mm;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.sample-column {
+  display: flex;
+  min-height: 430px;
+  flex-direction: column;
+  padding: 23px 22px;
+}
+
+.sample-column + .sample-column {
+  border-left: 1px solid var(--line);
+}
+
+.sample-category + .sample-category {
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.sample-category h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: "Lora", serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.sample-category h3::before {
+  content: "";
+  width: 3px;
+  height: 15px;
+  flex: none;
+  background: var(--blue);
+  border-radius: 3px;
+}
+
+.sample-category .food-list {
+  margin-top: 11px;
+}
+
+.sample-category .food-list li {
+  min-height: 36px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  font-size: 11.5px;
+}
+
+.sample-category .food-list li::before {
+  top: 15px;
+}
+
+.sample-shopping-page .page-callout {
+  margin-top: 8mm;
 }
 
 /* Checklist */

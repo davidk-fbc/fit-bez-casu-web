@@ -30,6 +30,11 @@ EXPECTED_TEXT = [
     "Rychlá svačina",
     "Nouzová jídla",
     "Co mít v mrazáku",
+    "Začni tímhle jednoduchým nákupem",
+    "Na rychlé jídlo",
+    "Tuky a dochucení",
+    "olivový olej",
+    "ořechy",
     "Něco sladkého",
     "Můj rychlý nákupní checklist",
     "Jídelníček pro zdravé hubnutí",
@@ -46,6 +51,16 @@ CHECKLIST_CATEGORIES = [
     "Svačiny",
     "Nouzové jídlo",
     "Mrazák",
+    "Něco sladkého",
+]
+
+SAMPLE_CATEGORIES = [
+    "Bílkoviny",
+    "Přílohy",
+    "Zelenina",
+    "Ovoce",
+    "Na rychlé jídlo",
+    "Tuky a dochucení",
     "Něco sladkého",
 ]
 
@@ -144,7 +159,9 @@ def main() -> None:
 
     html = HTML.read_text(encoding="utf-8")
     css = CSS.read_text(encoding="utf-8")
-    check(len(re.findall(r'<section\s+class="page(?:\s|\")', html)) == 8, "Zdroj nemá přesně 8 stran.")
+    check(len(re.findall(r'<section\s+class="page(?:\s|\")', html)) == 9, "Zdroj nemá přesně 9 stran.")
+    check(html.count('class="page sample-shopping-page"') == 1, "Zdroj nemá přesně jednu stránku vzorového nákupu.")
+    check(html.count('class="sample-category"') == 7, "Vzorový nákup nemá přesně 7 kategorií.")
     check(html.count('class="shopping-grid"') == 1, "Zdroj nemá přesně jeden nákupní checklist.")
     check(html.count('class="write-line"') == 27, "Checklist nemá 27 doplnitelných řádků.")
     for forbidden in FORBIDDEN_SOURCE:
@@ -153,9 +170,11 @@ def main() -> None:
         check(pattern not in html and pattern not in css, f"Ve zdroji zůstal starý designový vzor: {pattern}")
     for category in CHECKLIST_CATEGORIES:
         check(category.casefold() in html.casefold(), f"Ve zdroji chybí kategorie: {category}")
+    for category in SAMPLE_CATEGORIES:
+        check(category.casefold() in html.casefold(), f"Ve vzorovém nákupu chybí kategorie: {category}")
 
     reader = PdfReader(PDF)
-    check(len(reader.pages) == 8, f"PDF má {len(reader.pages)} stran místo 8.")
+    check(len(reader.pages) == 9, f"PDF má {len(reader.pages)} stran místo 9.")
     for page_number, page in enumerate(reader.pages, start=1):
         width = float(page.mediabox.width)
         height = float(page.mediabox.height)
@@ -203,10 +222,10 @@ def main() -> None:
             Path(temp_dir).glob("page-*.png"),
             key=lambda path: int(path.stem.split("-")[-1]),
         )
-        check(len(page_files) == 8, "Render nevytvořil přesně 8 stran.")
+        check(len(page_files) == 9, "Render nevytvořil přesně 9 stran.")
         build_contact_sheet(page_files)
 
-    print("QA OK: 8 A4 stran, text, 9 kategorií, checklist, CTA, odkazy a fonty.")
+    print("QA OK: 9 A4 stran, vzorový nákup, checklist, CTA, odkazy a fonty.")
     print(f"Fonty: {fonts}")
     print(f"Odkazy: {sorted(links)}")
     print(f"Contact sheet: {CONTACT_SHEET}")
