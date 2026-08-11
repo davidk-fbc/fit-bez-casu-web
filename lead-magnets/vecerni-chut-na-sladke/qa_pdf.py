@@ -23,16 +23,29 @@ EXPECTED_TEXT = [
     "Stres",
     "Únava",
     "Zvyk",
-    "Nečekej s jídlem až na večer",
+    "Nenech se večer dohnat velkým hladem",
     "Poskládej si sytější hlavní jídla",
     "Nezakazuj si sladké automaticky",
-    "Měj jednoduchou večerní variantu",
+    "Měj připravenou jednoduchou večerní variantu",
     "Najdi svůj nejčastější spouštěč",
     "Co u tebe spouští večerní chutě nejčastěji?",
     "Jídelníček pro zdravé hubnutí",
     "Osobní rozbor jídelníčku",
     "web.fitbezcasu.cz",
     "@fitbezcasu",
+]
+
+SELF_CHECK_TEXT = [
+    "Přes den často nestíhám jíst.",
+    "Mezi obědem a večeří mám dlouhou pauzu.",
+    "Večer bych si dala i normální jídlo, nejen sladké.",
+    "Sladké si dávám hlavně po náročném dni.",
+    "Večer bývám výrazně unavená.",
+    "Sladké patří k televizi nebo seriálu.",
+    "Často jím přímo z balení.",
+    "Přes den se snažím jíst co nejméně.",
+    "Když si sladké zakážu, myslím na něj ještě víc.",
+    "Chuť přichází skoro vždy ve stejnou dobu.",
 ]
 
 EXPECTED_LINKS = {
@@ -116,7 +129,7 @@ def main() -> None:
     check(HTML.is_file(), f"Chybí HTML: {HTML}")
 
     html = HTML.read_text(encoding="utf-8")
-    check(html.count('class="page') >= 9, "Zdroj nemá očekávaných 9 stran.")
+    check(len(re.findall(r'<section\s+class="page(?:\s|\")', html)) == 9, "Zdroj nemá přesně 9 stran.")
     for forbidden in FORBIDDEN_SOURCE:
         check(forbidden.casefold() not in html.casefold(), f"Ve zdroji zůstal zakázaný text: {forbidden}")
 
@@ -133,6 +146,9 @@ def main() -> None:
     for required in EXPECTED_TEXT:
         compact_required = re.sub(r"\s+", "", required.casefold())
         check(compact_required in compact_text, f"V PDF chybí povinný text: {required}")
+    for statement in SELF_CHECK_TEXT:
+        compact_statement = re.sub(r"\s+", "", statement.casefold())
+        check(compact_statement in compact_text, f"V PDF chybí self-check tvrzení: {statement}")
 
     links = pdf_links(reader)
     check(EXPECTED_LINKS.issubset(links), f"V PDF chybí odkazy: {EXPECTED_LINKS - links}")
