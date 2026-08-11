@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import pdfplumber
 from PIL import Image, ImageDraw
 from pypdf import PdfReader
 
@@ -15,6 +16,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parent
 PDF = ROOT / "fit-bez-casu-tahak-zdraveho-nakupu.pdf"
 HTML = ROOT / "index.html"
+CSS = ROOT / "styles.css"
 CONTACT_SHEET = ROOT / "contact-sheet.png"
 
 EXPECTED_TEXT = [
@@ -64,6 +66,15 @@ FORBIDDEN_SOURCE = [
     "sacharidy večer škodí",
     "povolené potraviny",
     "zakázané potraviny",
+]
+
+FORBIDDEN_DESIGN_PATTERNS = [
+    "pill-grid",
+    "choice-chips",
+    "ingredient-cloud",
+    "sweet-options",
+    "highlight-strip",
+    "freezer-tip",
 ]
 
 
@@ -129,13 +140,17 @@ def build_contact_sheet(page_files: list[Path]) -> None:
 def main() -> None:
     check(PDF.is_file(), f"Chybí PDF: {PDF}")
     check(HTML.is_file(), f"Chybí HTML: {HTML}")
+    check(CSS.is_file(), f"Chybí CSS: {CSS}")
 
     html = HTML.read_text(encoding="utf-8")
+    css = CSS.read_text(encoding="utf-8")
     check(len(re.findall(r'<section\s+class="page(?:\s|\")', html)) == 8, "Zdroj nemá přesně 8 stran.")
     check(html.count('class="shopping-grid"') == 1, "Zdroj nemá přesně jeden nákupní checklist.")
     check(html.count('class="write-line"') == 27, "Checklist nemá 27 doplnitelných řádků.")
     for forbidden in FORBIDDEN_SOURCE:
         check(forbidden.casefold() not in html.casefold(), f"Ve zdroji zůstal zakázaný text: {forbidden}")
+    for pattern in FORBIDDEN_DESIGN_PATTERNS:
+        check(pattern not in html and pattern not in css, f"Ve zdroji zůstal starý designový vzor: {pattern}")
     for category in CHECKLIST_CATEGORIES:
         check(category.casefold() in html.casefold(), f"Ve zdroji chybí kategorie: {category}")
 
@@ -146,7 +161,12 @@ def main() -> None:
         height = float(page.mediabox.height)
         check(590 <= width <= 600 and 838 <= height <= 845, f"Strana {page_number} není A4.")
 
-    text = normalize("\n".join(page.extract_text() or "" for page in reader.pages))
+    page_texts = [(page.extract_text() or "").splitlines() for page in reader.pages]
+    check(not page_texts[0] or page_texts[0][-1].strip() != "0", "Titulka má chybné číslování.")
+    for expected_number, lines in enumerate(page_texts[1:], start=1):
+        check(lines and lines[-1].strip() == str(expected_number), f"Chybné číslo strany {expected_number}.")
+
+    text = normalize("\n".join("\n".join(lines) for lines in page_texts))
     check(len(text) > 5000, "PDF nemá dostatečnou textovou vrstvu.")
     compact_text = re.sub(r"\s+", "", text.casefold())
     for required in EXPECTED_TEXT:
@@ -161,6 +181,14 @@ def main() -> None:
     check(any("Inter" in name for _, name in fonts), "V PDF není vložený Inter.")
     check(any("Lora" in name for _, name in fonts), "V PDF není vložená Lora.")
     check(not any("Arial" in name for _, name in fonts), f"V PDF je Arial fallback: {fonts}")
+
+    with pdfplumber.open(PDF) as document:
+        for page_number, page in enumerate(document.pages, start=1):
+            for character in page.chars:
+                check(character["x0"] >= -0.5, f"Text přesahuje vlevo na straně {page_number}.")
+                check(character["x1"] <= page.width + 0.5, f"Text přesahuje vpravo na straně {page_number}.")
+                check(character["top"] >= -0.5, f"Text přesahuje nahoře na straně {page_number}.")
+                check(character["bottom"] <= page.height + 0.5, f"Text přesahuje dole na straně {page_number}.")
 
     with tempfile.TemporaryDirectory(prefix="fbc-shopping-guide-qa-") as temp_dir:
         prefix = Path(temp_dir) / "page"
