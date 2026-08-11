@@ -9,7 +9,7 @@ Finální desetistránkový A4 lead magnet značky Fit bez času. Zdroj je v HTM
 - `export_pdf.py` – export PDF
 - `qa_pdf.py` – kontrola struktury, textu, odkazů, fontů, A4 rozměru a 200 DPI renderu
 - `fit-bez-casu-7-chyb-v-jidelnicku-ktere-mohou-brzdit-hubnuti.pdf` – finální výstup
-- `kontaktni-nahled.png` – náhled všech stran
+- `contact-sheet.png` – náhled všech stran v 200 DPI
 
 ## Export a kontrola
 

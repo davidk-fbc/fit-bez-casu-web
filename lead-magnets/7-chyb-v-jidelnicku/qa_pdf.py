@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent
 PDF = ROOT / "fit-bez-casu-7-chyb-v-jidelnicku-ktere-mohou-brzdit-hubnuti.pdf"
 HTML = ROOT / "index.html"
 CSS = ROOT / "styles.css"
-CONTACT_SHEET = ROOT / "kontaktni-nahled.png"
+CONTACT_SHEET = ROOT / "contact-sheet.png"
 EXPECTED_PAGES = 10
 
 EXPECTED_TEXT = [
