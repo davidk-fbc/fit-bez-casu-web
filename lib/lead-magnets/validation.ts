@@ -4,15 +4,15 @@ export type LeadMagnetSubmission = {
   name: string;
   email: string;
   magnetId: LeadMagnetId;
-  marketingConsent: boolean;
+  consent: true;
   website: string;
 };
 
 export type ValidationResult =
   | { ok: true; value: LeadMagnetSubmission }
-  | { ok: false; fields: readonly ("name" | "email" | "magnetId" | "marketingConsent" | "website")[] };
+  | { ok: false; fields: readonly ("name" | "email" | "magnetId" | "consent" | "website")[] };
 
-const ALLOWED_KEYS = new Set(["name", "email", "magnetId", "marketingConsent", "website"]);
+const ALLOWED_KEYS = new Set(["name", "email", "magnetId", "consent", "website"]);
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function parseLeadMagnetSubmission(input: unknown): ValidationResult {
@@ -21,7 +21,7 @@ export function parseLeadMagnetSubmission(input: unknown): ValidationResult {
   }
 
   const record = input as Record<string, unknown>;
-  const fields: ("name" | "email" | "magnetId" | "marketingConsent" | "website")[] = [];
+  const fields: ("name" | "email" | "magnetId" | "consent" | "website")[] = [];
   if (Object.keys(record).some((key) => !ALLOWED_KEYS.has(key))) fields.push("magnetId");
 
   const name = typeof record.name === "string" ? record.name.trim().replace(/\s+/g, " ") : "";
@@ -31,9 +31,7 @@ export function parseLeadMagnetSubmission(input: unknown): ValidationResult {
   if (!email || email.length > 254 || !EMAIL_PATTERN.test(email)) fields.push("email");
 
   if (!isLeadMagnetId(record.magnetId)) fields.push("magnetId");
-  if (record.marketingConsent !== undefined && typeof record.marketingConsent !== "boolean") {
-    fields.push("marketingConsent");
-  }
+  if (record.consent !== true) fields.push("consent");
 
   const website = record.website === undefined ? "" : typeof record.website === "string" ? record.website.trim() : "invalid";
   if (website.length > 200) fields.push("website");
@@ -48,7 +46,7 @@ export function parseLeadMagnetSubmission(input: unknown): ValidationResult {
       name,
       email,
       magnetId: record.magnetId,
-      marketingConsent: record.marketingConsent === true,
+      consent: true,
       website,
     },
   };

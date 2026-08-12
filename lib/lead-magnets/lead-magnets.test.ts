@@ -25,9 +25,15 @@ const VALID_SUBMISSION: LeadMagnetSubmission = {
   name: "Klára",
   email: "klara@example.test",
   magnetId: "quick-meals",
-  marketingConsent: true,
+  consent: true,
   website: "",
 };
+
+function submissionWithoutConsent() {
+  const submission: Record<string, unknown> = { ...VALID_SUBMISSION };
+  delete submission.consent;
+  return submission;
+}
 
 function response(body: unknown, status = 200) {
   return new Response(body === null ? null : JSON.stringify(body), {
@@ -48,17 +54,18 @@ function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   });
 }
 
-test("validation normalizes the name and email and defaults marketing consent to false", () => {
+test("validation normalizes the name and email when explicit consent is true", () => {
   const result = parseLeadMagnetSubmission({
     name: "  Klára   Nová  ",
     email: "  KLARA@EXAMPLE.CZ ",
     magnetId: "shopping-guide",
+    consent: true,
   });
   assert.equal(result.ok, true);
   if (result.ok) {
     assert.equal(result.value.name, "Klára Nová");
     assert.equal(result.value.email, "klara@example.cz");
-    assert.equal(result.value.marketingConsent, false);
+    assert.equal(result.value.consent, true);
   }
 });
 
@@ -72,8 +79,10 @@ test("validation rejects unknown magnet ids, invalid emails and extra payload ke
   }
 });
 
-test("validation accepts only boolean marketing consent and caps field sizes", () => {
-  assert.equal(parseLeadMagnetSubmission({ ...VALID_SUBMISSION, marketingConsent: "yes" }).ok, false);
+test("validation requires consent to be exactly true and caps field sizes", () => {
+  assert.equal(parseLeadMagnetSubmission({ ...VALID_SUBMISSION, consent: false }).ok, false);
+  assert.equal(parseLeadMagnetSubmission({ ...VALID_SUBMISSION, consent: "yes" }).ok, false);
+  assert.equal(parseLeadMagnetSubmission(submissionWithoutConsent()).ok, false);
   assert.equal(parseLeadMagnetSubmission({ ...VALID_SUBMISSION, name: "x".repeat(81) }).ok, false);
   assert.equal(parseLeadMagnetSubmission({ ...VALID_SUBMISSION, website: "x".repeat(201) }).ok, false);
 });
@@ -204,7 +213,7 @@ test("Systeme refuses a partial tag-name match and never creates a replacement t
   assert.equal(calls.some((call) => call.url.includes("campaign")), false);
 });
 
-test("orchestrator delivers first and skips Systeme entirely without marketing consent", async () => {
+test("orchestrator sends every valid submission through Brevo and Systeme", async () => {
   const calls: string[] = [];
   const brevo = {
     async upsertContact() { calls.push("brevo-contact"); },
@@ -212,13 +221,13 @@ test("orchestrator delivers first and skips Systeme entirely without marketing c
   };
   const systeme = { async upsertAndTag() { calls.push("systeme"); return "assigned" as const; } };
   const result = await orchestrateLeadMagnet(
-    { ...VALID_SUBMISSION, marketingConsent: false },
+    VALID_SUBMISSION,
     1,
     brevo,
     systeme,
   );
-  assert.deepEqual(calls, ["brevo-contact", "brevo-send"]);
-  assert.deepEqual(result, { delivered: true, marketingSynced: false });
+  assert.deepEqual(calls, ["brevo-contact", "brevo-send", "systeme"]);
+  assert.deepEqual(result, { delivered: true, marketingSynced: true });
 });
 
 test("orchestrator still reports delivery success if Systeme fails after Brevo sent", async () => {
@@ -266,6 +275,25 @@ test("subscribe handler accepts a valid request and passes only normalized data 
   assert.deepEqual(await result.json(), { ok: true });
   assert.deepEqual(submissions, [VALID_SUBMISSION]);
   assert.equal(result.headers.get("cache-control"), "no-store");
+});
+
+test("subscribe handler rejects false or missing consent before any fulfillment call", async () => {
+  let fulfillmentCalls = 0;
+  const dependencies = {
+    limiter: new MemoryRateLimiter(),
+    fulfill: async () => { fulfillmentCalls += 1; },
+  };
+  const falseConsent = await handleLeadMagnetSubscribe(
+    makeRequest({ ...VALID_SUBMISSION, consent: false }),
+    dependencies,
+  );
+  const missingConsent = await handleLeadMagnetSubscribe(makeRequest(submissionWithoutConsent()), dependencies);
+
+  assert.equal(falseConsent.status, 400);
+  assert.equal(missingConsent.status, 400);
+  assert.deepEqual(await falseConsent.json(), { ok: false, error: "invalid_input", fields: ["consent"] });
+  assert.deepEqual(await missingConsent.json(), { ok: false, error: "invalid_input", fields: ["consent"] });
+  assert.equal(fulfillmentCalls, 0);
 });
 
 test("subscribe handler rejects wrong content types, malformed JSON and oversized bodies", async () => {
@@ -329,13 +357,26 @@ test("frontend has one reusable native modal with all required states and consen
   assert.match(provider, /submissionState === "error"/);
   assert.match(provider, /magnet\.preview\.cover/);
   assert.match(provider, /Kam ti máme materiál poslat\?/);
-  assert.match(provider, /Poslat materiál zdarma/);
-  assert.match(provider, /name="marketingConsent"/);
-  assert.doesNotMatch(provider, /name="marketingConsent"[\s\S]{0,120}\brequired\b/);
+  assert.match(provider, /Vyplň jméno a e-mail\. Pošleme ti vybraný materiál a budeš od nás dostávat také praktické tipy k hubnutí, inspiraci a nabídky Fit bez času\. Z odběru se můžeš kdykoliv jednoduše odhlásit\./);
+  assert.match(provider, /Získat materiál zdarma/);
+  assert.match(provider, /name="consent"[\s\S]{0,120}\brequired\b/);
+  assert.match(provider, /Souhlasím se zasíláním e-mailových tipů, inspirace a nabídek Fit bez času a se zpracováním svých údajů za tímto účelem\. Souhlas můžu kdykoliv odvolat\./);
+  assert.match(provider, /Pro získání materiálu je potřeba potvrdit souhlas s e-mailovou komunikací\./);
+  assert.match(provider, /https:\/\/platforma\.fitbezcasu\.cz\/ochrana-osobnich-udaju/);
+  assert.match(provider, /Zásadách ochrany osobních údajů/);
+  assert.match(provider, /data\.get\("consent"\) !== "on"/);
+  assert.match(provider, /consent: true/);
+  assert.doesNotMatch(provider, /Materiál ti pošleme i bez souhlasu/);
   for (const event of ["lead_magnet_open", "lead_magnet_submit", "lead_magnet_success"]) assert.ok(provider.includes(event));
   assert.match(provider, /consentStatus === "decided" && analytics === "granted"/);
   assert.match(provider, /\{ magnet_id: selectedId \}/);
   assert.match(cta, /onClick=\{\(event\) => open\(magnetId, event\.currentTarget\)\}/);
+});
+
+test("the old no-consent delivery branch is absent and valid orchestration always reaches Systeme", () => {
+  const source = readFileSync(new URL("./orchestrator.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /if\s*\(!submission\.(?:marketingConsent|consent)\)/);
+  assert.match(source, /await systeme\.upsertAndTag\(submission\.name, submission\.email\)/);
 });
 
 test("server maps all four magnet ids to their own template env without reading or attaching a PDF", () => {

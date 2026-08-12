@@ -18,7 +18,6 @@ export async function orchestrateLeadMagnet(
     templateId,
   });
 
-  if (!submission.marketingConsent) return { delivered: true, marketingSynced: false } as const;
   if (!systeme) {
     log("lead_magnet_systeme_sync_failed", { code: "systeme_api_key_missing", magnetId: submission.magnetId });
     return { delivered: true, marketingSynced: false } as const;

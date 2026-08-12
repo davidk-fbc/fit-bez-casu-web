@@ -31,11 +31,13 @@ const PRIVACY_URL = "https://platforma.fitbezcasu.cz/ochrana-osobnich-udaju";
 export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const consentInputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const [magnetId, setMagnetId] = useState<LeadMagnetId | null>(null);
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [consentError, setConsentError] = useState("");
   const { status: consentStatus, analytics } = useConsent();
 
   const magnet = useMemo(
@@ -65,6 +67,7 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
     setMagnetId(null);
     setSubmissionState("idle");
     setErrorMessage("");
+    setConsentError("");
     const trigger = triggerRef.current;
     triggerRef.current = null;
     trigger?.focus();
@@ -75,6 +78,7 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
       triggerRef.current = trigger;
       setSubmissionState("idle");
       setErrorMessage("");
+      setConsentError("");
       setMagnetId(selectedId);
       track("lead_magnet_open", selectedId);
     },
@@ -97,9 +101,15 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
     if (!magnet) return;
 
     const form = event.currentTarget;
+    const data = new FormData(form);
+    if (data.get("consent") !== "on") {
+      setConsentError("Pro získání materiálu je potřeba potvrdit souhlas s e-mailovou komunikací.");
+      consentInputRef.current?.focus();
+      return;
+    }
+    setConsentError("");
     if (!form.reportValidity()) return;
 
-    const data = new FormData(form);
     const controller = new AbortController();
     abortRef.current?.abort();
     abortRef.current = controller;
@@ -115,14 +125,24 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
           name: String(data.get("name") ?? ""),
           email: String(data.get("email") ?? ""),
           magnetId: magnet.id,
-          marketingConsent: data.get("marketingConsent") === "on",
+          consent: true,
           website: String(data.get("website") ?? ""),
         }),
         signal: controller.signal,
       });
 
-      const result = (await response.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      const result = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        error?: string;
+        fields?: string[];
+      } | null;
       if (!response.ok || !result?.ok) {
+        if (response.status === 400 && result?.fields?.includes("consent")) {
+          setConsentError("Pro získání materiálu je potřeba potvrdit souhlas s e-mailovou komunikací.");
+          consentInputRef.current?.focus();
+          setSubmissionState("idle");
+          return;
+        }
         if (response.status === 429) {
           throw new Error("Zkus to prosím znovu za chvíli.");
         }
@@ -202,7 +222,7 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
               Kam ti máme materiál poslat?
             </h2>
             <p id="lead-magnet-dialog-description" className="mt-3 text-sm leading-relaxed text-[var(--color-text-muted)] sm:text-base">
-              Vyplň jméno a e-mail a pošleme ti ho rovnou do schránky.
+              Vyplň jméno a e-mail. Pošleme ti vybraný materiál a budeš od nás dostávat také praktické tipy k hubnutí, inspiraci a nabídky Fit bez času. Z odběru se můžeš kdykoliv jednoduše odhlásit.
             </p>
 
             {submissionState === "success" ? (
@@ -266,20 +286,31 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
 
                 <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-[var(--color-surface-muted)] p-4 text-sm leading-relaxed">
                   <input
-                    name="marketingConsent"
+                    ref={consentInputRef}
+                    name="consent"
                     type="checkbox"
+                    required
+                    aria-invalid={consentError ? "true" : undefined}
+                    aria-describedby={consentError ? "lead-magnet-consent-error lead-magnet-privacy-note" : "lead-magnet-privacy-note"}
+                    onChange={() => setConsentError("")}
                     className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-accent-blue)]"
                   />
                   <span>
-                    Chci také dostávat navazující e-mailové tipy a nabídky Fit bez času. Souhlas je dobrovolný a můžu ho kdykoli odvolat.
+                    Souhlasím se zasíláním e-mailových tipů, inspirace a nabídek Fit bez času a se zpracováním svých údajů za tímto účelem. Souhlas můžu kdykoliv odvolat.
                   </span>
                 </label>
 
-                <p className="text-xs leading-relaxed text-[var(--color-text-muted)]">
-                  Materiál ti pošleme i bez souhlasu s dalšími e-maily. Odesláním formuláře potvrzuješ, že sis přečetla{
+                {consentError ? (
+                  <p id="lead-magnet-consent-error" role="alert" className="text-sm font-medium text-red-700">
+                    {consentError}
+                  </p>
+                ) : null}
+
+                <p id="lead-magnet-privacy-note" className="text-xs leading-relaxed text-[var(--color-text-muted)]">
+                  Více informací najdeš v{
                   " "
                   }<Link href={PRIVACY_URL} target="_blank" rel="noreferrer" className="font-semibold text-[var(--color-accent-blue)] underline underline-offset-2">
-                    informace o zpracování osobních údajů
+                    Zásadách ochrany osobních údajů
                   </Link>.
                 </p>
 
@@ -295,7 +326,7 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
                   className="min-h-12 w-full rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-[0_16px_36px_-15px_rgba(76,65,245,0.72)] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent-blue)]"
                   style={{ background: "var(--gradient-brand)" }}
                 >
-                  {submissionState === "loading" ? "Odesílám materiál..." : "Poslat materiál zdarma"}
+                  {submissionState === "loading" ? "Odesílám materiál..." : "Získat materiál zdarma"}
                 </button>
               </form>
             )}
