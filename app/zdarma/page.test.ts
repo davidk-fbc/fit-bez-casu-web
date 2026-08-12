@@ -44,7 +44,9 @@ test("free resources page has one exact H1 and no explicit material count in the
 test("all lead magnets and exact CTA labels are configured", () => {
   for (const title of TITLES) assert.ok(configSource.includes(title), `missing title: ${title}`);
   for (const label of CTA_LABELS) assert.ok(configSource.includes(label), `missing CTA: ${label}`);
-  assert.equal(configSource.match(/ctaUrl:\s*null/g)?.length, 4);
+  for (const id of ["quick-meals", "evening-cravings", "shopping-guide", "diet-mistakes"]) {
+    assert.ok(configSource.includes(`id: "${id}"`), `missing magnet id: ${id}`);
+  }
 });
 
 test("all optimized preview assets exist", () => {
@@ -54,8 +56,10 @@ test("all optimized preview assets exist", () => {
   }
 });
 
-test("CTA fallback is a disabled button and never a fake or PDF link", () => {
-  assert.match(ctaSource, /<button[\s\S]*?disabled/);
+test("all CTA buttons open the reusable lead-magnet dialog and never expose a PDF link", () => {
+  assert.match(ctaSource, /<button[\s\S]*?onClick=/);
+  assert.match(pageSource, /<LeadMagnetSignupProvider>/);
+  assert.match(pageSource, /magnetId=\{magnet\.id\}/);
   assert.doesNotMatch(`${pageSource}\n${configSource}\n${ctaSource}`, /href=["']#["']/);
   assert.doesNotMatch(`${pageSource}\n${configSource}\n${ctaSource}`, /\.pdf(?:["'?#]|$)/i);
 });

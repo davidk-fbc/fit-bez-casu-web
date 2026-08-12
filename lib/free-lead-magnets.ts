@@ -1,5 +1,6 @@
 export type FreeLeadMagnet = {
   key: "quickMeals" | "eveningCravings" | "shoppingGuide" | "dietMistakes";
+  id: LeadMagnetId;
   title: string;
   eyebrow: string;
   headline: string;
@@ -8,7 +9,6 @@ export type FreeLeadMagnet = {
   closing: readonly string[];
   ctaLabel: string;
   ctaNote: string;
-  ctaUrl: string | null;
   preview: {
     cover: string;
     inside: string;
@@ -16,11 +16,23 @@ export type FreeLeadMagnet = {
   };
 };
 
-// Jediné místo pro budoucí cílové URL. Dokud je hodnota null, stránka
-// vykreslí bezpečné neaktivní tlačítko bez falešné navigace.
+export const LEAD_MAGNET_IDS = [
+  "quick-meals",
+  "evening-cravings",
+  "shopping-guide",
+  "diet-mistakes",
+] as const;
+
+export type LeadMagnetId = (typeof LEAD_MAGNET_IDS)[number];
+
+export function isLeadMagnetId(value: unknown): value is LeadMagnetId {
+  return typeof value === "string" && LEAD_MAGNET_IDS.includes(value as LeadMagnetId);
+}
+
 export const FREE_LEAD_MAGNETS = [
   {
     key: "quickMeals",
+    id: "quick-meals",
     title: "15 rychlých jídel, když nestíháš",
     eyebrow: "15 RYCHLÝCH JÍDEL Z BĚŽNÝCH POTRAVIN",
     headline: "Když nemáš čas vařit, nemusíš skončit u rohlíku nebo objednávky",
@@ -41,7 +53,6 @@ export const FREE_LEAD_MAGNETS = [
     ],
     ctaLabel: "Chci 15 rychlých jídel zdarma",
     ctaNote: "PDF zdarma",
-    ctaUrl: null,
     preview: {
       cover: "/images/free-resources/quick-cover.webp",
       inside: "/images/free-resources/quick-inside.webp",
@@ -50,6 +61,7 @@ export const FREE_LEAD_MAGNETS = [
   },
   {
     key: "eveningCravings",
+    id: "evening-cravings",
     title: "Co dělat, když tě večer honí chuť na sladké",
     eyebrow: "KDYŽ TĚ VEČER HONÍ CHUŤ NA SLADKÉ",
     headline: "Než začneš sladké znovu zakazovat, zjisti, proč na něj máš chuť",
@@ -69,7 +81,6 @@ export const FREE_LEAD_MAGNETS = [
     ],
     ctaLabel: "Chci e-book o večerních chutích zdarma",
     ctaNote: "PDF zdarma",
-    ctaUrl: null,
     preview: {
       cover: "/images/free-resources/cravings-cover.webp",
       inside: "/images/free-resources/cravings-inside.webp",
@@ -78,6 +89,7 @@ export const FREE_LEAD_MAGNETS = [
   },
   {
     key: "shoppingGuide",
+    id: "shopping-guide",
     title: "Tahák zdravého nákupu",
     eyebrow: "TAHÁK, KTERÝ SI MŮŽEŠ VZÍT ROVNOU DO OBCHODU",
     headline: "Nakup tak, aby doma bylo z čeho rychle poskládat jídlo",
@@ -99,7 +111,6 @@ export const FREE_LEAD_MAGNETS = [
     ],
     ctaLabel: "Chci Tahák zdravého nákupu zdarma",
     ctaNote: "PDF zdarma",
-    ctaUrl: null,
     preview: {
       cover: "/images/free-resources/shopping-cover.webp",
       inside: "/images/free-resources/shopping-inside.webp",
@@ -108,6 +119,7 @@ export const FREE_LEAD_MAGNETS = [
   },
   {
     key: "dietMistakes",
+    id: "diet-mistakes",
     title: "7 chyb v jídelníčku, které mohou brzdit hubnutí",
     eyebrow: "KDYŽ SE SNAŽÍŠ, ALE NEVÍŠ, KDE JE PROBLÉM",
     headline: "Možná nepotřebuješ dělat víc. Potřebuješ zjistit, co má smysl změnit",
@@ -130,7 +142,6 @@ export const FREE_LEAD_MAGNETS = [
     ],
     ctaLabel: "Chci zjistit, co může brzdit moje hubnutí",
     ctaNote: "Self-check zdarma v PDF",
-    ctaUrl: null,
     preview: {
       cover: "/images/free-resources/mistakes-cover.webp",
       inside: "/images/free-resources/mistakes-inside.webp",

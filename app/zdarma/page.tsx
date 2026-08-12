@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, ForkKnifeIcon, PencilIcon, PhoneIcon } from "@/components/icons";
 import { FreeLeadMagnetCta } from "@/components/free-resources/FreeLeadMagnetCta";
 import { FreeLeadMagnetPreview } from "@/components/free-resources/FreeLeadMagnetPreview";
+import { LeadMagnetSignupProvider } from "@/components/free-resources/LeadMagnetSignupProvider";
 import { FREE_LEAD_MAGNETS } from "@/lib/free-lead-magnets";
 import { EXTERNAL_LINKS } from "@/lib/links";
 import { DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
@@ -107,6 +108,7 @@ export default function FreeResourcesPage() {
       <JsonLd data={FREE_PAGE_SCHEMA} />
       <JsonLd data={FREE_PAGE_BREADCRUMB} />
       <Header />
+      <LeadMagnetSignupProvider>
       <main className="min-w-0 flex-1 overflow-x-clip">
         <section className="relative overflow-hidden bg-[var(--color-dark)] py-20 sm:py-24 lg:py-28">
           <div
@@ -192,9 +194,8 @@ export default function FreeResourcesPage() {
 
                     <div className="mt-8 flex flex-col items-stretch sm:items-start">
                       <FreeLeadMagnetCta
-                        configKey={magnet.key}
+                        magnetId={magnet.id}
                         label={magnet.ctaLabel}
-                        url={magnet.ctaUrl}
                         describedBy={noteId}
                       />
                       <p id={noteId} className="mt-2 text-center text-xs font-medium text-[var(--color-text-muted)] sm:pl-5 sm:text-left">
@@ -265,6 +266,7 @@ export default function FreeResourcesPage() {
           </Container>
         </section>
       </main>
+      </LeadMagnetSignupProvider>
       <Footer />
     </>
   );

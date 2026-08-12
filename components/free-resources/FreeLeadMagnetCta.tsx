@@ -1,10 +1,12 @@
-import { Button } from "@/components/Button";
+"use client";
+
 import { ArrowRightIcon } from "@/components/icons";
+import { useLeadMagnetSignup } from "@/components/free-resources/LeadMagnetSignupProvider";
+import type { LeadMagnetId } from "@/lib/free-lead-magnets";
 
 type FreeLeadMagnetCtaProps = {
-  configKey: string;
+  magnetId: LeadMagnetId;
   label: string;
-  url: string | null;
   describedBy: string;
 };
 
@@ -12,26 +14,19 @@ const classes =
   "min-h-11 justify-center px-7 py-3.5 text-center text-[15px] shadow-[0_16px_36px_-15px_rgba(76,65,245,0.72)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent-blue)] sm:justify-start";
 
 export function FreeLeadMagnetCta({
-  configKey,
+  magnetId,
   label,
-  url,
   describedBy,
 }: FreeLeadMagnetCtaProps) {
-  if (url) {
-    return (
-      <Button href={url} aria-describedby={describedBy} variant="gradient" className={classes}>
-        {label}
-      </Button>
-    );
-  }
+  const { open } = useLeadMagnetSignup();
 
   return (
     <button
       type="button"
-      disabled
+      onClick={(event) => open(magnetId, event.currentTarget)}
       aria-describedby={describedBy}
-      data-cta-config-key={configKey}
-      className={`${classes} inline-flex cursor-default items-center gap-2 rounded-full text-sm font-semibold text-white`}
+      data-lead-magnet-id={magnetId}
+      className={`${classes} inline-flex items-center gap-2 rounded-full text-sm font-semibold text-white transition hover:brightness-110`}
       style={{ background: "var(--gradient-brand)" }}
     >
       {label}

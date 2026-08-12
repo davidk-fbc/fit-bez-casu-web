@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test app/not-found.test.ts app/page.test.ts app/zdarma/page.test.ts lib/blog/articles.test.ts lib/private-pages.test.ts lib/structured-data.test.ts"
+    "test": "tsx --test app/not-found.test.ts app/page.test.ts app/zdarma/page.test.ts lib/blog/articles.test.ts lib/lead-magnets/lead-magnets.test.ts lib/private-pages.test.ts lib/structured-data.test.ts"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.10",
@@ -24,6 +24,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }

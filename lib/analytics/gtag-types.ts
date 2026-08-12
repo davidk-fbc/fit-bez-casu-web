@@ -17,6 +17,11 @@ export type GtagConsentParams = {
 
 export type GtagFunction = {
   (command: "consent", action: "default" | "update", params: GtagConsentParams): void;
+  (
+    command: "event",
+    action: "lead_magnet_open" | "lead_magnet_submit" | "lead_magnet_success",
+    params: { magnet_id: string },
+  ): void;
 };
 
 // gtag.js's real (post-load) implementation reads whatever was queued into
