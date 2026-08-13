@@ -220,12 +220,12 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
             </div>
             <h2 id="lead-magnet-dialog-title" className="mt-5 text-2xl font-bold leading-tight tracking-[-0.025em] sm:text-3xl">
               {submissionState === "success"
-                ? "Materiál je na cestě do tvé e-mailové schránky"
+                ? "Materiál už míří do tvého e-mailu"
                 : "Kam ti máme materiál poslat?"}
             </h2>
             <p id="lead-magnet-dialog-description" className="mt-3 text-sm leading-relaxed text-[var(--color-text-muted)] sm:text-base">
               {submissionState === "success"
-                ? "Právě jsme ti poslali vybraný materiál na e-mail. Pokud ho během pár minut neuvidíš, zkontroluj také složku Hromadné, Promo nebo Spam."
+                ? "Pokud ho během pár minut neuvidíš, zkontroluj také složku Hromadné, Promo nebo Spam."
                 : "Vyplň jméno a e-mail. Pošleme ti vybraný materiál a budeš od nás dostávat také praktické tipy k hubnutí, inspiraci a nabídky Fit bez času. Z odběru se můžeš kdykoliv jednoduše odhlásit."}
             </p>
 
