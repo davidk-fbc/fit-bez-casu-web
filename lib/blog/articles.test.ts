@@ -114,6 +114,14 @@ test("AuthorCard shows the real brand logo for the Fit bez času author instead 
   assert.match(authorCard, /author\.displayName\.slice\(0, 1\)/);
 });
 
+test("AuthorCard uses the brand byline while keeping Fit bez času linked to /o-nas", async () => {
+  const source = await readFile(new URL("../../components/blog/ArticleContent.tsx", import.meta.url), "utf8");
+  const authorCard = source.match(/function AuthorCard.+/)?.[0] ?? "";
+  assert.match(authorCard, /isBrandAuthor \? "Klárka a David" : author\.bio/);
+  assert.match(authorCard, /profileUrl \? <Link href={profileUrl}/);
+  assert.equal(getAuthorProfileUrl({ id: "brand", displayName: "Fit bez času", bio: "Tým Fit bez času.", avatarPath: null }), "/o-nas");
+});
+
 test("share box has the new, more specific copy and a real functional share button, not just informational text", async () => {
   const source = await readFile(new URL("../../components/blog/ArticleContent.tsx", import.meta.url), "utf8");
   assert.match(source, /Pošli článek někomu, komu může pomoct/);
