@@ -362,6 +362,8 @@ test("frontend has one reusable native modal with all required states and consen
   assert.match(provider, /Pokud ho během pár minut neuvidíš, zkontroluj také složku Hromadné, Promo nebo Spam\./);
   assert.match(provider, /Materiál jsme ti právě poslali na e-mail\./);
   assert.match(provider, /submissionState === "success"[\s\S]{0,160}Materiál už míří do tvého e-mailu/);
+  assert.doesNotMatch(provider, /Právě jsme ti poslali vybraný materiál na e-mail\./);
+  assert.doesNotMatch(provider, /Materiál je na cestě do tvé e-mailové schránky/);
   assert.match(provider, /Získat materiál zdarma/);
   assert.match(provider, /name="consent"[\s\S]{0,120}\brequired\b/);
   assert.match(provider, /Souhlasím se zasíláním e-mailových tipů, inspirace a nabídek Fit bez času a se zpracováním svých údajů za tímto účelem\. Souhlas můžu kdykoliv odvolat\./);
