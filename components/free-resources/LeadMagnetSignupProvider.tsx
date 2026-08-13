@@ -219,20 +219,21 @@ export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) 
               </div>
             </div>
             <h2 id="lead-magnet-dialog-title" className="mt-5 text-2xl font-bold leading-tight tracking-[-0.025em] sm:text-3xl">
-              Kam ti máme materiál poslat?
+              {submissionState === "success"
+                ? "Materiál je na cestě do tvé e-mailové schránky"
+                : "Kam ti máme materiál poslat?"}
             </h2>
             <p id="lead-magnet-dialog-description" className="mt-3 text-sm leading-relaxed text-[var(--color-text-muted)] sm:text-base">
-              Vyplň jméno a e-mail. Pošleme ti vybraný materiál a budeš od nás dostávat také praktické tipy k hubnutí, inspiraci a nabídky Fit bez času. Z odběru se můžeš kdykoliv jednoduše odhlásit.
+              {submissionState === "success"
+                ? "Právě jsme ti poslali vybraný materiál na e-mail. Pokud ho během pár minut neuvidíš, zkontroluj také složku Hromadné, Promo nebo Spam."
+                : "Vyplň jméno a e-mail. Pošleme ti vybraný materiál a budeš od nás dostávat také praktické tipy k hubnutí, inspiraci a nabídky Fit bez času. Z odběru se můžeš kdykoliv jednoduše odhlásit."}
             </p>
 
             {submissionState === "success" ? (
               <div className="mt-7 rounded-2xl border border-green-200 bg-green-50 p-5" role="status" aria-live="polite">
                 <h3 className="text-lg font-bold text-green-900">Hotovo!</h3>
                 <p className="mt-2 text-sm leading-relaxed text-green-900">
-                  Materiál jsme ti poslali na e-mail.
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-green-900">
-                  Pokud ho během pár minut nevidíš, zkontroluj také složku Hromadné, Promo nebo Spam.
+                  Materiál jsme ti právě poslali na e-mail.
                 </p>
                 <button
                   type="button"
