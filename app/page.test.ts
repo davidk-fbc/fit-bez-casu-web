@@ -54,7 +54,7 @@ test("WebPage structured data uses the same title and description as the rendere
 
 test("homepage intro cards keep their existing destinations and Zdarma points to /zdarma", () => {
   assert.match(introCardsSource, /title: "Jídelníček",[\s\S]*?href: EXTERNAL_LINKS\.mealPlan/);
-  assert.match(introCardsSource, /title: "Aplikace",[\s\S]*?href: EXTERNAL_LINKS\.app/);
+  assert.match(introCardsSource, /title: "Fit Talíř",[\s\S]*?href: EXTERNAL_LINKS\.app/);
   assert.match(introCardsSource, /title: "Zdarma",[\s\S]*?href: "\/zdarma"/);
   assert.match(introCardsSource, /title: "Blog",[\s\S]*?href: "\/blog"/);
   assert.equal(introCardsSource.match(/title: "/g)?.length, 4);

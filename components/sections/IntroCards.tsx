@@ -13,7 +13,7 @@ const CARDS = [
   },
   {
     icon: <PhoneIcon className="h-full w-full" />,
-    title: "Aplikace",
+    title: "Fit Talíř",
     description:
       "Měj jídlo, pohyb i svůj progres na jednom místě. Jednoduše, přehledně a tak, aby ses v tom vyznala i ve dnech, kdy nestíháš.",
     href: EXTERNAL_LINKS.app,

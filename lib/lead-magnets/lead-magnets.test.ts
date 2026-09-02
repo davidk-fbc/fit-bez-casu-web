@@ -368,7 +368,7 @@ test("frontend has one reusable native modal with all required states and consen
   assert.match(provider, /name="consent"[\s\S]{0,120}\brequired\b/);
   assert.match(provider, /Souhlasím se zasíláním e-mailových tipů, inspirace a nabídek Fit bez času a se zpracováním svých údajů za tímto účelem\. Souhlas můžu kdykoliv odvolat\./);
   assert.match(provider, /Pro získání materiálu je potřeba potvrdit souhlas s e-mailovou komunikací\./);
-  assert.match(provider, /https:\/\/platforma\.fitbezcasu\.cz\/ochrana-osobnich-udaju/);
+  assert.match(provider, /https:\/\/fittalir\.fitbezcasu\.cz\/ochrana-osobnich-udaju/);
   assert.match(provider, /Zásadách ochrany osobních údajů/);
   assert.match(provider, /data\.get\("consent"\) !== "on"/);
   assert.match(provider, /consent: true/);

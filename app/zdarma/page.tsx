@@ -84,12 +84,12 @@ const PAID_NEXT_STEPS = [
   },
   {
     icon: <PhoneIcon className="h-full w-full" />,
-    title: "Aplikace Fit bez času",
+    title: "Fit Talíř",
     description:
       "Když chceš mít jídlo, pohyb a svůj progres přehledně na jednom místě a jednoduše se v tom vyznat i v nabitém dni.",
     href: EXTERNAL_LINKS.app,
     linkLabel: "Zjistit více",
-    linkAriaLabel: "Zjistit více o Aplikaci Fit bez času",
+    linkAriaLabel: "Zjistit více o Fit Talíři",
   },
   {
     icon: <PencilIcon className="h-full w-full" />,

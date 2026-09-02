@@ -97,13 +97,13 @@ test("paid next steps follow the decision section and contain exactly three card
 });
 
 test("paid next-step cards reuse the project product links and internal review route", () => {
-  assert.match(linksSource, /app: "https:\/\/platforma\.fitbezcasu\.cz\/"/);
+  assert.match(linksSource, /app: "https:\/\/fittalir\.fitbezcasu\.cz\/"/);
   assert.match(
     linksSource,
     /mealPlan: "https:\/\/www\.fitbezcasu\.cz\/jidelnicek-pro-zdrave-hubnuti"/,
   );
   assert.match(pageSource, /title: "Jídelníček pro zdravé hubnutí",[\s\S]*?href: EXTERNAL_LINKS\.mealPlan/);
-  assert.match(pageSource, /title: "Aplikace Fit bez času",[\s\S]*?href: EXTERNAL_LINKS\.app/);
+  assert.match(pageSource, /title: "Fit Talíř",[\s\S]*?href: EXTERNAL_LINKS\.app/);
   assert.match(
     pageSource,
     /title: "Osobní rozbor jídelníčku",[\s\S]*?href: "\/nabidka-podpory\/osobni-rozbor-jidelnicku"/,

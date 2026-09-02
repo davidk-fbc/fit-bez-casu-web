@@ -10,7 +10,7 @@ export type NavLink = {
 // stránky tohoto webu.
 export const NAV_LINKS: NavLink[] = [
   { label: "Jídelníček", href: EXTERNAL_LINKS.mealPlan },
-  { label: "Aplikace", href: EXTERNAL_LINKS.app },
+  { label: "Fit Talíř", href: EXTERNAL_LINKS.app },
   { label: "Zdarma", href: "/zdarma" },
   { label: "Blog", href: "/blog" },
   { label: "O nás", href: "/o-nas" },
@@ -21,4 +21,4 @@ export const NAV_LINKS: NavLink[] = [
 export const COMMUNITY_URL = EXTERNAL_LINKS.community;
 
 export const HERO_PRIMARY_CTA = { label: "Mrknout na jídelníček", href: EXTERNAL_LINKS.mealPlan };
-export const HERO_SECONDARY_CTA = { label: "Poznat aplikaci", href: EXTERNAL_LINKS.app };
+export const HERO_SECONDARY_CTA = { label: "Poznat Fit Talíř", href: EXTERNAL_LINKS.app };

@@ -26,7 +26,7 @@ type SubmissionState = "idle" | "loading" | "success" | "error";
 
 const SignupContext = createContext<SignupContextValue | null>(null);
 
-const PRIVACY_URL = "https://platforma.fitbezcasu.cz/ochrana-osobnich-udaju";
+const PRIVACY_URL = "https://fittalir.fitbezcasu.cz/ochrana-osobnich-udaju";
 
 export function LeadMagnetSignupProvider({ children }: { children: ReactNode }) {
   const dialogRef = useRef<HTMLDialogElement>(null);

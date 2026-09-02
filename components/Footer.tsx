@@ -82,21 +82,21 @@ export function Footer() {
             <span>© {year} Fit bez času</span>
             <span aria-hidden="true">·</span>
             <a
-              href="https://platforma.fitbezcasu.cz/obchodni-podminky"
+              href="https://fittalir.fitbezcasu.cz/obchodni-podminky"
               className="underline-offset-2 transition hover:text-white hover:underline"
             >
               Obchodní podmínky
             </a>
             <span aria-hidden="true">·</span>
             <a
-              href="https://platforma.fitbezcasu.cz/ochrana-osobnich-udaju"
+              href="https://fittalir.fitbezcasu.cz/ochrana-osobnich-udaju"
               className="underline-offset-2 transition hover:text-white hover:underline"
             >
               Ochrana osobních údajů
             </a>
             <span aria-hidden="true">·</span>
             <a
-              href="https://platforma.fitbezcasu.cz/zasady-cookies"
+              href="https://fittalir.fitbezcasu.cz/zasady-cookies"
               className="underline-offset-2 transition hover:text-white hover:underline"
             >
               Zásady cookies

@@ -122,7 +122,7 @@ export function AppShowcase() {
         <div className="flex flex-col gap-6">
           <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-purple)]">
             <span className="h-1.5 w-6 rounded-full" style={{ background: "var(--gradient-brand)" }} />
-            Aplikace Fit bez času
+            Fit Talíř
           </span>
           <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-[var(--color-text)] sm:text-5xl">
             Měj jasno v tom, kolik jíst a co už máš za dnešek splněno
@@ -140,7 +140,7 @@ export function AppShowcase() {
             ))}
           </ul>
           <Button href={EXTERNAL_LINKS.app} variant="solid-blue" withArrow={false} className="w-fit px-7 py-3.5">
-            Poznat aplikaci
+            Poznat Fit Talíř
           </Button>
         </div>
 
