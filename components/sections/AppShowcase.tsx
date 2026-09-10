@@ -1,7 +1,7 @@
+import Image from "next/image";
 import { Button } from "../Button";
 import { Container } from "../Container";
-import { PlaceholderImage } from "../PlaceholderImage";
-import { CalculatorIcon, ForkKnifeIcon, LayersIcon, RepeatIcon, TrendingUpIcon } from "../icons";
+import { CalculatorIcon, LayersIcon, RepeatIcon, TrendingUpIcon } from "../icons";
 import { EXTERNAL_LINKS } from "@/lib/links";
 
 // Popis skutečných 5 hlavních funkcí aplikace - žádná motivace/připomínky/
@@ -54,66 +54,6 @@ const BENEFITS = [
   },
 ];
 
-const MEALS = ["Snídaně", "Oběd", "Večeře"];
-
-// Technický vizuál aplikace - skutečný screenshot v projektu není k
-// dispozici (public/images/app obsahuje jen .gitkeep), proto zůstává tento
-// device mockup, jen s obsahem odpovídajícím reálným datům aplikace
-// (dnešní příjem, splněná energie, kalorie/bílkoviny/sacharidy/tuky,
-// zapsaná jídla, tlačítko pro přidání jídla).
-function PhoneMockup() {
-  return (
-    <div className="mx-auto w-full max-w-[320px] rounded-[2.75rem] border-[10px] border-[var(--color-text)] bg-white p-3 shadow-[var(--shadow-card-hover)]">
-      <div className="flex flex-col gap-5 rounded-[1.9rem] bg-[var(--color-surface-muted)] p-5">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">Dnešní příjem</p>
-          <div className="mt-1.5 flex items-end gap-1.5">
-            <span className="text-2xl font-bold text-[var(--color-text)]">1 480</span>
-            <span className="pb-0.5 text-xs text-[var(--color-text-muted)]">/ 2 100 kcal</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { label: "Bílkoviny", value: "82 g" },
-            { label: "Sacharidy", value: "140 g" },
-            { label: "Tuky", value: "48 g" },
-          ].map((macro) => (
-            <div key={macro.label} className="flex flex-col items-center gap-0.5 rounded-xl bg-white p-2 text-center shadow-sm">
-              <span className="text-sm font-bold text-[var(--color-text)]">{macro.value}</span>
-              <span className="text-[10px] leading-tight text-[var(--color-text-muted)]">{macro.label}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-2.5">
-          <span className="text-sm font-semibold text-[var(--color-text-muted)]">Dnešní jídla</span>
-          {MEALS.map((meal) => (
-            <div key={meal} className="flex items-center gap-3 rounded-xl bg-white p-2.5 shadow-sm">
-              <PlaceholderImage
-                label=""
-                icon={<ForkKnifeIcon className="h-full w-full" />}
-                className="h-10 w-10 shrink-0 rounded-lg"
-              />
-              <span className="text-sm font-medium text-[var(--color-text)]">{meal}</span>
-            </div>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-hidden="true"
-          className="mt-1 flex h-10 w-full items-center justify-center rounded-xl text-sm font-semibold text-white"
-          style={{ background: "var(--gradient-brand)" }}
-        >
-          + Přidat jídlo
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export function AppShowcase() {
   return (
     <section id="aplikace" className="relative overflow-hidden bg-[var(--color-surface)] py-[var(--space-section)]">
@@ -144,7 +84,21 @@ export function AppShowcase() {
           </Button>
         </div>
 
-        <PhoneMockup />
+        {/* Skutečný screenshot kalkulačky nahradil dřívější ručně kreslený
+            device mockup, který tu stál jen proto, že v public/images/app
+            žádný screenshot nebyl. Obrázek si nese vlastní rámečky telefonů,
+            takže kolem něj nesmí přijít další rámeček. Zůstává v prostředním
+            sloupci se stejným mx-auto/max-w-[320px] jako mockup, aby se
+            proporce sekce nezměnily; object-contain, protože se z něj nesmí
+            nic oříznout. */}
+        <Image
+          src="/images/app/fit-talir-kalkulacka.webp"
+          alt="Kalkulačka Fit Talíř na třech telefonech: zadané údaje, výsledky s bazálním metabolismem a BMI, a doporučený denní příjem s bílkovinami"
+          width={941}
+          height={1672}
+          sizes="320px"
+          className="mx-auto h-auto w-full max-w-[320px] object-contain"
+        />
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1">
           {BENEFITS.map((benefit) => (
