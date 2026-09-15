@@ -12,7 +12,7 @@ type HeroPoint = {
 };
 
 const HERO_POINTS: HeroPoint[] = [
-  { icon: <ForkKnifeIcon className="h-full w-full" />, label: "Jídlo" },
+  { icon: <ForkKnifeIcon className="h-full w-full" />, label: "Jídelníček" },
   { icon: <RunningIcon className="h-full w-full" />, label: "Krátká cvičení" },
   { icon: <UsersIcon className="h-full w-full" />, label: "Komunita" },
 ];
