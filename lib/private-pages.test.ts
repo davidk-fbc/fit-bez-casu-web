@@ -227,7 +227,7 @@ test("four-week support detail has the approved hero, audience and price", () =>
     "KDYŽ NECHCEŠ VŠECHNO ŘEŠIT SAMA",
     "4 týdny podpory, během kterých můžeš průběžně řešit, co se ti daří i kde tápeš",
     "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace",
-    "Po dobu 4 týdnů s námi můžeš pravidelně řešit, co se právě děje",
+    "Po dobu **4 týdnů** s námi můžeš pravidelně řešit, co se právě děje",
     "Je 4týdenní podpora vhodná právě pro tebe?",
     "990 Kč",
   ]) assert.ok(supportCopy.includes(text), `missing four-week support copy: ${text}`);
@@ -239,7 +239,13 @@ test("four-week support detail has the approved hero, audience and price", () =>
     "Pomohlo by ti mít každý týden jasnou prioritu, na kterou se zaměřit dál.",
     "Chceš podporu, která reaguje na to, co se u tebe skutečně děje, ne další obecný plán.",
   ]) assert.ok(supportCopy.includes(text), `missing four-week audience point: ${text}`);
-  assert.match(renderer, /<FourWeekSupportHeroCopy \/>/);
+    // This used to assert the hero was <FourWeekSupportHeroCopy />, a
+    // component holding its own copy of these paragraphs. That assertion is
+    // what made the suite green while an edit to the data reached nobody:
+    // it proved the hardcoded hero existed, not that the page said anything.
+    // It now asserts the opposite - the hero reads the page's own subtitle.
+    assert.ok(!renderer.includes("FourWeekSupportHeroCopy /"), "the hardcoded hero must not come back");
+    assert.match(renderer, /<HeroSubtitle subtitle=\{page\.subtitle\} \/>/);
   assert.match(renderer, /<FourWeekSupportCta href=\{fourWeekSupportCtaUrl\}/);
   assert.equal((renderer.match(/<h1 /g) ?? []).length, 1);
 });

@@ -318,7 +318,11 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
     pageType: "service_detail",
     title: "4 týdny podpory, během kterých můžeš průběžně řešit, co se ti daří i kde tápeš",
     subtitle:
-      "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace, se kterými si nejsi jistá. Jeden týden se daří, další přijde hlad, chutě, náročný víkend nebo pocit, že se nikam neposouváš.\n\nPo dobu 4 týdnů s námi můžeš pravidelně řešit, co se právě děje, získávat zpětnou vazbu a podle potřeby upravovat další kroky.\n\nK dispozici budeš mít také WhatsApp skupinu a možnost napsat nám soukromě, když svůj dotaz nechceš řešit před ostatními.",
+      // The hero renders this directly (see PrivatePageRenderer's
+      // HeroSubtitle): a blank line starts a paragraph, **like this** is
+      // emphasised. The two emphasised phrases are the ones the hardcoded
+      // hero used to bold, kept so the page looks exactly as it did.
+      "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace, se kterými si nejsi jistá. Jeden týden se daří, další přijde **hlad, chutě, náročný víkend** nebo pocit, že se nikam neposouváš.\n\nPo dobu **4 týdnů** s námi můžeš pravidelně řešit, co se právě děje, získávat zpětnou vazbu a podle potřeby upravovat další kroky.\n\nK dispozici budeš mít také WhatsApp skupinu a možnost napsat nám soukromě, když svůj dotaz nechceš řešit před ostatními.",
     content: {
       ...content,
       eyebrow: "KDYŽ NECHCEŠ VŠECHNO ŘEŠIT SAMA",

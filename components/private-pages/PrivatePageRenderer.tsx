@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+import { parseHeroCopy } from "@/lib/hero-copy";
 import Image from "next/image";
 
 import { Button } from "@/components/Button";
@@ -17,15 +19,30 @@ function Hero({ page, preview }: { page: PrivatePage; preview: boolean }) {
   const personalDietReviewCtaUrl = personalDietReview?.cta.active ? page.salesLinks[personalDietReview.cta.salesLinkKey] : undefined;
   const fourWeekSupport = isFourWeekSupportPage(page) ? page.content : null;
   const fourWeekSupportCtaUrl = fourWeekSupport?.cta.active ? page.salesLinks[fourWeekSupport.cta.salesLinkKey] : undefined;
-  return <section className="relative overflow-hidden bg-[var(--color-dark)] py-20 text-white sm:py-24 lg:py-28"><div className="stars-layer" /><div className="noise-layer" /><div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-80 max-w-5xl opacity-35 blur-3xl" style={{ background: "var(--gradient-brand-diagonal)" }} /><Container className="relative"><div className="mx-auto max-w-4xl text-center">{preview ? <p className="mx-auto mb-5 w-fit rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-xs font-bold tracking-[0.16em] text-amber-100">NÁHLED KONCEPTU</p> : null}<p className="text-sm font-bold tracking-[0.18em] text-[#bba4ff]">{eyebrow}</p>{preparing ? <p className="mx-auto mt-5 w-fit rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold">Připravujeme</p> : null}<h1 className="mt-5 text-balance text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">{page.title}</h1>{personalDietReview ? <PersonalDietReviewHeroCopy /> : fourWeekSupport ? <FourWeekSupportHeroCopy /> : <p className="mx-auto mt-6 max-w-3xl text-balance text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">{isSupportOfferPage(page) ? <SupportOfferSubtitle /> : page.subtitle}</p>}{personalDietReview && personalDietReviewCtaUrl ? <div className="mx-auto mt-8 flex max-w-2xl flex-col items-center"><PersonalDietReviewCta href={personalDietReviewCtaUrl} tone="on-dark" className="w-full justify-center sm:w-auto sm:min-w-80" /><p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">{personalDietReview.heroCtaSupportText}</p></div> : null}{fourWeekSupport && fourWeekSupportCtaUrl ? <div className="mx-auto mt-8 flex max-w-2xl flex-col items-center"><FourWeekSupportCta href={fourWeekSupportCtaUrl} tone="on-dark" className="w-full justify-center sm:w-auto sm:min-w-80" /><p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">{fourWeekSupport.heroCtaSupportText}</p></div> : null}</div>{page.featuredImageUrl && page.featuredImageAlt ? <div className="relative mx-auto mt-12 aspect-[16/7] max-w-5xl overflow-hidden rounded-[var(--radius-card)] border border-white/10 shadow-[var(--shadow-card)]"><Image src={page.featuredImageUrl} alt={page.featuredImageAlt} fill priority className="object-cover" sizes="(max-width: 768px) 100vw, 1024px" /></div> : null}</Container></section>;
+  return <section className="relative overflow-hidden bg-[var(--color-dark)] py-20 text-white sm:py-24 lg:py-28"><div className="stars-layer" /><div className="noise-layer" /><div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-80 max-w-5xl opacity-35 blur-3xl" style={{ background: "var(--gradient-brand-diagonal)" }} /><Container className="relative"><div className="mx-auto max-w-4xl text-center">{preview ? <p className="mx-auto mb-5 w-fit rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-xs font-bold tracking-[0.16em] text-amber-100">NÁHLED KONCEPTU</p> : null}<p className="text-sm font-bold tracking-[0.18em] text-[#bba4ff]">{eyebrow}</p>{preparing ? <p className="mx-auto mt-5 w-fit rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold">Připravujeme</p> : null}<h1 className="mt-5 text-balance text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">{page.title}</h1>{personalDietReview ? <PersonalDietReviewHeroCopy /> : fourWeekSupport ? <HeroSubtitle subtitle={page.subtitle} /> : <p className="mx-auto mt-6 max-w-3xl text-balance text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">{isSupportOfferPage(page) ? <SupportOfferSubtitle /> : page.subtitle}</p>}{personalDietReview && personalDietReviewCtaUrl ? <div className="mx-auto mt-8 flex max-w-2xl flex-col items-center"><PersonalDietReviewCta href={personalDietReviewCtaUrl} tone="on-dark" className="w-full justify-center sm:w-auto sm:min-w-80" /><p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">{personalDietReview.heroCtaSupportText}</p></div> : null}{fourWeekSupport && fourWeekSupportCtaUrl ? <div className="mx-auto mt-8 flex max-w-2xl flex-col items-center"><FourWeekSupportCta href={fourWeekSupportCtaUrl} tone="on-dark" className="w-full justify-center sm:w-auto sm:min-w-80" /><p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--color-text-on-dark-muted)]">{fourWeekSupport.heroCtaSupportText}</p></div> : null}</div>{page.featuredImageUrl && page.featuredImageAlt ? <div className="relative mx-auto mt-12 aspect-[16/7] max-w-5xl overflow-hidden rounded-[var(--radius-card)] border border-white/10 shadow-[var(--shadow-card)]"><Image src={page.featuredImageUrl} alt={page.featuredImageAlt} fill priority className="object-cover" sizes="(max-width: 768px) 100vw, 1024px" /></div> : null}</Container></section>;
 }
 
 function PersonalDietReviewHeroCopy() {
   return <div className="mx-auto mt-6 max-w-3xl space-y-4 text-balance text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl"><p>Možná se snažíš jíst lépe, hlídáš si porce a vybíráš zdravější jídla. Přesto máš <strong className="font-semibold text-white">večer hlad, honí tě chutě</strong> nebo se váha nehýbe tak, jak sis představovala.</p><p>Z pěti běžných dní zjistíme, <strong className="font-semibold text-white">kde může být skutečný problém, co už děláš dobře</strong> a které změny pro tebe mají největší smysl.</p></div>;
 }
 
-function FourWeekSupportHeroCopy() {
-  return <div className="mx-auto mt-6 max-w-3xl space-y-4 text-balance text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl"><p>Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace, se kterými si nejsi jistá. Jeden týden se daří, další přijde <strong className="font-semibold text-white">hlad, chutě, náročný víkend</strong> nebo pocit, že se nikam neposouváš.</p><p>Po dobu <strong className="font-semibold text-white">4 týdnů</strong> s námi můžeš pravidelně řešit, co se právě děje, získávat zpětnou vazbu a podle potřeby upravovat další kroky.</p></div>;
+/**
+ * A hero subtitle rendered from the page's own copy.
+ *
+ * This replaced a hardcoded FourWeekSupportHeroCopy that held the same two
+ * paragraphs a second time. The component was the only version that reached
+ * the page, so editing the copy in support-offer-copy.ts changed nothing -
+ * a sentence added to the data shipped, tested green, and never appeared.
+ *
+ * The markup is the hardcoded component's, unchanged: same wrapper, same
+ * spacing, same emphasis treatment. Only where the words come from moved.
+ */
+function HeroSubtitle({ subtitle }: { subtitle: string }) {
+  const paragraphs = parseHeroCopy(subtitle);
+
+  if (paragraphs.length === 0) return null;
+
+  return <div className="mx-auto mt-6 max-w-3xl space-y-4 text-balance text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">{paragraphs.map((paragraph, index) => <p key={index}>{paragraph.segments.map((segment, segmentIndex) => segment.emphasised ? <strong key={segmentIndex} className="font-semibold text-white">{segment.text}</strong> : <Fragment key={segmentIndex}>{segment.text}</Fragment>)}</p>)}</div>;
 }
 
 function SupportOfferSubtitle() {
