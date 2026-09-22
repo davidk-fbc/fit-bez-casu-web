@@ -244,12 +244,14 @@ test("four-week support detail has the approved hero, audience and price", () =>
   assert.equal((renderer.match(/<h1 /g) ?? []).length, 1);
 });
 
-test("four-week support detail contains all six outcomes, five steps and WhatsApp", () => {
+test("four-week support detail contains all seven outcomes, five steps and WhatsApp", () => {
   for (const title of [
     "Pravidelná týdenní zpětná vazba",
     "Jasná priorita pro další týden",
     "Odpovědi na konkrétní otázky",
     "Průběžná podpora přes WhatsApp",
+    // Writing privately is its own outcome, not a footnote to the group.
+    "Soukromé dotazy přímo nám",
     "Doporučení podle toho, co se skutečně děje",
     "Čtyři týdny, během kterých na to nejsi sama",
   ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing four-week outcome: ${title}`);
@@ -257,14 +259,37 @@ test("four-week support detail contains all six outcomes, five steps and WhatsAp
     "Po objednávce dostaneš informace k zahájení",
     "Každý týden nám pošleš krátké shrnutí",
     "Dostaneš osobní zpětnou vazbu",
-    "Během týdne můžeš využít WhatsApp skupinu",
+    // Renamed from "...WhatsApp skupinu": the step now covers both the group
+    // and a private message, so naming only the group in the title was wrong.
+    "Během týdne můžeš využít WhatsApp",
     "Postupně upravujeme další kroky",
   ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing four-week process step: ${title}`);
+  assert.ok(!supportCopy.includes('title: "Během týdne můžeš využít WhatsApp skupinu"'), "the group-only step title is gone");
   assert.match(supportCopy, /WhatsApp skupiny/);
   assert.match(supportCopy, /Průběžné otázky ve WhatsApp skupině/);
 });
 
-test("four-week support has the purchase, everyday-life and seven-question FAQ blocks", () => {
+test("four-week support offers a private WhatsApp message everywhere it offers the group", () => {
+  // The group and a private message are two different things. A reader who
+  // does not want to ask in front of others has to be told, in every place
+  // where the group is mentioned as the way to ask.
+  assert.match(supportCopy, /K dispozici budeš mít také WhatsApp skupinu a možnost napsat nám soukromě/, "hero");
+  assert.ok(supportCopy.includes("Chceš mít možnost napsat i soukromý dotaz, který nechceš sdílet s ostatními."), "audience");
+  assert.ok(supportCopy.includes('title: "Soukromé dotazy přímo nám"'), "benefit");
+  assert.match(supportCopy, /Pokud ji nechceš řešit před ostatními, napíšeš nám jednoduše soukromě\./, "process step");
+  assert.ok(supportCopy.includes('"Možnost napsat nám soukromě na WhatsApp"'), "price box");
+  assert.ok(supportCopy.includes('question: "Musím svoje dotazy psát do WhatsApp skupiny?"'), "faq");
+  assert.match(supportCopy, /Můžeš využít WhatsApp skupinu, napsat nám soukromě/, "final cta");
+});
+
+test("four-week support never calls the group private - it is not private communication", () => {
+  // "soukromá WhatsApp skupina" would promise something the group cannot be:
+  // a conversation between one client and us. The two channels stay named
+  // apart - "WhatsApp skupina" and "soukromá zpráva".
+  assert.ok(!/soukrom[áéýou]+ (WhatsApp )?skupin/i.test(supportCopy), "the group must never be described as private");
+});
+
+test("four-week support has the purchase, everyday-life and eight-question FAQ blocks", () => {
   assert.match(supportCopy, /purchaseTitle: "4týdenní podpora za 990 Kč"/);
   for (const item of [
     "4 týdny podpory",
@@ -273,6 +298,7 @@ test("four-week support has the purchase, everyday-life and seven-question FAQ b
     "Jasná priorita pro další týden",
     "Odpovědi na otázky z běžného života",
     "Průběžné otázky ve WhatsApp skupině",
+    "Možnost napsat nám soukromě na WhatsApp",
   ]) assert.ok(supportCopy.includes(`"${item}"`), `missing four-week purchase item: ${item}`);
   assert.match(supportCopy, /Vědět, co dělat, je jedna věc\. Zvládnout to v běžném životě je druhá\./);
   assert.match(supportCopy, /Hubnutí většinou nekomplikuje jeden špatný den\./);
@@ -280,6 +306,7 @@ test("four-week support has the purchase, everyday-life and seven-question FAQ b
     "Jak dlouho podpora trvá?",
     "Jak probíhá týdenní zpětná vazba?",
     "Můžu se ptát i během týdne?",
+    "Musím svoje dotazy psát do WhatsApp skupiny?",
     "Musím každý týden všechno dodržet dokonale?",
     "Je 4týdenní podpora vhodná i tehdy, když už mám jídelníček?",
     "Co když budu chtít pokračovat i po 4 týdnech?",

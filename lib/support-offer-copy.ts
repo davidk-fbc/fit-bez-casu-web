@@ -318,7 +318,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
     pageType: "service_detail",
     title: "4 týdny podpory, během kterých můžeš průběžně řešit, co se ti daří i kde tápeš",
     subtitle:
-      "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace, se kterými si nejsi jistá. Jeden týden se daří, další přijde hlad, chutě, náročný víkend nebo pocit, že se nikam neposouváš.\n\nPo dobu 4 týdnů s námi můžeš pravidelně řešit, co se právě děje, získávat zpětnou vazbu a podle potřeby upravovat další kroky.",
+      "Možná víš, co bys chtěla změnit, ale v běžném životě přicházejí situace, se kterými si nejsi jistá. Jeden týden se daří, další přijde hlad, chutě, náročný víkend nebo pocit, že se nikam neposouváš.\n\nPo dobu 4 týdnů s námi můžeš pravidelně řešit, co se právě děje, získávat zpětnou vazbu a podle potřeby upravovat další kroky.\n\nK dispozici budeš mít také WhatsApp skupinu a možnost napsat nám soukromě, když svůj dotaz nechceš řešit před ostatními.",
     content: {
       ...content,
       eyebrow: "KDYŽ NECHCEŠ VŠECHNO ŘEŠIT SAMA",
@@ -339,6 +339,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
         "Nechceš čekat několik týdnů s otázkou, která tě právě teď brzdí.",
         "Pomohlo by ti mít každý týden jasnou prioritu, na kterou se zaměřit dál.",
         "Chceš podporu, která reaguje na to, co se u tebe skutečně děje, ne další obecný plán.",
+        "Chceš mít možnost napsat i soukromý dotaz, který nechceš sdílet s ostatními.",
       ],
       benefitsTitle: "Co během 4 týdnů získáš",
       benefitsIntro:
@@ -358,7 +359,11 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
         },
         {
           title: "Průběžná podpora přes WhatsApp",
-          text: "Když se během týdne objeví otázka, můžeš nám napsat do WhatsApp skupiny a nemusíš čekat až na další týdenní shrnutí.",
+          text: "Když se během týdne objeví otázka, můžeš ji napsat do WhatsApp skupiny a nemusíš čekat až na další týdenní shrnutí.",
+        },
+        {
+          title: "Soukromé dotazy přímo nám",
+          text: "Pokud řešíš něco osobnějšího nebo svůj dotaz nechceš sdílet ve skupině, můžeš nám napsat přímo do soukromé zprávy na WhatsApp.",
         },
         {
           title: "Doporučení podle toho, co se skutečně děje",
@@ -384,8 +389,8 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
           text: "Odpovíme na to, co právě řešíš, a doporučíme konkrétní další kroky podle tvé situace.",
         },
         {
-          title: "Během týdne můžeš využít WhatsApp skupinu",
-          text: "Pokud se objeví otázka nebo situace, se kterou si nejsi jistá, můžeš ji průběžně řešit i mezi týdenními shrnutími.",
+          title: "Během týdne můžeš využít WhatsApp",
+          text: "Pokud se objeví otázka nebo situace, se kterou si nejsi jistá, můžeš ji napsat do WhatsApp skupiny. Pokud ji nechceš řešit před ostatními, napíšeš nám jednoduše soukromě.",
         },
         {
           title: "Postupně upravujeme další kroky",
@@ -415,6 +420,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
         "Jasná priorita pro další týden",
         "Odpovědi na otázky z běžného života",
         "Průběžné otázky ve WhatsApp skupině",
+        "Možnost napsat nám soukromě na WhatsApp",
       ],
       purchaseSupportText: FOUR_WEEK_SUPPORT_SUPPORT_TEXT,
       everydayLifeTitle: "Vědět, co dělat, je jedna věc. Zvládnout to v běžném životě je druhá.",
@@ -436,7 +442,12 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
         {
           question: "Můžu se ptát i během týdne?",
           answer:
-            "Ano. Součástí podpory je WhatsApp skupina, kde můžeš průběžně psát otázky, které se během týdne objeví.",
+            "Ano. Součástí podpory je WhatsApp skupina, kde můžeš průběžně psát otázky, které se během týdne objeví. Pokud řešíš něco osobnějšího nebo svůj dotaz nechceš sdílet s ostatními, můžeš nám napsat také soukromě na WhatsApp.",
+        },
+        {
+          question: "Musím svoje dotazy psát do WhatsApp skupiny?",
+          answer:
+            "Ne. Skupinu můžeš využít pro běžné otázky, sdílení a podporu. Pokud ale řešíš něco osobnějšího nebo svůj dotaz jednoduše nechceš sdílet před ostatními, můžeš nám napsat přímo do soukromé zprávy.",
         },
         {
           question: "Musím každý týden všechno dodržet dokonale?",
@@ -461,7 +472,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
       ],
       finalTitle: "Nemusíš mít každý týden perfektní. Důležité je vědět, jak pokračovat dál.",
       finalText:
-        "Během 4 týdnů nebudeš na každou otázku a problém sama. Když se něco nepovede podle plánu, společně se podíváme na to, co upravit a na co se zaměřit dál.",
+        "Během 4 týdnů nebudeš na každou otázku a problém sama. Můžeš využít WhatsApp skupinu, napsat nám soukromě a každý týden dostaneš osobní zpětnou vazbu podle toho, co právě řešíš.",
       finalCtaTitle: "Chceš mít během dalších 4 týdnů pravidelnou podporu?",
       finalPriceText: "4týdenní podpora za 990 Kč",
     },
