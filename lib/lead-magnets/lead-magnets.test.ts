@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { LEAD_MAGNET_TAG } from "./systeme";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -148,7 +149,7 @@ test("Systeme updates an existing name and does not re-add an existing Lead-magn
   }) as typeof fetch;
   const systeme = createSystemeClient({ apiKey: "mock-key" }, fetcher);
 
-  assert.equal(await systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email), "already-present");
+  assert.equal(await systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email, LEAD_MAGNET_TAG), "already-present");
   const patch = calls.find((call) => call.init?.method === "PATCH");
   assert.ok(patch);
   assert.deepEqual(bodyOf(patch), { fields: [{ slug: "first_name", value: "Klára" }] });
@@ -167,7 +168,7 @@ test("Systeme assigns exactly the existing Lead-magnet tag to an untagged contac
   }) as typeof fetch;
   const systeme = createSystemeClient({ apiKey: "mock-key" }, fetcher);
 
-  assert.equal(await systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email), "assigned");
+  assert.equal(await systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email, LEAD_MAGNET_TAG), "assigned");
   const assign = calls.find((call) => call.url.endsWith("/contacts/9/tags"));
   assert.ok(assign);
   assert.equal(assign.init?.method, "POST");
@@ -187,7 +188,7 @@ test("Systeme creates a missing contact with first_name and Czech locale before 
   }) as typeof fetch;
   const systeme = createSystemeClient({ apiKey: "mock-key" }, fetcher);
 
-  await systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email);
+  await systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email, LEAD_MAGNET_TAG);
   const create = calls.find((call) => call.url.endsWith("/contacts") && call.init?.method === "POST");
   assert.ok(create);
   assert.deepEqual(bodyOf(create), {
@@ -208,7 +209,7 @@ test("Systeme refuses a partial tag-name match and never creates a replacement t
   }) as typeof fetch;
   const systeme = createSystemeClient({ apiKey: "mock-key" }, fetcher);
 
-  await assert.rejects(() => systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email), /systeme_tag_missing/);
+  await assert.rejects(() => systeme.upsertAndTag(VALID_SUBMISSION.name, VALID_SUBMISSION.email, LEAD_MAGNET_TAG), /systeme_tag_missing/);
   assert.equal(calls.some((call) => call.url.endsWith("/tags") && call.init?.method === "POST"), false);
   assert.equal(calls.some((call) => call.url.includes("campaign")), false);
 });
@@ -382,7 +383,10 @@ test("frontend has one reusable native modal with all required states and consen
 test("the old no-consent delivery branch is absent and valid orchestration always reaches Systeme", () => {
   const source = readFileSync(new URL("./orchestrator.ts", import.meta.url), "utf8");
   assert.doesNotMatch(source, /if\s*\(!submission\.(?:marketingConsent|consent)\)/);
-  assert.match(source, /await systeme\.upsertAndTag\(submission\.name, submission\.email\)/);
+  // The tag is now passed explicitly. Lead magnets must keep using their
+  // own tag and no other - the waitlist shares the client, not the tag.
+  assert.match(source, /await systeme\.upsertAndTag\(submission\.name, submission\.email, LEAD_MAGNET_TAG\)/);
+  assert.equal(LEAD_MAGNET_TAG, "Lead-magnet");
 });
 
 test("server maps all four magnet ids to their own template env without reading or attaching a PDF", () => {

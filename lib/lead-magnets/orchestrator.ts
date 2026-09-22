@@ -1,5 +1,5 @@
 import type { BrevoClient, BrevoDelivery } from "./brevo";
-import type { SystemeClient } from "./systeme";
+import { LEAD_MAGNET_TAG, type SystemeClient } from "./systeme";
 import type { LeadMagnetSubmission } from "./validation";
 
 export type LeadMagnetLogger = (event: string, context: { code: string; magnetId: string }) => void;
@@ -24,7 +24,7 @@ export async function orchestrateLeadMagnet(
   }
 
   try {
-    await systeme.upsertAndTag(submission.name, submission.email);
+    await systeme.upsertAndTag(submission.name, submission.email, LEAD_MAGNET_TAG);
     return { delivered: true, marketingSynced: true } as const;
   } catch (error) {
     const code = error instanceof Error ? error.message : "unknown";

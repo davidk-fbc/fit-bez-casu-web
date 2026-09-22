@@ -100,25 +100,14 @@ const CARD_COPY: Record<OverviewCard["variant"], Omit<SupportOfferCard, keyof Ov
   dark: {
     preBenefitsText:
       "Nechceme zatím slibovat konkrétní podobu programu, dokud nebude celý systém spolupráce připravený. Už teď ale víme, že půjde o intenzivnější formu podpory než u našich ostatních služeb.",
-    emphasisText: "Start připravujeme od září 2026.",
+    emphasisText: "Osobní vedení 1:1 spouštíme 1. ledna 2027.",
+    // Replaced the old "napiš nám na e-mail nebo Instagram" prompt: that
+    // was the manual way of collecting the same interest, and keeping both
+    // would give two competing ways onto one list, only one of which is
+    // findable later by a tag.
     contactText:
-      "Pokud máš o osobní vedení zájem, napiš nám už teď na info@fitbezcasu.cz nebo do zprávy na Instagramu @fitbezcasu. Jakmile budeme otevírat první místa, ozveme se ti mezi prvními.",
-    contactActions: [
-      {
-        label: "Napsat e-mail",
-        href: "mailto:info@fitbezcasu.cz",
-        ariaLabel: "Napsat e-mail na info@fitbezcasu.cz",
-        external: false,
-        icon: "mail",
-      },
-      {
-        label: "Napsat na Instagram",
-        href: "https://www.instagram.com/fitbezcasu/",
-        ariaLabel: "Napsat na Instagram profilu @fitbezcasu",
-        external: true,
-        icon: "instagram",
-      },
-    ],
+      "Chceš vědět, až otevřeme první místa? Nech nám svůj e-mail a ozveme se ti mezi prvními.",
+    contactActions: [],
   },
 };
 
@@ -529,7 +518,7 @@ function copyForCard(card: OverviewCard): Partial<OverviewCard> {
       };
     case "dark":
       return {
-        eyebrow: "PŘIPRAVUJEME OD ZÁŘÍ 2026",
+        eyebrow: "ZAČÍNÁME 1. LEDNA 2027",
         title: "Osobní vedení 1:1",
         description:
           "Připravujeme 3měsíční program osobního vedení pro ženy, které chtějí svou situaci řešit osobněji, dlouhodoběji a s pravidelnou individuální podporou.",
@@ -541,8 +530,8 @@ function copyForCard(card: OverviewCard): Partial<OverviewCard> {
           "Dlouhodobější spolupráci během 3 měsíců",
           "Podporu přizpůsobenou tomu, co právě řeší",
         ],
-        supportingText: "",
-        ctaLabel: "",
+        supportingText: "Nezávazně. Jen ti dáme vědět, až bude možné se přihlásit.",
+        ctaLabel: "CHCI VĚDĚT, AŽ OTEVŘETE MÍSTA",
       };
   }
 }

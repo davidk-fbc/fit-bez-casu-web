@@ -1,7 +1,14 @@
 import { IntegrationError } from "./integration-error";
 
 const SYSTEME_BASE_URL = "https://api.systeme.io/api";
-const LEAD_MAGNET_TAG = "Lead-magnet";
+
+/**
+ * The tag the lead-magnet flow assigns. Passed explicitly by its caller
+ * rather than read from here, so a second flow (the 1:1 waitlist) can use
+ * the same client without either one being able to reach the other's tag by
+ * accident.
+ */
+export const LEAD_MAGNET_TAG = "Lead-magnet";
 
 type SystemeTag = { id: number; name: string };
 type SystemeContact = { id: number; email: string; tags?: SystemeTag[] };
@@ -79,20 +86,25 @@ export function createSystemeClient(config: SystemeConfig, fetcher: typeof fetch
     );
   }
 
-  async function findExactTag(): Promise<SystemeTag> {
+  /**
+   * The tag must already exist in Systeme.io - this never creates one. A tag
+   * invented by the app would be invisible to whoever runs the campaigns,
+   * and would silently split contacts across two names.
+   */
+  async function findExactTag(tagName: string): Promise<SystemeTag> {
     const result = (await request(
-      `/tags?query=${encodeURIComponent(LEAD_MAGNET_TAG)}&limit=100`,
+      `/tags?query=${encodeURIComponent(tagName)}&limit=100`,
       { method: "GET" },
       "systeme_tag_lookup_failed",
     )) as Collection<SystemeTag>;
     if (!result || !Array.isArray(result.items)) throw new IntegrationError("systeme_tag_lookup_invalid");
-    const tag = result.items.find((candidate) => candidate.name === LEAD_MAGNET_TAG);
+    const tag = result.items.find((candidate) => candidate.name === tagName);
     if (!tag) throw new IntegrationError("systeme_tag_missing");
     return tag;
   }
 
   return {
-    async upsertAndTag(name: string, email: string): Promise<"assigned" | "already-present"> {
+    async upsertAndTag(name: string, email: string, tagName: string): Promise<"assigned" | "already-present"> {
       let contact = await findContact(email);
       if (contact) {
         await updateFirstName(contact.id, name);
@@ -101,8 +113,8 @@ export function createSystemeClient(config: SystemeConfig, fetcher: typeof fetch
       }
 
       if (!Array.isArray(contact.tags)) throw new IntegrationError("systeme_contact_tags_missing");
-      const tag = await findExactTag();
-      if (contact.tags.some((existingTag) => existingTag.id === tag.id || existingTag.name === LEAD_MAGNET_TAG)) {
+      const tag = await findExactTag(tagName);
+      if (contact.tags.some((existingTag) => existingTag.id === tag.id || existingTag.name === tagName)) {
         return "already-present";
       }
 

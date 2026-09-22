@@ -364,11 +364,15 @@ test("four-week support copy contains all six requested benefits including Whats
   assert.match(supportCopy, /Zjistit více o 4týdenní podpoře/);
 });
 
-test("personal guidance stays the dark third-card variant and is clearly marked as upcoming", () => {
+test("personal guidance stays the dark third-card variant and now carries its launch date", () => {
   assert.match(supportCopy, /case "dark"/);
-  assert.match(supportCopy, /PŘIPRAVUJEME OD ZÁŘÍ 2026/);
+  // September 2026 arrived and passed while the card still promised it.
+  // The date is now a real one, and the card collects interest rather than
+  // only announcing a month.
+  assert.match(supportCopy, /ZAČÍNÁME 1\. LEDNA 2027/);
+  assert.match(supportCopy, /Osobní vedení 1:1 spouštíme 1\. ledna 2027\./);
+  assert.ok(!supportCopy.includes("září 2026"), "the stale date must not come back");
   assert.match(supportCopy, /Připravujeme 3měsíční program osobního vedení/);
-  assert.match(supportCopy, /Start připravujeme od září 2026\./);
   for (const text of [
     "Pravidelnou individuální podporu",
     "Řešit svou konkrétní situaci více do hloubky",
@@ -380,12 +384,21 @@ test("personal guidance stays the dark third-card variant and is clearly marked 
   assert.doesNotMatch(renderer, /lg:grid-cols-2/);
 });
 
-test("personal guidance contact actions use the existing public channels safely", () => {
-  assert.match(supportCopy, /info@fitbezcasu\.cz/);
-  assert.match(supportCopy, /@fitbezcasu/);
-  assert.match(supportCopy, /href: "mailto:info@fitbezcasu\.cz"/);
-  assert.match(supportCopy, /href: "https:\/\/www\.instagram\.com\/fitbezcasu\/"/);
+test("personal guidance collects interest through the waitlist, not a mailto", () => {
+  // The card used to ask people to write to info@fitbezcasu.cz or Instagram
+  // if they were interested. That was the manual version of the same list,
+  // and keeping it alongside the form would give two ways onto one list -
+  // only one of which can be found later by a tag.
+  assert.ok(!supportCopy.includes('href: "mailto:info@fitbezcasu.cz"'), "the manual prompt is gone");
+  assert.match(supportCopy, /contactActions: \[\],/);
+  assert.match(supportCopy, /Chceš vědět, až otevřeme první místa\?/);
+  assert.match(supportCopy, /ctaLabel: "CHCI VĚDĚT, AŽ OTEVŘETE MÍSTA"/);
+
+  // The channels themselves are unchanged where they still belong.
   assert.match(footer, /href: "https:\/\/www\.instagram\.com\/fitbezcasu\/"/);
+
+  // The renderer's contact-action machinery stays correct for the cards
+  // that may use it again.
   assert.match(renderer, /target=\{action\.external \? "_blank" : undefined\}/);
   assert.match(renderer, /rel=\{action\.external \? "noopener noreferrer" : undefined\}/);
   assert.match(renderer, /aria-label=\{action\.ariaLabel\}/);
