@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
  * what was submitted: bounded reading, a JSON response with no caching, and
  * a hashed identifier for rate limiting.
  *
- * Extracted from the lead-magnet handler when the 1:1 waitlist needed the
+ * Extracted from the lead-magnet handler when the coaching waitlist needed the
  * same guards. The alternative was either copying sixty lines or turning one
  * endpoint into a switch over two unrelated flows - the guards are shared,
  * the flows are not.

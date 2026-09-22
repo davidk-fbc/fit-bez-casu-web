@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 
 /**
- * The 1:1 coaching waitlist: a button on the card, and a dialog behind it.
+ * The coaching waitlist: a button on the card, and a dialog behind it.
  *
  * The form is not inlined in the card because the card sits in a row of
  * three of equal height - a form inside one of them would stretch the row
@@ -22,7 +22,7 @@ import { useEffect, useId, useRef, useState } from "react";
 const PRIVACY_URL = "https://fittalir.fitbezcasu.cz/ochrana-osobnich-udaju";
 
 const CONSENT_TEXT =
-  "Souhlasím, aby mě Fit bez času kontaktovalo e-mailem ohledně spuštění Osobního vedení 1:1. Souhlas můžu kdykoliv odvolat.";
+  "Souhlasím, aby mě Fit bez času kontaktovalo e-mailem ohledně spuštění Osobního vedení. Souhlas můžu kdykoliv odvolat.";
 
 type Status = "idle" | "submitting" | "done" | "error";
 
@@ -129,7 +129,7 @@ export function CoachingWaitlistCta({ label, className }: { label: string; class
             {status === "done" ? (
               <>
                 <h2 id={titleId} className="text-xl font-bold text-[var(--color-text)]">
-                  Osobní vedení 1:1
+                  Osobní vedení
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-[var(--color-text-muted)]">
                   Díky, máme tě na seznamu. Ozveme se ti, až otevřeme první místa.
@@ -145,7 +145,7 @@ export function CoachingWaitlistCta({ label, className }: { label: string; class
             ) : (
               <form onSubmit={onSubmit} noValidate>
                 <h2 id={titleId} className="text-xl font-bold text-[var(--color-text)]">
-                  Osobní vedení 1:1
+                  Osobní vedení
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">
                   Dáme ti vědět, až otevřeme první místa.

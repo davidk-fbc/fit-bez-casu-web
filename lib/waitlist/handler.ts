@@ -4,7 +4,7 @@ import type { MemoryRateLimiter } from "../lead-magnets/rate-limit";
 import { parseWaitlistSubmission, type WaitlistSubmission } from "./validation";
 
 /**
- * The 1:1 waitlist endpoint.
+ * The coaching waitlist endpoint.
  *
  * Kept next to the lead-magnet handler rather than inside it: the two share
  * their guards (lib/http/subscribe-request.ts) and their rate limiter, but

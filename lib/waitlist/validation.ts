@@ -1,5 +1,5 @@
 /**
- * What the 1:1 waitlist form submits.
+ * What the coaching waitlist form submits.
  *
  * Deliberately not the lead-magnet validator with `magnetId` made optional:
  * the two forms accept different things, and a shared validator with an

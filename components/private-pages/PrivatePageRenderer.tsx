@@ -56,8 +56,8 @@ function Overview({ content, emphasizeServiceNames }: { content: OverviewContent
   return <section className="bg-[var(--color-surface-muted)] py-[var(--space-section)]"><Container><div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">{cards.map((card) => <SupportCard key={card.id} card={card} />)}</div>{content.closingTitle || closingText ? <div className="mx-auto mt-12 max-w-3xl text-center">{content.closingTitle ? <h2 className="text-balance text-2xl font-black sm:text-3xl">{content.closingTitle}</h2> : null}{closingText ? emphasizeServiceNames ? <SupportSelectionCopy text={closingText} hasTitle={Boolean(content.closingTitle)} /> : <p className={`${content.closingTitle ? "mt-4" : ""} text-lg leading-relaxed text-[var(--color-text-muted)]`}>{closingText}</p> : null}</div> : null}{content.finalCta.active ? <div className="mt-9 flex justify-center"><Button href={content.finalCta.url} className="px-8 py-4">{content.finalCta.label}</Button></div> : null}</Container></section>;
 }
 
-const SUPPORT_SERVICE_NAMES = new Set(["Osobní rozbor jídelníčku", "4týdenní podpora", "Osobní vedení 1:1"]);
-const SUPPORT_SERVICE_PATTERN = /(Osobní rozbor jídelníčku|4týdenní podpora|Osobní vedení 1:1)/g;
+const SUPPORT_SERVICE_NAMES = new Set(["Osobní rozbor jídelníčku", "4týdenní podpora", "Osobní vedení"]);
+const SUPPORT_SERVICE_PATTERN = /(Osobní rozbor jídelníčku|4týdenní podpora|Osobní vedení)/g;
 
 function SupportSelectionCopy({ text, hasTitle }: { text: string; hasTitle: boolean }) {
   return <div className={`${hasTitle ? "mt-4" : ""} space-y-4 text-lg leading-relaxed text-[var(--color-text-muted)]`}>{text.split("\n\n").map((paragraph) => <p key={paragraph}>{paragraph.split(SUPPORT_SERVICE_PATTERN).map((part, index) => SUPPORT_SERVICE_NAMES.has(part) ? <strong key={`${part}-${index}`} className="font-semibold text-[var(--color-text)]">{part}</strong> : part)}</p>)}</div>;

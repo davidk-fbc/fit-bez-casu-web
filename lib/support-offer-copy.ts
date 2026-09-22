@@ -9,7 +9,7 @@ export const SUPPORT_OFFER_SUBTITLE =
 export const SUPPORT_OFFER_CLOSING_TITLE =
   "Každá služba řeší jinou situaci. Vyber si podle toho, co potřebuješ právě teď.";
 export const SUPPORT_OFFER_CLOSING_TEXT =
-  "Pokud si nejsi jistá, kde začít, pomůže ti jednoduché rozdělení. Osobní rozbor jídelníčku je pro chvíli, kdy chceš zjistit, co konkrétně ve svém jídelníčku změnit. 4týdenní podpora se hodí, když chceš mít během několika týdnů pravidelnou zpětnou vazbu a prostor řešit otázky, které přicházejí v běžném životě.\n\nOsobní vedení 1:1 připravujeme pro ženy, které chtějí dlouhodobější individuální spolupráci a osobní vedení zaměřené na to, aby se skutečně posouvaly k výsledkům, kterých chtějí dosáhnout.";
+  "Pokud si nejsi jistá, kde začít, pomůže ti jednoduché rozdělení. Osobní rozbor jídelníčku je pro chvíli, kdy chceš zjistit, co konkrétně ve svém jídelníčku změnit. 4týdenní podpora se hodí, když chceš mít během několika týdnů pravidelnou zpětnou vazbu a prostor řešit otázky, které přicházejí v běžném životě.\n\nOsobní vedení připravujeme pro ženy, které chtějí dlouhodobější spolupráci v malé skupině a osobní přístup zaměřený na to, aby se skutečně posouvaly k výsledkům, kterých chtějí dosáhnout.";
 
 export type SupportOfferAction = {
   label: string;
@@ -99,8 +99,8 @@ const CARD_COPY: Record<OverviewCard["variant"], Omit<SupportOfferCard, keyof Ov
   },
   dark: {
     preBenefitsText:
-      "Nechceme zatím slibovat konkrétní podobu programu, dokud nebude celý systém spolupráce připravený. Už teď ale víme, že půjde o intenzivnější formu podpory než u našich ostatních služeb.",
-    emphasisText: "Osobní vedení 1:1 spouštíme 1. ledna 2027.",
+      "Nechceme zatím slibovat konkrétní podobu programu, dokud nebude celý systém spolupráce připravený. Už teď ale víme, že půjde o menší skupinu a o intenzivnější formu podpory než u našich ostatních služeb.",
+    emphasisText: "Osobní vedení spouštíme 1. ledna 2027.",
     // Replaced the old "napiš nám na e-mail nebo Instagram" prompt: that
     // was the manual way of collecting the same interest, and keeping both
     // would give two competing ways onto one list, only one of which is
@@ -519,12 +519,12 @@ function copyForCard(card: OverviewCard): Partial<OverviewCard> {
     case "dark":
       return {
         eyebrow: "ZAČÍNÁME 1. LEDNA 2027",
-        title: "Osobní vedení 1:1",
+        title: "Osobní vedení",
         description:
-          "Připravujeme 3měsíční program osobního vedení pro ženy, které chtějí svou situaci řešit osobněji, dlouhodoběji a s pravidelnou individuální podporou.",
+          "3měsíční program v malé skupině žen, kde se budeme pravidelně věnovat i tvé konkrétní situaci.",
         benefitsHeading: "OSOBNÍ VEDENÍ BUDE URČENÉ PRO ŽENY, KTERÉ CHTĚJÍ",
         benefits: [
-          "Pravidelnou individuální podporu",
+          "Pravidelnou osobní podporu",
           "Řešit svou konkrétní situaci více do hloubky",
           "Mít prostor průběžně konzultovat další kroky",
           "Dlouhodobější spolupráci během 3 měsíců",

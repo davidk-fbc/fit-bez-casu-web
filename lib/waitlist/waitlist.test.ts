@@ -1,6 +1,6 @@
 // Run with: npx tsx --test lib/waitlist/waitlist.test.ts
 //
-// The 1:1 waitlist differs from the lead magnets in one way that matters:
+// The coaching waitlist differs from the lead magnets in one way that matters:
 // there is nothing to deliver. The only outcome is that somebody can be
 // found later by a tag in Systeme.io, so a failed sync is a failed sign-up,
 // not a degraded one. Most of these tests exist to pin that.

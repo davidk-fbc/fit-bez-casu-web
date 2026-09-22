@@ -3,7 +3,7 @@ import type { SystemeClient } from "../lead-magnets/systeme";
 import type { WaitlistSubmission } from "./validation";
 
 /**
- * The tag that IS the waitlist. Whoever opens the 1:1 programme finds these
+ * The tag that IS the waitlist. Whoever opens the programme finds these
  * people by filtering on it, so a contact without it is not on the list at
  * all - which is why this flow fails rather than degrades.
  *

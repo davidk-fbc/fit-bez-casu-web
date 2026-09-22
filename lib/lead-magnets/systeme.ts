@@ -4,7 +4,7 @@ const SYSTEME_BASE_URL = "https://api.systeme.io/api";
 
 /**
  * The tag the lead-magnet flow assigns. Passed explicitly by its caller
- * rather than read from here, so a second flow (the 1:1 waitlist) can use
+ * rather than read from here, so a second flow (the coaching waitlist) can use
  * the same client without either one being able to reach the other's tag by
  * accident.
  */

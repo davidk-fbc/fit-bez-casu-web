@@ -121,7 +121,7 @@ test("support offer uses the final selection copy with restrained service-name e
   assert.match(supportCopy, /Pokud si nejsi jistá, kde začít, pomůže ti jednoduché rozdělení\./);
   assert.match(supportCopy, /Osobní rozbor jídelníčku je pro chvíli, kdy chceš zjistit, co konkrétně ve svém jídelníčku změnit\./);
   assert.match(supportCopy, /4týdenní podpora se hodí, když chceš mít během několika týdnů pravidelnou zpětnou vazbu/);
-  assert.match(supportCopy, /Osobní vedení 1:1 připravujeme pro ženy, které chtějí dlouhodobější individuální spolupráci/);
+  assert.match(supportCopy, /Osobní vedení připravujeme pro ženy, které chtějí dlouhodobější spolupráci v malé skupině/);
   assert.match(supportCopy, /skutečně posouvaly k výsledkům, kterých chtějí dosáhnout\./);
   assert.match(renderer, /emphasizeServiceNames=\{isSupportOfferPage\(page\)\}/);
   assert.match(renderer, /SUPPORT_SERVICE_NAMES/);
@@ -370,11 +370,13 @@ test("personal guidance stays the dark third-card variant and now carries its la
   // The date is now a real one, and the card collects interest rather than
   // only announcing a month.
   assert.match(supportCopy, /ZAČÍNÁME 1\. LEDNA 2027/);
-  assert.match(supportCopy, /Osobní vedení 1:1 spouštíme 1\. ledna 2027\./);
+  assert.match(supportCopy, /Osobní vedení spouštíme 1\. ledna 2027\./);
   assert.ok(!supportCopy.includes("září 2026"), "the stale date must not come back");
-  assert.match(supportCopy, /Připravujeme 3měsíční program osobního vedení/);
+  // The description no longer says "individuální" or "1:1": the programme is
+  // a small group, and the old wording promised one-to-one coaching.
+  assert.match(supportCopy, /3měsíční program v malé skupině žen, kde se budeme pravidelně věnovat i tvé konkrétní situaci\./);
   for (const text of [
-    "Pravidelnou individuální podporu",
+    "Pravidelnou osobní podporu",
     "Řešit svou konkrétní situaci více do hloubky",
     "Mít prostor průběžně konzultovat další kroky",
     "Dlouhodobější spolupráci během 3 měsíců",
