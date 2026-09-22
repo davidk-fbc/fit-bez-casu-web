@@ -517,7 +517,7 @@ function copyForCard(card: OverviewCard): Partial<OverviewCard> {
           "Pomoc s konkrétními situacemi z tvého týdne",
           "Doporučení upravená podle toho, co právě řešíš",
           "Jasnou prioritu, na kterou se zaměřit dál",
-          "Možnost průběžně se ptát i ve WhatsApp skupině",
+          "Možnost průběžně se ptát ve WhatsApp skupině i soukromě",
         ],
         supportingText:
           "Nebudeš tápat, jestli postupuješ správně. Každý týden budeš vědět, co si ponechat, co upravit a čemu teď věnovat největší pozornost.",

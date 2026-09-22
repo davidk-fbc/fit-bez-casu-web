@@ -342,8 +342,13 @@ test("four-week support copy contains all six requested benefits including Whats
     "Pomoc s konkrétními situacemi z tvého týdne",
     "Doporučení upravená podle toho, co právě řešíš",
     "Jasnou prioritu, na kterou se zaměřit dál",
-    "Možnost průběžně se ptát i ve WhatsApp skupině",
+    // The overview card now names both channels, like the detail page does.
+    "Možnost průběžně se ptát ve WhatsApp skupině i soukromě",
   ]) assert.ok(supportCopy.includes(text), `missing four-week support benefit: ${text}`);
+  assert.ok(
+    !supportCopy.includes("Možnost průběžně se ptát i ve WhatsApp skupině"),
+    "the group-only bullet must not come back"
+  );
   assert.match(supportCopy, /title: "4týdenní podpora"/);
   assert.match(supportCopy, /Zjistit více o 4týdenní podpoře/);
 });
