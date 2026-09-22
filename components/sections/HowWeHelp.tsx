@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Button } from "../Button";
 import { Container } from "../Container";
 import { SectionHeading } from "../SectionHeading";
-import { ForkKnifeIcon, UsersIcon } from "../icons";
+import { ChatBubblesIcon, ForkKnifeIcon, PhoneIcon, TrophyIcon } from "../icons";
 import { EXTERNAL_LINKS } from "@/lib/links";
 
 type PathCardProps = {
@@ -60,33 +60,59 @@ export function HowWeHelp() {
     <section id="jidelnicek" className="relative overflow-hidden bg-[var(--color-surface-muted)] py-[var(--space-section)]">
       <div className="pointer-events-none absolute -left-40 top-0 h-96 w-96 rounded-full bg-[var(--color-accent-purple)] opacity-[0.07] blur-3xl" />
       <Container className="relative grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14">
-        <SectionHeading
-          eyebrow="Vyber si, s čím chceš začít"
-          title="Dvě možnosti, jak začít. Jeden cíl: cítit se lépe."
-          description="Ať teď nejvíc potřebuješ jasno v jídle, nebo podporu a krátká cvičení, vyber si cestu, která ti dává největší smysl. Nemusíš změnit všechno najednou."
-        />
-        <div className="grid gap-6 sm:grid-cols-2">
-          <PathCard
-            number="01"
-            icon={<ForkKnifeIcon className="h-full w-full" />}
-            title="Jídelníček"
-            description="Získej jídelníček na míru, konkrétní porce, recepty a jasný plán, díky kterému budeš vědět, co jíst bez hladovění a každodenního vymýšlení."
-            ctaLabel="Chci jídelníček na míru"
-            ctaHref={EXTERNAL_LINKS.mealPlan}
-            gradient="linear-gradient(135deg, #8b3cf9, #4c1d95)"
-            glowPosition="-right-16 -top-16"
+          <SectionHeading
+            eyebrow="Vyber si, s čím chceš začít"
+            title="Vyber si cestu, která ti dává největší smysl"
+            description="Každá začíná jinde: u jídelníčku, u přehledu o vlastním dni, u prvního malého kroku nebo u někoho, kdo se na to podívá s tebou. Nemusíš změnit všechno najednou."
           />
-          <PathCard
-            number="02"
-            icon={<UsersIcon className="h-full w-full" />}
-            title="Komunita"
-            description="Získej pravidelnou podporu, krátká domácí cvičení, praktické tipy k jídlu a motivaci, která ti pomůže pokračovat i ve dnech, kdy se ti nebude chtít."
-            ctaLabel="Přidat se ke komunitě"
-            ctaHref={EXTERNAL_LINKS.community}
-            gradient="linear-gradient(135deg, #1f6ef9, #4c1d95)"
-            glowPosition="-right-10 top-0"
-          />
-        </div>
+          {/* Four situations, not seven products. Somebody landing here is
+              asking "co potřebuji právě já", so each card is named after her
+              situation and the product sits inside it. Komunita is
+              deliberately absent - it already has CommunityCta at the foot of
+              the page, and a second entry here would only split the same
+              click between two places. */}
+          <div className="grid gap-6 sm:grid-cols-2">
+            <PathCard
+              number="01"
+              icon={<ForkKnifeIcon className="h-full w-full" />}
+              title="Chci vědět, co jíst"
+              description="Jídelníček na míru, konkrétní porce a recepty. Budeš vědět, co si dát, i ve dnech, kdy na vymýšlení není čas."
+              ctaLabel="Chci jídelníček"
+              ctaHref={EXTERNAL_LINKS.mealPlan}
+              gradient="linear-gradient(135deg, #8b3cf9, #4c1d95)"
+              glowPosition="-right-16 -top-16"
+            />
+            <PathCard
+              number="02"
+              icon={<PhoneIcon className="h-full w-full" />}
+              title="Chci mít jídlo pod kontrolou"
+              description="Aplikace Fit Talíř, ve které si zapíšeš jídlo a hned vidíš, jak si vedeš. Ve vyšší variantě Fit Talíř Plus k tomu máš i hotový jídelníček a porce."
+              ctaLabel="Vyzkoušet 5 dní zdarma"
+              ctaHref={EXTERNAL_LINKS.app}
+              gradient="linear-gradient(135deg, #1f6ef9, #4c1d95)"
+              glowPosition="-right-10 top-0"
+            />
+            <PathCard
+              number="03"
+              icon={<TrophyIcon className="h-full w-full" />}
+              title="Chci začít jednoduchým krokem"
+              description="21 dní krátkých cvičení a podpory za 297 Kč. Součástí je i 30 dní Fit Talíře, ať si rovnou vyzkoušíš, jak ti sedí."
+              ctaLabel="Chci 21denní výzvu"
+              ctaHref={EXTERNAL_LINKS.challenge}
+              gradient="linear-gradient(135deg, #f0812f, #9a3412)"
+              glowPosition="-right-14 -top-10"
+            />
+            <PathCard
+              number="04"
+              icon={<ChatBubblesIcon className="h-full w-full" />}
+              title="Chci osobní pomoc"
+              description="Když chceš, aby se na tvoji situaci někdo podíval osobně nebo tě provázel delší dobu, vybereš si mezi jednorázovým rozborem a průběžnou podporou."
+              ctaLabel="Vybrat si podporu"
+              ctaHref="/nabidka-podpory"
+              gradient="linear-gradient(135deg, #0d9488, #134e4a)"
+              glowPosition="-right-12 -top-12"
+            />
+          </div>
       </Container>
     </section>
   );

@@ -67,7 +67,12 @@ test("approved support pages are in the sitemap while preview and internal varia
   assert.match(sitemap, /SUPPORT_OFFER_INDEXABLE_SLUGS/);
   assert.match(sitemap, /supportOfferPages/);
   assert.doesNotMatch(sitemap, /nahled|token|pokracovani-podpory/);
-  for (const source of [navigation, footer]) assert.doesNotMatch(source, /nabidka-podpory/);
+  // The navigation half of this was deliberately reversed: the support offer
+  // was indexable and finished, yet nothing on the site linked to it, so it
+  // now has one entry in the menu. The footer keeps the rule - a second link
+  // to the same chooser would only split the click.
+  assert.match(navigation, /nabidka-podpory/, "the menu must offer a way into the support pages");
+  assert.doesNotMatch(footer, /nabidka-podpory/, "the footer keeps out of it");
 });
 
 test("approved support pages have unique SEO titles, descriptions and self-referencing canonicals", () => {

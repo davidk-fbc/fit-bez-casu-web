@@ -11,6 +11,9 @@ export type NavLink = {
 export const NAV_LINKS: NavLink[] = [
   { label: "Jídelníček", href: EXTERNAL_LINKS.mealPlan },
   { label: "Fit Talíř", href: EXTERNAL_LINKS.app },
+  // The support offer page existed with no way in from anywhere on the site.
+  // One entry, not one per service - the page itself is the chooser.
+  { label: "Podpora", href: "/nabidka-podpory" },
   { label: "Zdarma", href: "/zdarma" },
   { label: "Blog", href: "/blog" },
   { label: "O nás", href: "/o-nas" },

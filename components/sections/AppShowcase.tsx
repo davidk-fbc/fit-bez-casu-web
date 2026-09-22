@@ -79,6 +79,16 @@ export function AppShowcase() {
               </li>
             ))}
           </ul>
+          {/* Where the higher tier belongs: one sentence, in the column
+              that already explains the app, after a reader knows what it
+              does and before the CTA she acts on. Not a second product
+              block and not a price table - it is the same app with more
+              in it. */}
+          <p className="text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg">
+            Tohle všechno máš v základním Fit Talíři. Pokud k tomu chceš i hotový jídelníček na celý týden a porce
+            podle svého příjmu, je tu vyšší varianta{" "}
+            <strong className="font-semibold text-[var(--color-text)]">Fit Talíř Plus</strong>.
+          </p>
           <Button href={EXTERNAL_LINKS.app} variant="solid-blue" withArrow={false} className="w-fit px-7 py-3.5">
             Poznat Fit Talíř
           </Button>
