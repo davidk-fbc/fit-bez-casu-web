@@ -78,7 +78,7 @@ export type FourWeekSupportPage = Omit<PrivatePage, "content" | "pageType"> & {
 const PERSONAL_DIET_REVIEW_CTA_LABEL = "Chci svůj osobní rozbor";
 const PERSONAL_DIET_REVIEW_PRICE = "490 Kč";
 const PERSONAL_DIET_REVIEW_SUPPORT_TEXT =
-  "Po objednávce ti pošleme vstupní dotazník a přesný postup pro zapsání pěti dní.";
+  "Po objednávce ti přijde e-mail se vstupním dotazníkem, instrukcemi a přístupem do Fit Talíře na 30 dní.";
 const FOUR_WEEK_SUPPORT_CTA_LABEL = "Chci 4týdenní podporu";
 const FOUR_WEEK_SUPPORT_PRICE = "990 Kč";
 const FOUR_WEEK_SUPPORT_SUPPORT_TEXT =
@@ -186,6 +186,10 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
         "Na konci nebudeš mít jen seznam toho, co děláš špatně. Budeš vědět, co ponechat, co změnit a na co se zaměřit jako první.",
       benefits: [
         {
+          title: "30 dní Fit Talíře",
+          text: "Hned po nákupu dostaneš na 30 dní přístup do základního Fit Talíře, kam si jednoduše zapíšeš 5 běžných dní svého jídla.",
+        },
+        {
           title: "Zhodnocení pěti běžných dní",
           text: "Nebudeme hodnotit jeden ukázkový „dokonalý“ den. Podíváme se na to, jak jíš v práci, doma, během náročnějších dní i o víkendu.",
         },
@@ -213,24 +217,24 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
       processTitle: "Jak osobní rozbor probíhá",
       process: [
         {
-          title: "Vyplníš vstupní dotazník",
-          text: "Napíšeš nám svůj cíl, běžný režim, zkušenosti, omezení a to, s čím si teď nejvíc nevíš rady.",
+          title: "Objednáš si Osobní rozbor jídelníčku",
+          text: "Po nákupu ti přijde e-mail se vstupním dotazníkem a všemi instrukcemi.",
         },
         {
-          title: "Zapíšeš pět běžných dní",
-          text: "Nechceme pět dokonale připravených dní. Potřebujeme vidět realitu, ze které můžeme vycházet.",
+          title: "Dostaneš 30 dní Fit Talíře",
+          text: "Ve Fit Talíři si zapíšeš 5 běžných dní svého jídla. Ideálně tak, aby mezi nimi byl alespoň jeden víkendový den.",
         },
         {
-          title: "Podklady důkladně projdeme",
-          text: "Budeme hledat opakující se souvislosti, slabá místa i věci, které už máš nastavené dobře.",
+          title: "Doplníš pár informací o sobě a svém režimu",
+          text: "V dotazníku nám popíšeš svůj cíl, spánek, stres, pohyb, hlad, chutě a další věci, které mohou mít na tvoje stravování vliv.",
         },
         {
-          title: "Dostaneš osobní rozbor",
-          text: "Ne obecné rady pro každého, ale zpětnou vazbu postavenou na tvém jídelníčku a běžném životě.",
+          title: "Podklady nám pošleš e-mailem",
+          text: "Po 5 dnech uděláš screenshoty jednotlivých dnů z Fit Talíře a spolu s vyplněným dotazníkem nám je pošleš na e-mail.",
         },
         {
-          title: "Začneš třemi jasnými kroky",
-          text: "Nebudeš muset měnit všechno najednou. Začneš tím, co pro tebe může mít největší přínos.",
+          title: "Připravíme tvůj osobní rozbor",
+          text: "Podíváme se na celý obraz tvého stravování a pošleme ti konkrétní vyhodnocení toho, co už funguje, co tě nejvíc brzdí a jaké kroky mají smysl udělat jako první.",
         },
       ],
       closingTitle: "",
@@ -248,8 +252,10 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
         "Osobní rozbor jídelníčku za 490 Kč. Po objednávce ti pošleme vstupní dotazník a přesný postup.",
       purchaseTitle: "Osobní rozbor jídelníčku za 490 Kč",
       purchaseText:
-        "Za jednu cenu získáš kompletní zhodnocení pěti běžných dní a konkrétní doporučení, se kterými můžeš začít pracovat hned.",
+        "Za jednu cenu získáš 30 dní Fit Talíře pro zápis jídla, kompletní zhodnocení pěti běžných dní a konkrétní doporučení, se kterými můžeš začít pracovat hned.",
       purchaseItems: [
+        "Vstupní dotazník a přesné instrukce",
+        "30 dní přístupu do základního Fit Talíře pro zápis jídel",
         "Zhodnocení 5 běžných dní",
         "3 věci, které už děláš dobře",
         "3 hlavní brzdy",
@@ -260,9 +266,14 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
       purchaseSupportText: PERSONAL_DIET_REVIEW_SUPPORT_TEXT,
       faq: [
         {
-          question: "Co vám budu posílat?",
+          question: "Kam si budu zapisovat jídlo?",
           answer:
-            "Po objednávce dostaneš vstupní dotazník a přesné instrukce k zapisování. Následně nám pošleš záznam pěti běžných dní, abychom viděli, jak vypadá tvoje stravování v reálném životě.",
+            "Po nákupu dostaneš na 30 dní přístup do základního Fit Talíře. Do něj si zapíšeš 5 běžných dní svého jídla, ideálně včetně alespoň jednoho víkendového dne.",
+        },
+        {
+          question: "Jak vám potom jídelníček pošlu?",
+          answer:
+            "Po 5 dnech uděláš screenshoty jednotlivých dnů z Fit Talíře a pošleš nám je e-mailem společně s vyplněným vstupním dotazníkem. Všechny instrukce dostaneš hned po nákupu.",
         },
         {
           question: "Musím si kvůli rozboru všechno připravit „ukázkově“?",
@@ -273,6 +284,11 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
           question: "Mám zaznamenat i víkend?",
           answer:
             "Ano, ideální je, aby mezi pěti dny byl alespoň jeden víkendový den. Víkend často vypadá jinak než pracovní týden a pro celkový obrázek je důležitý.",
+        },
+        {
+          question: "Jak dlouho budu na rozbor čekat?",
+          answer:
+            "Hotový rozbor ti připravíme do 5 pracovních dnů od chvíle, kdy nám dorazí kompletní podklady. Podklady nám pošli ideálně do 30 dní od objednávky.",
         },
         {
           question: "Dostanu jen seznam chyb?",

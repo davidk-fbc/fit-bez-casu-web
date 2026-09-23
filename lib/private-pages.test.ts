@@ -164,8 +164,9 @@ test("personal diet review detail has the approved hero, audience and price", ()
   assert.equal((renderer.match(/<h1 /g) ?? []).length, 1);
 });
 
-test("personal diet review detail contains all six outcomes and all five process steps", () => {
+test("personal diet review detail contains every outcome and all five process steps", () => {
   for (const title of [
+    "30 dní Fit Talíře",
     "Zhodnocení pěti běžných dní",
     "3 věci, které už děláš dobře",
     "3 hlavní brzdy",
@@ -174,11 +175,11 @@ test("personal diet review detail contains all six outcomes and all five process
     "Osobní výstup",
   ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing outcome: ${title}`);
   for (const title of [
-    "Vyplníš vstupní dotazník",
-    "Zapíšeš pět běžných dní",
-    "Podklady důkladně projdeme",
-    "Dostaneš osobní rozbor",
-    "Začneš třemi jasnými kroky",
+    "Objednáš si Osobní rozbor jídelníčku",
+    "Dostaneš 30 dní Fit Talíře",
+    "Doplníš pár informací o sobě a svém režimu",
+    "Podklady nám pošleš e-mailem",
+    "Připravíme tvůj osobní rozbor",
   ]) assert.ok(supportCopy.includes(`title: "${title}"`), `missing process step: ${title}`);
   assert.match(supportCopy, /Na konci nebudeš mít jen seznam toho, co děláš špatně/);
   assert.match(renderer, /<DetailList items=\{content\.process\} numbered \/>/);
@@ -187,6 +188,8 @@ test("personal diet review detail contains all six outcomes and all five process
 test("personal diet review has the approved purchase, FAQ and final CTA blocks", () => {
   assert.match(supportCopy, /purchaseTitle: "Osobní rozbor jídelníčku za 490 Kč"/);
   for (const item of [
+    "Vstupní dotazník a přesné instrukce",
+    "30 dní přístupu do základního Fit Talíře pro zápis jídel",
     "Zhodnocení 5 běžných dní",
     "3 věci, které už děláš dobře",
     "3 hlavní brzdy",
@@ -195,9 +198,11 @@ test("personal diet review has the approved purchase, FAQ and final CTA blocks",
     "Přehledný osobní výstup",
   ]) assert.ok(supportCopy.includes(`"${item}"`), `missing purchase item: ${item}`);
   for (const question of [
-    "Co vám budu posílat?",
+    "Kam si budu zapisovat jídlo?",
+    "Jak vám potom jídelníček pošlu?",
     "Musím si kvůli rozboru všechno připravit „ukázkově“?",
     "Mám zaznamenat i víkend?",
+    "Jak dlouho budu na rozbor čekat?",
     "Dostanu jen seznam chyb?",
     "Je rozbor vhodný, i když už si hlídám kalorie?",
     "Je osobní rozbor vhodný při zdravotních problémech?",
@@ -510,4 +515,120 @@ test("individual contact renders as accessible text links without hard-coded des
 
 test("responsive classes keep cards stacked on mobile and avoid narrow fixed widths", () => {
   assert.match(renderer, /grid-cols-1/); assert.match(renderer, /md:grid-cols-2/); assert.match(renderer, /lg:grid-cols-3/); assert.doesNotMatch(renderer, /w-\[(?:[4-9]\d{2}|\d{4,})px\]/);
+});
+
+// --- the real diet review process ------------------------------------------
+//
+// The page used to describe a process nobody runs any more: fill in a
+// questionnaire, write five days down somewhere unspecified, send us "the
+// record". The service now hands her 30 days of the basic Fit Talíř to log
+// in, and she mails us screenshots of it herself.
+//
+// Two things in that sentence are load-bearing and easy to lose in a later
+// copy pass: it is the BASIC tier, not Fit Talíř Plus, and we never see her
+// log - she chooses what to send us. Both are asserted below.
+
+/** Only the diet review's own copy, so an assertion here cannot be satisfied by another service's text. */
+const dietReviewCopy = supportCopy.slice(
+  supportCopy.indexOf("function applyPersonalDietReviewCopy"),
+  supportCopy.indexOf("function applyFourWeekSupportCopy")
+);
+
+test("diet review: the price and the checkout are exactly what they were", () => {
+  assert.match(supportCopy, /const PERSONAL_DIET_REVIEW_PRICE = "490 Kč";/);
+  assert.equal((dietReviewCopy.match(/490 Kč/g) ?? []).length, 3, "the three places that quote the price");
+
+  // The checkout URL lives in the database and reaches the page through
+  // salesLinks. A literal SimpleShop URL anywhere here would mean someone
+  // bypassed that, and the real link would stop being editable.
+  assert.doesNotMatch(supportCopy, /simpleshop/iu);
+  assert.doesNotMatch(renderer, /form\.simpleshop\.cz/);
+  assert.match(supportCopy, /const PERSONAL_DIET_REVIEW_CTA_LABEL = "Chci svůj osobní rozbor";/);
+});
+
+test("diet review: she is told she gets 30 days of Fit Talíř, and which tier", () => {
+  assert.match(dietReviewCopy, /30 dní/);
+  assert.match(dietReviewCopy, /Fit Talíř/);
+  assert.match(dietReviewCopy, /30 dní přístupu do základního Fit Talíře pro zápis jídel/, "the purchase box must list it");
+  assert.match(dietReviewCopy, /základního Fit Talíře/, "basic tier, spelled out");
+
+  // Plus is a different product at a different price. Promising it here
+  // would be a promise the purchase does not keep.
+  assert.doesNotMatch(dietReviewCopy, /Fit Talíř Plus/);
+  assert.doesNotMatch(dietReviewCopy, /Talíř Plus/);
+});
+
+test("diet review: five ordinary days, at least one of them a weekend day", () => {
+  assert.match(dietReviewCopy, /5 běžných dní|pěti běžných dní/);
+  assert.match(dietReviewCopy, /víkendov/, "at least one weekend day must still be asked for");
+  assert.match(dietReviewCopy, /alespoň jeden víkendový den/);
+});
+
+test("diet review: she sends the materials herself, by e-mail", () => {
+  assert.match(dietReviewCopy, /screenshoty/);
+  assert.match(dietReviewCopy, /pošleš/);
+  assert.match(dietReviewCopy, /e-mail/);
+  assert.match(dietReviewCopy, /Podklady nám pošleš e-mailem/, "the process step must say so");
+});
+
+test("diet review: the page never claims we can see her Fit Talíř data", () => {
+  // We cannot, and saying otherwise would be both untrue and a privacy
+  // claim we have no basis for. She screenshots what she chooses to send.
+  for (const claim of [
+    /uvidíme tvoje zápisy/iu,
+    /uvidíme tvé zápisy/iu,
+    /data se nám (automaticky )?ode[sš]/iu,
+    /máme přístup k tvému jídelníčku/iu,
+    /zápisy se nám (automaticky )?zobraz/iu,
+    /automaticky (uvidíme|uvidime|získáme)/iu
+  ]) assert.doesNotMatch(dietReviewCopy, claim, `the page must not claim: ${claim}`);
+});
+
+test("diet review: the turnaround is counted from complete materials, not from the order", () => {
+  assert.match(dietReviewCopy, /do 5 pracovních dnů od chvíle, kdy nám dorazí kompletní podklady/);
+  assert.match(dietReviewCopy, /do 30 dní od objednávky/, "and she is told how long she has to send them");
+});
+
+test("diet review: no customer-facing instruction points at another food-logging app", () => {
+  // Kalorické tabulky was the old instruction and lives on only in the
+  // internal e-mail templates, which are a separate system. It must never
+  // reappear as an instruction on the sales page.
+  for (const source of [dietReviewCopy, root("lib/support-offer-seo.ts")]) {
+    assert.doesNotMatch(source, /kalorick[éý]ch? tabulk/iu);
+  }
+  assert.doesNotMatch(renderer, /kalorick[éý]ch? tabulk/iu);
+});
+
+test("diet review: the hero and the untouched sections are unchanged", () => {
+  // The brief for this pass covered the process, the purchase box and the
+  // FAQ. If a later edit reaches into the hero or the audience block, this
+  // is where it shows up.
+  for (const text of [
+    "PŘESTAŇ HÁDAT, CO DĚLÁŠ ŠPATNĚ",
+    "Zjisti, co ve tvém jídelníčku opravdu brzdí výsledky",
+    "Osobní rozbor jídelníčku za 490 Kč. Po objednávce ti pošleme vstupní dotazník a přesný postup.",
+    "Je osobní rozbor vhodný právě pro tebe?",
+    "Nemusíš jíst dokonale. Potřebuješ vědět, co má smysl řešit jako první.",
+    "Chceš konečně vědět, co ve svém jídelníčku změnit?"
+  ]) assert.ok(dietReviewCopy.includes(text), `unexpectedly changed: ${text}`);
+
+  assert.match(renderer, /<PersonalDietReviewHeroCopy \/>/);
+  assert.match(renderer, /Možná se snažíš jíst lépe, hlídáš si porce a vybíráš zdravější jídla\./);
+});
+
+test("diet review: every CTA still resolves through the page's own sales link", () => {
+  assert.match(renderer, /personalDietReviewCtaUrl = personalDietReview\?\.cta\.active \? page\.salesLinks\[personalDietReview\.cta\.salesLinkKey\]/);
+  assert.match(renderer, /const ctaUrl = content\.cta\.active \? page\.salesLinks\[content\.cta\.salesLinkKey\]/);
+  assert.equal((renderer.match(/<PersonalDietReviewCta href=\{ctaUrl\}/g) ?? []).length, 2);
+});
+
+test("diet review: the other services were not touched by this pass", () => {
+  // The 30-day Fit Talíř access belongs to this product alone.
+  const fourWeek = supportCopy.slice(supportCopy.indexOf("function applyFourWeekSupportCopy"));
+  assert.doesNotMatch(fourWeek, /30 dní přístupu do základního Fit Talíře/);
+  assert.match(supportCopy, /const FOUR_WEEK_SUPPORT_PRICE = "990 Kč";/);
+  assert.match(
+    supportCopy,
+    /const FOUR_WEEK_SUPPORT_SUPPORT_TEXT =\s*\n\s*"Po objednávce ti pošleme informace k zahájení 4týdenní spolupráce\.";/
+  );
 });
