@@ -197,16 +197,7 @@ test("personal diet review has the approved purchase, FAQ and final CTA blocks",
     "Akční plán na 7 dní",
     "Přehledný osobní výstup",
   ]) assert.ok(supportCopy.includes(`"${item}"`), `missing purchase item: ${item}`);
-  for (const question of [
-    "Kam si budu zapisovat jídlo?",
-    "Jak vám potom jídelníček pošlu?",
-    "Musím si kvůli rozboru všechno připravit „ukázkově“?",
-    "Mám zaznamenat i víkend?",
-    "Jak dlouho budu na rozbor čekat?",
-    "Dostanu jen seznam chyb?",
-    "Je rozbor vhodný, i když už si hlídám kalorie?",
-    "Je osobní rozbor vhodný při zdravotních problémech?",
-  ]) assert.ok(supportCopy.includes(`question: "${question}"`), `missing FAQ question: ${question}`);
+  assert.deepEqual(faqQuestions(dietReviewCopy), DIET_REVIEW_FAQ_QUESTIONS);
   assert.match(renderer, /<dl className=/);
   assert.match(renderer, /<dt className=/);
   assert.match(renderer, /<dd className=/);
@@ -294,7 +285,10 @@ test("four-week support offers a private WhatsApp message everywhere it offers t
   assert.ok(supportCopy.includes('title: "Soukromé dotazy přímo nám"'), "benefit");
   assert.match(supportCopy, /Pokud ji nechceš řešit před ostatními, napíšeš nám jednoduše soukromě\./, "process step");
   assert.ok(supportCopy.includes('"Možnost napsat nám soukromě na WhatsApp"'), "price box");
-  assert.ok(supportCopy.includes('question: "Musím svoje dotazy psát do WhatsApp skupiny?"'), "faq");
+  // The separate "Musím svoje dotazy psát do WhatsApp skupiny?" question was
+  // merged into "Můžu se ptát i během týdne?" - the two said the same thing.
+  // The private option it guaranteed has to survive inside the merged answer.
+  assert.match(supportCopy, /Pokud jde o něco osobnějšího, můžeš nám napsat soukromě\./, "faq");
   assert.match(supportCopy, /Můžeš využít WhatsApp skupinu, napsat nám soukromě/, "final cta");
 });
 
@@ -309,7 +303,7 @@ test("four-week support has the purchase, everyday-life and eight-question FAQ b
   assert.match(supportCopy, /purchaseTitle: "4týdenní podpora za 990 Kč"/);
   for (const item of [
     "4 týdny podpory",
-    "Pravidelná týdenní zpětná vazba",
+    "Pravidelná týdenní zpětná vazba e-mailem",
     "Konkrétní doporučení podle tvé situace",
     "Jasná priorita pro další týden",
     "Odpovědi na otázky z běžného života",
@@ -318,26 +312,23 @@ test("four-week support has the purchase, everyday-life and eight-question FAQ b
   ]) assert.ok(supportCopy.includes(`"${item}"`), `missing four-week purchase item: ${item}`);
   assert.match(supportCopy, /Vědět, co dělat, je jedna věc\. Zvládnout to v běžném životě je druhá\./);
   assert.match(supportCopy, /Hubnutí většinou nekomplikuje jeden špatný den\./);
-  for (const question of [
-    "Jak dlouho podpora trvá?",
-    "Jak probíhá týdenní zpětná vazba?",
-    "Můžu se ptát i během týdne?",
-    "Musím svoje dotazy psát do WhatsApp skupiny?",
-    "Musím každý týden všechno dodržet dokonale?",
-    "Je 4týdenní podpora vhodná i tehdy, když už mám jídelníček?",
-    "Co když budu chtít pokračovat i po 4 týdnech?",
-    "Je podpora vhodná při zdravotních problémech?",
-  ]) assert.ok(supportCopy.includes(`question: "${question}"`), `missing four-week FAQ question: ${question}`);
+  assert.deepEqual(faqQuestions(fourWeekCopy), FOUR_WEEK_FAQ_QUESTIONS);
   assert.match(renderer, /function FourWeekSupportFaq/);
   assert.match(renderer, /<dl className=/);
 });
 
 test("four-week support includes continuation, final CTA and health disclaimer copy", () => {
-  assert.match(supportCopy, /objednat další 4 týdny a plynule pokračovat/);
+  assert.match(supportCopy, /můžeme se před koncem domluvit na další možnosti podpory/);
   assert.match(supportCopy, /Nemusíš mít každý týden perfektní\. Důležité je vědět, jak pokračovat dál\./);
   assert.match(supportCopy, /Chceš mít během dalších 4 týdnů pravidelnou podporu\?/);
-  assert.match(supportCopy, /Nenahrazuje lékařskou péči ani individuální doporučení nutričního terapeuta/);
-  assert.doesNotMatch(supportCopy, /odpovíme do|odpověď do \d+|do \d+ hodin/iu);
+  assert.match(supportCopy, /nenahrazuje lékařskou péči ani péči nutričního terapeuta/);
+  // Replaces an older rule that forbade stating any response time at all.
+  // Obchodní podmínky 12.5 expects the offer to carry an *orientační* reakční
+  // doba, so the FAQ states one - but as an expectation, not an SLA. The two
+  // assertions below are a pair: the first pins the wording, the second keeps
+  // it from hardening into a guarantee the terms do not back.
+  assert.match(fourWeekCopy, /Obvykle odpovídáme do 24 hodin\./);
+  assert.doesNotMatch(fourWeekCopy, /nejpozději|garantu|zaruču|zaručen|vždy (do|odpov)/iu);
 });
 
 test("all four-week purchase CTAs reuse the existing resolved sales link and slug", () => {
@@ -534,6 +525,45 @@ const dietReviewCopy = supportCopy.slice(
   supportCopy.indexOf("function applyFourWeekSupportCopy")
 );
 
+/** Only the four-week support's own copy, for the same reason. */
+const fourWeekCopy = supportCopy.slice(supportCopy.indexOf("function applyFourWeekSupportCopy"));
+
+/**
+ * The questions of one service's faq array, in source order. Comparing the
+ * whole list at once pins the count, the exact wording, the order and the
+ * absence of duplicates - a plain includes() check proved none of those.
+ */
+function faqQuestions(serviceCopy: string): string[] {
+  const block = serviceCopy.slice(serviceCopy.indexOf("faq: ["), serviceCopy.indexOf("finalTitle:"));
+  return [...block.matchAll(/question: "(.*?)",/g)].map((match) => match[1]);
+}
+
+const DIET_REVIEW_FAQ_QUESTIONS = [
+  "Co přesně v osobním rozboru dostanu?",
+  "Dostanu jídelníček na míru?",
+  "Kam si budu zapisovat jídlo?",
+  "Jak vám jídelníček pošlu?",
+  "Musím se před rozborem snažit jíst dokonale?",
+  "Jak dlouho budu na rozbor čekat?",
+  "Dostanu jen seznam toho, co dělám špatně?",
+  "Můžu se po rozboru ještě na něco doptat?",
+  "Je rozbor vhodný, i když už si hlídám kalorie?",
+  "Je rozbor vhodný při zdravotních problémech?",
+];
+
+const FOUR_WEEK_FAQ_QUESTIONS = [
+  "Co přesně během 4 týdnů dostanu?",
+  "Jak probíhá týdenní zpětná vazba?",
+  "Můžu se ptát i během týdne?",
+  "Je součástí spolupráce nový jídelníček?",
+  "Musím každý týden všechno dodržet dokonale?",
+  "Je podpora vhodná, i když už mám svůj jídelníček?",
+  "Kdy 4 týdny začínají běžet?",
+  "Co když během spolupráce onemocním nebo budu potřebovat pauzu?",
+  "Co když budu chtít pokračovat i po 4 týdnech?",
+  "Je podpora vhodná při zdravotních problémech?",
+];
+
 test("diet review: the price and the checkout are exactly what they were", () => {
   assert.match(supportCopy, /const PERSONAL_DIET_REVIEW_PRICE = "490 Kč";/);
   assert.equal((dietReviewCopy.match(/490 Kč/g) ?? []).length, 3, "the three places that quote the price");
@@ -585,8 +615,8 @@ test("diet review: the page never claims we can see her Fit Talíř data", () =>
 });
 
 test("diet review: the turnaround is counted from complete materials, not from the order", () => {
-  assert.match(dietReviewCopy, /do 5 pracovních dnů od chvíle, kdy nám dorazí kompletní podklady/);
-  assert.match(dietReviewCopy, /do 30 dní od objednávky/, "and she is told how long she has to send them");
+  assert.match(dietReviewCopy, /do 5 pracovních dnů od chvíle, kdy od tebe máme všechny potřebné podklady/);
+  assert.match(dietReviewCopy, /do 30 dnů od nákupu/, "and she is told how long she has to send them");
 });
 
 test("diet review: no customer-facing instruction points at another food-logging app", () => {
@@ -631,4 +661,138 @@ test("diet review: the other services were not touched by this pass", () => {
     supportCopy,
     /const FOUR_WEEK_SUPPORT_SUPPORT_TEXT =\s*\n\s*"Po objednávce ti pošleme informace k zahájení 4týdenní spolupráce\.";/
   );
+});
+
+// ---------------------------------------------------------------------
+// FAQ rewrite (2026-10-04), driven by the FAQ audit across all Fit bez
+// času surfaces. Both services went from 8 questions to 10: each now
+// opens with what she actually gets, states outright what the service is
+// NOT, and the two near-duplicate WhatsApp questions were merged into
+// one. Nothing outside the two faq arrays was touched - the tests above
+// still pin the prices, CTAs, slugs, hero and section copy.
+// ---------------------------------------------------------------------
+
+test("FAQ rewrite: both services lead with what she gets and then with what she does not", () => {
+  // The audit's finding was that the old FAQ read as a preparation manual:
+  // it opened with what she had to do and never said what arrived.
+  assert.equal(DIET_REVIEW_FAQ_QUESTIONS[0], "Co přesně v osobním rozboru dostanu?");
+  assert.equal(DIET_REVIEW_FAQ_QUESTIONS[1], "Dostanu jídelníček na míru?");
+  assert.equal(FOUR_WEEK_FAQ_QUESTIONS[0], "Co přesně během 4 týdnů dostanu?");
+  assert.equal(FOUR_WEEK_FAQ_QUESTIONS[3], "Je součástí spolupráce nový jídelníček?");
+});
+
+test("FAQ rewrite: the diet review states the output format and the delivery channel", () => {
+  // "V jaké formě to dostanu?" was unanswered anywhere on the page - the
+  // benefits block only said "přehledně sepsané".
+  assert.match(dietReviewCopy, /Výstup dostaneš přehledně v PDF e-mailem\./);
+});
+
+test("FAQ rewrite: the diet review denies a bespoke meal plan outright", () => {
+  // The page sells a review of what she already eats. The denial has to be
+  // explicit - leaving it implied is what the audit flagged as the single
+  // largest risk of a disappointed 490 Kč purchase.
+  assert.match(dietReviewCopy, /Osobní rozbor není nový jídelníček na míru\./);
+  assert.match(dietReviewCopy, /question: "Dostanu jídelníček na míru\?"/);
+});
+
+test("FAQ rewrite: the diet review still asks for five ordinary days including a weekend", () => {
+  const faq = dietReviewCopy.slice(dietReviewCopy.indexOf("faq: ["), dietReviewCopy.indexOf("finalTitle:"));
+  assert.match(faq, /5 běžných dní/);
+  assert.match(faq, /alespoň jeden víkendový den/, "the merged question has to keep the weekend ask");
+  // "Mám zaznamenat i víkend?" was its own question; its content moved here.
+  assert.doesNotMatch(faq, /question: "Mám zaznamenat i víkend\?"/);
+});
+
+test("FAQ rewrite: the diet review offers a follow-up question after delivery", () => {
+  assert.match(dietReviewCopy, /question: "Můžu se po rozboru ještě na něco doptat\?"/);
+  assert.match(dietReviewCopy, /můžeš nám napsat e-mail a doptat se/);
+});
+
+test("FAQ rewrite: four-week support names both channels and which is which", () => {
+  // The service is sold under the slug "emailova-konzultace" while the page
+  // described only WhatsApp. The split is now stated in the FAQ: the weekly
+  // feedback is e-mail, the running questions are WhatsApp.
+  assert.match(fourWeekCopy, /Každý týden od nás dostaneš osobní zhodnocení e-mailem/);
+  assert.match(fourWeekCopy, /během týdne se nás můžeš průběžně ptát přes WhatsApp/);
+  assert.match(fourWeekCopy, /My ti e-mailem pošleme zpětnou vazbu/);
+});
+
+test("four-week support names the e-mail channel outside the FAQ too, in all three places", () => {
+  // The FAQ alone was not enough: a reader who skips it saw nine mentions of
+  // WhatsApp and not one of e-mail, while the slug promised an e-mail service.
+  // These are the benefit, the process step and the price box - the three
+  // places that describe the weekly feedback.
+  const outsideFaq =
+    fourWeekCopy.slice(0, fourWeekCopy.indexOf("faq: [")) +
+    fourWeekCopy.slice(fourWeekCopy.indexOf("finalTitle:"));
+
+  assert.match(outsideFaq, /Každý týden dostaneš e-mailem konkrétní zpětnou vazbu podle své aktuální situace\./, "benefit");
+  assert.match(outsideFaq, /E-mailem ti odpovíme na to, co právě řešíš, a doporučíme konkrétní další kroky podle tvé situace\./, "process step");
+  assert.ok(outsideFaq.includes('"Pravidelná týdenní zpětná vazba e-mailem"'), "price box");
+});
+
+test("naming the e-mail channel did not push WhatsApp off the page", () => {
+  // Adding one channel must not quietly demote the other. WhatsApp and the
+  // private message are both part of what she pays for.
+  const outsideFaq =
+    fourWeekCopy.slice(0, fourWeekCopy.indexOf("faq: [")) +
+    fourWeekCopy.slice(fourWeekCopy.indexOf("finalTitle:"));
+
+  assert.ok(outsideFaq.includes('title: "Průběžná podpora přes WhatsApp"'), "benefit");
+  assert.ok(outsideFaq.includes('title: "Soukromé dotazy přímo nám"'), "benefit");
+  assert.ok(outsideFaq.includes('title: "Během týdne můžeš využít WhatsApp"'), "process step");
+  assert.ok(outsideFaq.includes('"Průběžné otázky ve WhatsApp skupině"'), "price box");
+  assert.ok(outsideFaq.includes('"Možnost napsat nám soukromě na WhatsApp"'), "price box");
+  assert.match(outsideFaq, /K dispozici budeš mít také WhatsApp skupinu a možnost napsat nám soukromě/, "hero");
+
+  // Both halves of the principle, outside the FAQ: weekly feedback by e-mail,
+  // running support over WhatsApp.
+  assert.match(outsideFaq, /e-mailem/i);
+  assert.ok((outsideFaq.match(/WhatsApp/g) ?? []).length >= 6);
+});
+
+test("FAQ rewrite: four-week support denies a new meal plan and says when the 4 weeks start", () => {
+  assert.match(fourWeekCopy, /nevytváříme nový jídelníček na míru/);
+  assert.match(fourWeekCopy, /Spolupráce začíná dnem nákupu a trvá 4 týdny\./);
+  assert.match(fourWeekCopy, /question: "Co když během spolupráce onemocním nebo budu potřebovat pauzu\?"/);
+});
+
+test("FAQ rewrite: the merged questions are gone from both services", () => {
+  for (const removed of [
+    'question: "Mám zaznamenat i víkend?"',
+    'question: "Musím svoje dotazy psát do WhatsApp skupiny?"',
+    'question: "Jak vám potom jídelníček pošlu?"',
+    'question: "Dostanu jen seznam chyb?"',
+    'question: "Jak dlouho podpora trvá?"',
+    'question: "Je 4týdenní podpora vhodná i tehdy, když už mám jídelníček?"'
+  ]) assert.ok(!supportCopy.includes(removed), `removed question is still present: ${removed}`);
+});
+
+test("FAQ rewrite: neither service answers a refund or withdrawal question yet", () => {
+  // Deliberately out of scope until obchodní podmínky, the checkout consents
+  // and the moment performance begins have been reviewed together. Note that
+  // "Spolupráce začíná dnem nákupu" is exactly the trigger the terms treat as
+  // performance started before the withdrawal period ends.
+  const faqs = [
+    dietReviewCopy.slice(dietReviewCopy.indexOf("faq: ["), dietReviewCopy.indexOf("finalTitle:")),
+    fourWeekCopy.slice(fourWeekCopy.indexOf("faq: ["), fourWeekCopy.indexOf("finalTitle:"))
+  ];
+  for (const faq of faqs) {
+    assert.doesNotMatch(faq, /vrácení peněz|vrátíme|storno|odstoupit|garanc|záruk/iu);
+  }
+});
+
+test("FAQ rewrite: both health disclaimers point at a real professional, consistently", () => {
+  assert.match(dietReviewCopy, /Rozbor nenahrazuje lékařskou péči ani péči nutričního terapeuta\./);
+  assert.match(fourWeekCopy, /Podpora nenahrazuje lékařskou péči ani péči nutričního terapeuta\./);
+  for (const copy of [dietReviewCopy, fourWeekCopy]) {
+    assert.match(copy, /s příslušným zdravotnickým odborníkem/);
+  }
+});
+
+test("FAQ rewrite: no answer promises a weight-loss result", () => {
+  for (const copy of [dietReviewCopy, fourWeekCopy]) {
+    const faq = copy.slice(copy.indexOf("faq: ["), copy.indexOf("finalTitle:"));
+    assert.doesNotMatch(faq, /zhubneš|zaručen|garantujeme|určitě zhubn|slibujeme/iu);
+  }
 });

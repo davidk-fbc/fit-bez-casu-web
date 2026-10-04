@@ -266,44 +266,54 @@ function applyPersonalDietReviewCopy(page: PrivatePage): PersonalDietReviewPage 
       purchaseSupportText: PERSONAL_DIET_REVIEW_SUPPORT_TEXT,
       faq: [
         {
+          question: "Co přesně v osobním rozboru dostanu?",
+          answer:
+            "Dostaneš osobní zhodnocení toho, jak teď skutečně jíš. Podíváme se na tvůj vyplněný dotazník a běžné dny jídelníčku, zhodnotíme jednotlivá jídla i jídelníček jako celek a ukážeme ti, co dává smysl upravit jako první. Výstup dostaneš přehledně v PDF e-mailem.",
+        },
+        {
+          question: "Dostanu jídelníček na míru?",
+          answer:
+            "Ne. Osobní rozbor není nový jídelníček na míru. Pracujeme s tím, jak jíš teď, a ukážeme ti, co ve svém současném jídelníčku můžeš změnit a na co se zaměřit jako první.",
+        },
+        {
           question: "Kam si budu zapisovat jídlo?",
           answer:
-            "Po nákupu dostaneš na 30 dní přístup do základního Fit Talíře. Do něj si zapíšeš 5 běžných dní svého jídla, ideálně včetně alespoň jednoho víkendového dne.",
+            "Po nákupu dostaneš na 30 dní přístup do základního Fit Talíře. Do něj si zapíšeš 5 běžných dní, ideálně tak, aby mezi nimi byl alespoň jeden víkendový den. Nechceme „ukázkový“ jídelníček. Potřebujeme vidět, jak jíš doopravdy.",
         },
         {
-          question: "Jak vám potom jídelníček pošlu?",
+          question: "Jak vám jídelníček pošlu?",
           answer:
-            "Po 5 dnech uděláš screenshoty jednotlivých dnů z Fit Talíře a pošleš nám je e-mailem společně s vyplněným vstupním dotazníkem. Všechny instrukce dostaneš hned po nákupu.",
+            "Po nákupu dostaneš přesné instrukce. Vyplníš vstupní dotazník a pošleš nám e-mailem potřebné podklady a screenshoty jídelníčku z Fit Talíře.",
         },
         {
-          question: "Musím si kvůli rozboru všechno připravit „ukázkově“?",
+          question: "Musím se před rozborem snažit jíst dokonale?",
           answer:
-            "Ne. Právě naopak. Potřebujeme vidět běžné dny tak, jak skutečně vypadají. Jen tak dokážeme najít věci, které mají smysl řešit právě u tebe.",
-        },
-        {
-          question: "Mám zaznamenat i víkend?",
-          answer:
-            "Ano, ideální je, aby mezi pěti dny byl alespoň jeden víkendový den. Víkend často vypadá jinak než pracovní týden a pro celkový obrázek je důležitý.",
+            "Ne. Právě naopak. Čím běžnější dny nám ukážeš, tím lépe můžeme posoudit, co ti už funguje a kde mají změny největší smysl.",
         },
         {
           question: "Jak dlouho budu na rozbor čekat?",
           answer:
-            "Hotový rozbor ti připravíme do 5 pracovních dnů od chvíle, kdy nám dorazí kompletní podklady. Podklady nám pošli ideálně do 30 dní od objednávky.",
+            "Hotový rozbor dostaneš do 5 pracovních dnů od chvíle, kdy od tebe máme všechny potřebné podklady. Podklady je potřeba dodat do 30 dnů od nákupu.",
         },
         {
-          question: "Dostanu jen seznam chyb?",
+          question: "Dostanu jen seznam toho, co dělám špatně?",
           answer:
-            "Ne. Součástí rozboru jsou také věci, které už děláš dobře. Cílem není překopat celý jídelníček, ale najít několik změn, které pro tebe mohou mít největší přínos.",
+            "Ne. Podíváme se i na to, co už máš nastavené dobře. Cílem není hledat chyby, ale ukázat ti několik konkrétních věcí, které mají pro tebe největší smysl řešit jako první.",
+        },
+        {
+          question: "Můžu se po rozboru ještě na něco doptat?",
+          answer:
+            "Ano. Pokud ti po přečtení rozboru nebude něco jasné, můžeš nám napsat e-mail a doptat se.",
         },
         {
           question: "Je rozbor vhodný, i když už si hlídám kalorie?",
           answer:
-            "Ano. Samotný energetický příjem je jen jedna část celého obrazu. Podíváme se také na rozložení jídel během dne, skladbu jídelníčku a další souvislosti, které mohou ovlivňovat hlad, chutě, energii nebo to, jak se ti plán dlouhodobě dodržuje.",
+            "Ano. Samotná čísla neříkají všechno. U rozboru se díváme na to, jak vypadají tvoje jídla a jídelníček jako celek a co by pro tebe dávalo smysl upravit.",
         },
         {
-          question: "Je osobní rozbor vhodný při zdravotních problémech?",
+          question: "Je rozbor vhodný při zdravotních problémech?",
           answer:
-            "Osobní rozbor je praktickým zhodnocením běžného jídelníčku. Nenahrazuje lékařskou péči ani individuální doporučení nutričního terapeuta při zdravotních obtížích.",
+            "Rozbor nenahrazuje lékařskou péči ani péči nutričního terapeuta. Pokud máš zdravotní stav, který vyžaduje odborně vedenou dietu nebo léčebný jídelníček, je potřeba řešit ho s příslušným zdravotnickým odborníkem.",
         },
       ],
       finalTitle: "Nemusíš jíst dokonale. Potřebuješ vědět, co má smysl řešit jako první.",
@@ -356,7 +366,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
       benefits: [
         {
           title: "Pravidelná týdenní zpětná vazba",
-          text: "Každý týden nám pošleš shrnutí toho, co se dařilo, co bylo náročné a co potřebuješ vyřešit. Dostaneš konkrétní zpětnou vazbu podle své aktuální situace.",
+          text: "Každý týden dostaneš e-mailem konkrétní zpětnou vazbu podle své aktuální situace.",
         },
         {
           title: "Jasná priorita pro další týden",
@@ -395,7 +405,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
         },
         {
           title: "Dostaneš osobní zpětnou vazbu",
-          text: "Odpovíme na to, co právě řešíš, a doporučíme konkrétní další kroky podle tvé situace.",
+          text: "E-mailem ti odpovíme na to, co právě řešíš, a doporučíme konkrétní další kroky podle tvé situace.",
         },
         {
           title: "Během týdne můžeš využít WhatsApp",
@@ -424,7 +434,7 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
         "Po dobu 4 týdnů budeš mít pravidelnou zpětnou vazbu, prostor řešit konkrétní otázky a podporu při situacích, které přicházejí v běžném životě.",
       purchaseItems: [
         "4 týdny podpory",
-        "Pravidelná týdenní zpětná vazba",
+        "Pravidelná týdenní zpětná vazba e-mailem",
         "Konkrétní doporučení podle tvé situace",
         "Jasná priorita pro další týden",
         "Odpovědi na otázky z běžného života",
@@ -439,44 +449,54 @@ function applyFourWeekSupportCopy(page: PrivatePage): FourWeekSupportPage {
       ],
       faq: [
         {
-          question: "Jak dlouho podpora trvá?",
+          question: "Co přesně během 4 týdnů dostanu?",
           answer:
-            "Podpora trvá 4 týdny. Během této doby získáš pravidelnou týdenní zpětnou vazbu a můžeš průběžně řešit otázky také ve WhatsApp skupině.",
+            "Po dobu 4 týdnů máš pravidelnou podporu nad tím, co právě řešíš ve stravování. Každý týden od nás dostaneš osobní zhodnocení e-mailem a během týdne se nás můžeš průběžně ptát přes WhatsApp.",
         },
         {
           question: "Jak probíhá týdenní zpětná vazba?",
           answer:
-            "Každý týden nám pošleš krátké shrnutí toho, co se dařilo, co bylo náročné a co potřebuješ řešit. Na základě toho dostaneš osobní zpětnou vazbu a doporučení, na co se zaměřit v dalším týdnu.",
+            "Každý týden nám pošleš krátké shrnutí toho, jak se ti dařilo, co fungovalo a s čím jsi bojovala. My ti e-mailem pošleme zpětnou vazbu a doporučení, na co se zaměřit dál.",
         },
         {
           question: "Můžu se ptát i během týdne?",
           answer:
-            "Ano. Součástí podpory je WhatsApp skupina, kde můžeš průběžně psát otázky, které se během týdne objeví. Pokud řešíš něco osobnějšího nebo svůj dotaz nechceš sdílet s ostatními, můžeš nám napsat také soukromě na WhatsApp.",
+            "Ano. Během celé spolupráce nám můžeš psát přes WhatsApp a ptát se na věci, které právě řešíš. Obvykle odpovídáme do 24 hodin. Pokud jde o něco osobnějšího, můžeš nám napsat soukromě.",
         },
         {
-          question: "Musím svoje dotazy psát do WhatsApp skupiny?",
+          question: "Je součástí spolupráce nový jídelníček?",
           answer:
-            "Ne. Skupinu můžeš využít pro běžné otázky, sdílení a podporu. Pokud ale řešíš něco osobnějšího nebo svůj dotaz jednoduše nechceš sdílet před ostatními, můžeš nám napsat přímo do soukromé zprávy.",
+            "Ne. V rámci 4týdenní podpory ti nevytváříme nový jídelníček na míru. Pracujeme s tím, co už jíš, co máš nastavené a co během spolupráce skutečně řešíš.",
         },
         {
           question: "Musím každý týden všechno dodržet dokonale?",
           answer:
-            "Ne. Smyslem podpory není kontrolovat, jestli jsi byla „dokonalá“. Naopak chceme pracovat s tím, jak vypadá tvůj skutečný život, a podle toho hledat další kroky, které jsou pro tebe reálně použitelné.",
+            "Ne. Smyslem spolupráce není mít čtyři perfektní týdny. Právě z běžného života, problémů a situací, které během týdne nastanou, dokážeme nejlépe zjistit, co potřebuješ upravit.",
         },
         {
-          question: "Je 4týdenní podpora vhodná i tehdy, když už mám jídelníček?",
+          question: "Je podpora vhodná, i když už mám svůj jídelníček?",
           answer:
-            "Ano. Jídelníček ti může ukázat, co a kolik jíst, zatímco 4týdenní podpora ti pomáhá řešit situace, které přicházejí při jeho používání v běžném životě.",
+            "Ano. Nemusíme ti vytvářet nový plán. Můžeme pracovat s tím, co už máš, a během čtyř týdnů řešit, jak ti to funguje v praxi, kde se zasekáváš a co potřebuješ upravit.",
+        },
+        {
+          question: "Kdy 4 týdny začínají běžet?",
+          answer:
+            "Spolupráce začíná dnem nákupu a trvá 4 týdny.",
+        },
+        {
+          question: "Co když během spolupráce onemocním nebo budu potřebovat pauzu?",
+          answer:
+            "Ozvi se nám. Pokud nastane nemoc, dovolená nebo jiná výjimečná situace, případné přerušení spolupráce řešíme individuálně po domluvě.",
         },
         {
           question: "Co když budu chtít pokračovat i po 4 týdnech?",
           answer:
-            "Pokud ti spolupráce bude dávat smysl, můžeš si po skončení podpory objednat další 4 týdny a plynule pokračovat.",
+            "Pokud ti spolupráce vyhovuje a budeš chtít pokračovat, můžeme se před koncem domluvit na další možnosti podpory.",
         },
         {
           question: "Je podpora vhodná při zdravotních problémech?",
           answer:
-            "4týdenní podpora je zaměřená na praktickou podporu při změně stravovacích a režimových návyků. Nenahrazuje lékařskou péči ani individuální doporučení nutričního terapeuta při zdravotních obtížích.",
+            "Podpora nenahrazuje lékařskou péči ani péči nutričního terapeuta. Pokud máš zdravotní stav, který vyžaduje léčebnou dietu nebo odborně vedenou výživu, je potřeba řešit ho s příslušným zdravotnickým odborníkem.",
         },
       ],
       finalTitle: "Nemusíš mít každý týden perfektní. Důležité je vědět, jak pokračovat dál.",
