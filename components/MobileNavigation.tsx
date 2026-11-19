@@ -4,7 +4,7 @@ import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { Button } from "./Button";
 import { CloseIcon, MenuIcon } from "./icons";
-import { COMMUNITY_URL, NAV_LINKS } from "@/lib/navigation";
+import { HEADER_CTA, NAV_LINKS } from "@/lib/navigation";
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false);
@@ -56,8 +56,8 @@ export function MobileNavigation() {
               </Link>
             ))}
           </nav>
-          <Button href={COMMUNITY_URL} variant="gradient" className="mt-5 w-full justify-center">
-            Komunita Fit bez času
+          <Button href={HEADER_CTA.href} variant="gradient" className="mt-5 w-full justify-center">
+            {HEADER_CTA.label}
           </Button>
         </div>
       )}

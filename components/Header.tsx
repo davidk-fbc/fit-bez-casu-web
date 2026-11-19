@@ -3,7 +3,7 @@ import { Button } from "./Button";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
 import { MobileNavigation } from "./MobileNavigation";
-import { COMMUNITY_URL, NAV_LINKS } from "@/lib/navigation";
+import { HEADER_CTA, NAV_LINKS } from "@/lib/navigation";
 
 export function Header() {
   return (
@@ -29,12 +29,12 @@ export function Header() {
 
         <div className="hidden lg:block">
           <Button
-            href={COMMUNITY_URL}
+            href={HEADER_CTA.href}
             variant="gradient"
             withArrow={false}
             className="whitespace-nowrap px-6 py-3 shadow-[0_14px_35px_-10px_rgba(139,60,249,0.75)] transition hover:scale-[1.03] lg:px-8"
           >
-            Komunita Fit bez času
+            {HEADER_CTA.label}
           </Button>
         </div>
 

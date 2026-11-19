@@ -4,7 +4,7 @@ import { Button } from "../Button";
 import { Container } from "../Container";
 import { ForkKnifeIcon, RunningIcon, UsersIcon } from "../icons";
 import { EXTERNAL_LINKS } from "@/lib/links";
-import { COMMUNITY_URL } from "@/lib/navigation";
+import { SUPPORT_OFFER_PATH } from "@/lib/navigation";
 
 type HeroPoint = {
   icon: ReactNode;
@@ -14,7 +14,7 @@ type HeroPoint = {
 const HERO_POINTS: HeroPoint[] = [
   { icon: <ForkKnifeIcon className="h-full w-full" />, label: "Jídelníček" },
   { icon: <RunningIcon className="h-full w-full" />, label: "Krátká cvičení" },
-  { icon: <UsersIcon className="h-full w-full" />, label: "Komunita" },
+  { icon: <UsersIcon className="h-full w-full" />, label: "Osobní podpora" },
 ];
 
 export function Hero() {
@@ -65,17 +65,17 @@ export function Hero() {
             nuly.
           </h1>
           <p className="max-w-xl text-lg leading-relaxed text-[var(--color-text-on-dark-muted)] sm:text-xl">
-            Získáš jasný systém pro jídlo, krátká cvičení a podporu komunity, která ti pomůže vydržet i v běžném
-            životě plném práce, rodiny a povinností.
+            Získáš jasný systém pro jídlo, krátká cvičení a osobní podporu, díky které se ti změny snáz vejdou
+            do běžného dne mezi práci, rodinu a další povinnosti.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
             <Button
-              href={COMMUNITY_URL}
+              href={SUPPORT_OFFER_PATH}
               variant="gradient"
               className="px-8 py-4 text-base shadow-[0_20px_50px_-12px_rgba(139,60,249,0.8)] transition hover:scale-[1.03] hover:shadow-[0_25px_60px_-10px_rgba(139,60,249,0.9)]"
             >
-              Přidat se ke komunitě
+              Chci osobní podporu
             </Button>
             <Button
               href={EXTERNAL_LINKS.mealPlan}

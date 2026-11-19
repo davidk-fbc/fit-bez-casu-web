@@ -118,9 +118,9 @@ test("ECOSYSTEM 8: 'Můj Talíř' is not a product name, in any form", () => {
 test("ECOSYSTEM 9: navigation gains support, and stays six items", () => {
   assert.deepEqual(
     NAV_LINKS.map((link) => link.label),
-    ["Jídelníček", "Fit Talíř", "Podpora", "Zdarma", "Blog", "O nás"]
+    ["Jídelníček", "Fit Talíř", "Osobní podpora", "Zdarma", "Blog", "O nás"]
   );
-  assert.equal(NAV_LINKS.find((link) => link.label === "Podpora")?.href, "/nabidka-podpory");
+  assert.equal(NAV_LINKS.find((link) => link.label === "Osobní podpora")?.href, "/nabidka-podpory");
 
   // One entry per destination a reader needs, not one per product - the
   // routes section and /nabidka-podpory are the choosers.

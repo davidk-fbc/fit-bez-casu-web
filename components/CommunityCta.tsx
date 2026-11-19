@@ -7,12 +7,14 @@ type CommunityCtaProps = {
   title?: string;
   description?: string;
   buttonLabel?: string;
+  href?: string;
 };
 
 export function CommunityCta({
   title = "Přidej se ke komunitě fit žen",
   description = "Získej podporu, motivaci, tipy a přístup k exkluzivnímu obsahu. Společně to zvládneme.",
   buttonLabel = "Vstoupit do komunity",
+  href = COMMUNITY_URL,
 }: CommunityCtaProps = {}) {
   return (
     <Container>
@@ -36,7 +38,7 @@ export function CommunityCta({
               </p>
             </div>
           </div>
-          <Button href={COMMUNITY_URL} variant="gradient" className="shrink-0 px-7 py-3.5">
+          <Button href={href} variant="gradient" className="shrink-0 px-7 py-3.5">
             {buttonLabel}
           </Button>
         </div>

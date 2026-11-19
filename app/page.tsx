@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SUPPORT_OFFER_PATH } from "@/lib/navigation";
 import { CommunityCta } from "@/components/CommunityCta";
 import { Hero } from "@/components/sections/Hero";
 import { IntroCards } from "@/components/sections/IntroCards";
@@ -83,9 +84,10 @@ export default function Home() {
         <LatestArticles />
         <section className="bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
           <CommunityCta
-            title="Na změnu nemusíš být sama"
-            description="Přidej se do komunity Fit bez času a získej pravidelnou podporu, krátká domácí cvičení, praktické tipy k jídlu a motivaci, která ti pomůže pokračovat i ve dnech, kdy se ti nebude chtít."
-            buttonLabel="Přidat se ke komunitě"
+            title="V lednu startuje Osobní vedení"
+            description="Chystáme tříměsíční program v malé skupině žen. Pravidelně se budeme věnovat i tomu, co právě řešíš ty, a společně hledat kroky, které zvládneš ve svém běžném týdnu."
+            buttonLabel="Zjistit víc o programu"
+            href={SUPPORT_OFFER_PATH}
           />
         </section>
       </main>
