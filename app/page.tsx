@@ -86,9 +86,9 @@ export default function Home() {
         <LatestArticles />
         <section className="bg-[var(--color-surface-muted)] pb-[var(--space-section)]">
           <CommunityCta
-            title="V lednu startuje Osobní vedení"
-            description="Chystáme tříměsíční program v malé skupině žen. Pravidelně se budeme věnovat i tomu, co právě řešíš ty, a společně hledat kroky, které zvládneš ve svém běžném týdnu."
-            buttonLabel="Zjistit víc o programu"
+            title="Tříměsíční program hubnutí s osobní podporou"
+            description="Začínáme v lednu v malé skupině žen. Budeme s tebou pravidelně probírat, jak se ti daří s jídlem a pohybem, a pomůžeme ti upravit plán podle toho, co právě řešíš."
+            buttonLabel="Zjistit, jak program probíhá"
             href={SUPPORT_OFFER_PATH}
           />
         </section>
