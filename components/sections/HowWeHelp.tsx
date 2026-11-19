@@ -16,7 +16,7 @@ type PathCardProps = {
   ctaHref: string;
   gradient: string;
   glowPosition: string;
-  /** The 21denní výzva card carries no mark - it is outside the three offers measured here. */
+  /** Every card in this section is measured; the prop stays optional so a new card is not forced to be. */
   cta?: CtaMark;
 };
 
@@ -106,6 +106,7 @@ export function HowWeHelp() {
               description="21 dní krátkých cvičení a podpory za 297 Kč. Součástí je i 30 dní Fit Talíře, ať si rovnou vyzkoušíš, jak ti sedí."
               ctaLabel="Chci 21denní výzvu"
               ctaHref={EXTERNAL_LINKS.challenge}
+              cta={{ id: "home_path_challenge", location: "home_paths", target: "challenge_21_day" }}
               gradient="linear-gradient(135deg, #f0812f, #9a3412)"
               glowPosition="-right-14 -top-10"
             />

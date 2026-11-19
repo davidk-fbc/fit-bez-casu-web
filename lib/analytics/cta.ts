@@ -22,7 +22,11 @@ export type CtaLocation =
   | "home_final_cta";
 
 /** Which offer the click is heading for - not the URL, which may change. */
-export type CtaTarget = "meal_plan" | "personal_support" | "fit_talir";
+export type CtaTarget =
+  | "meal_plan"
+  | "personal_support"
+  | "fit_talir"
+  | "challenge_21_day";
 
 export type CtaMark = {
   /** Stable id for this element, e.g. "header_meal_plan". Never generated. */
