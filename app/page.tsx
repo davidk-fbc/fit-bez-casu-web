@@ -18,9 +18,11 @@ import { absoluteUrl, getPageSchema } from "@/lib/structured-data";
 // the same "X | Fit bez času" convention), so this is assigned as a plain
 // string, never title.absolute - there is no template to override.
 const PAGE_TITLE = "Fit bez času | Hubnutí, jídelníček a cvičení pro ženy";
-// Kept in sync with what the homepage actually offers (Hero's own promise
-// below is "jasný systém pro jídlo, krátká cvičení a podporu komunity" -
-// this is the same offer in SEO-friendly phrasing, not invented copy).
+// Kept in sync with what the homepage actually offers. The Hero's own
+// promise now reads "jasný systém pro jídlo, krátká cvičení a osobní
+// podporu"; this description keeps "podporu komunity" deliberately - the
+// community is still what the footer CTA sells, and the exact sentence is
+// pinned by app/page.test.ts. Change the two together, never just one.
 const PAGE_DESCRIPTION =
   "Pomáháme ženám, které mají málo času, zhubnout bez diet a extrémů. Najdeš tu jídelníček, krátká cvičení, praktické tipy a podporu komunity Fit bez času.";
 // Same absolute URL reused for canonical, openGraph.url and the WebPage
