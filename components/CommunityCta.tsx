@@ -8,6 +8,12 @@ type CommunityCtaProps = {
   description?: string;
   buttonLabel?: string;
   href?: string;
+  /**
+   * Stacks the icon above the text below `sm`, so a long heading gets the
+   * block's full inner width instead of sharing a row with the icon.
+   * Opt-in: every other use keeps the icon beside the text at all widths.
+   */
+  stackOnMobile?: boolean;
 };
 
 export function CommunityCta({
@@ -15,6 +21,7 @@ export function CommunityCta({
   description = "Získej podporu, motivaci, tipy a přístup k exkluzivnímu obsahu. Společně to zvládneme.",
   buttonLabel = "Vstoupit do komunity",
   href = COMMUNITY_URL,
+  stackOnMobile = false,
 }: CommunityCtaProps = {}) {
   return (
     <Container>
@@ -25,7 +32,7 @@ export function CommunityCta({
         <div className="pointer-events-none absolute -right-16 -top-24 h-96 w-96 rounded-full bg-[var(--color-accent-purple)] opacity-40 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 left-1/4 h-64 w-64 rounded-full bg-[var(--color-accent-blue)] opacity-20 blur-3xl" />
         <div className="relative flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-5">
+          <div className={`flex items-start gap-5${stackOnMobile ? " flex-col sm:flex-row" : ""}`}>
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[var(--color-border-dark)]">
               <UsersIcon className="h-6 w-6 text-white" />
             </div>
