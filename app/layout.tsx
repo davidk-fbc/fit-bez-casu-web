@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { ConsentMode } from "@/components/analytics/consent-mode";
+import { CtaTracking } from "@/components/analytics/cta-tracking";
 import { ConsentProvider } from "@/components/consent/consent-provider";
 import { ConsentBanner } from "@/components/consent/consent-banner";
 import { ConsentSettingsDialog } from "@/components/consent/consent-settings-dialog";
@@ -71,6 +72,7 @@ export default function RootLayout({
         <ConsentProvider>
           {children}
           <ConsentMode />
+          <CtaTracking />
           <ConsentBanner />
           <ConsentSettingsDialog />
         </ConsentProvider>

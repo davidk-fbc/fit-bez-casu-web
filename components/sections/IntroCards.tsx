@@ -10,6 +10,7 @@ const CARDS = [
     description:
       "Získej jídelníček na míru, konkrétní porce a ukázkové recepty, díky kterým budeš vědět, co jíst i v běžném nabitém dni.",
     href: EXTERNAL_LINKS.mealPlan,
+    cta: { id: "home_card_meal_plan", location: "home_cards", target: "meal_plan" } as const,
   },
   {
     icon: <PhoneIcon className="h-full w-full" />,
@@ -17,6 +18,7 @@ const CARDS = [
     description:
       "Měj jídlo, pohyb i svůj progres na jednom místě. Jednoduše, přehledně a tak, aby ses v tom vyznala i ve dnech, kdy nestíháš.",
     href: EXTERNAL_LINKS.app,
+    cta: { id: "home_card_fit_talir", location: "home_cards", target: "fit_talir" } as const,
   },
   {
     icon: <GiftIcon className="h-full w-full" />,

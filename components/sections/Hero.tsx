@@ -5,6 +5,7 @@ import { Container } from "../Container";
 import { ForkKnifeIcon, RunningIcon, UsersIcon } from "../icons";
 import { EXTERNAL_LINKS } from "@/lib/links";
 import { SUPPORT_OFFER_PATH } from "@/lib/navigation";
+import { ctaAttrs } from "@/lib/analytics/cta";
 
 type HeroPoint = {
   icon: ReactNode;
@@ -72,6 +73,7 @@ export function Hero() {
           <div className="flex flex-wrap items-center gap-4">
             <Button
               href={SUPPORT_OFFER_PATH}
+              {...ctaAttrs({ id: "hero_support", location: "hero", target: "personal_support" })}
               variant="gradient"
               className="px-8 py-4 text-base shadow-[0_20px_50px_-12px_rgba(139,60,249,0.8)] transition hover:scale-[1.03] hover:shadow-[0_25px_60px_-10px_rgba(139,60,249,0.9)]"
             >
@@ -79,6 +81,7 @@ export function Hero() {
             </Button>
             <Button
               href={EXTERNAL_LINKS.mealPlan}
+              {...ctaAttrs({ id: "hero_meal_plan", location: "hero", target: "meal_plan" })}
               variant="outline-dark"
               className="border-white/25 bg-white/[0.04] px-8 py-4 text-base backdrop-blur-sm transition hover:scale-[1.03] hover:bg-white/10"
             >

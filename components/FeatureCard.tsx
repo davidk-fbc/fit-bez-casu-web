@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { ArrowRightIcon } from "./icons";
+import { ctaAttrs } from "@/lib/analytics/cta";
+import type { CtaMark } from "@/lib/analytics/cta";
 
 type FeatureCardProps = {
   icon: ReactNode;
@@ -9,6 +11,8 @@ type FeatureCardProps = {
   linkLabel?: string;
   linkAriaLabel?: string;
   linkClassName?: string;
+  /** Omitted on cards that are not an offer (Zdarma, Blog) - they fire nothing. */
+  cta?: CtaMark;
 };
 
 export function FeatureCard({
@@ -19,6 +23,7 @@ export function FeatureCard({
   linkLabel = "Zjistit více",
   linkAriaLabel,
   linkClassName = "",
+  cta,
 }: FeatureCardProps) {
   return (
     <div className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-7 shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
@@ -33,6 +38,7 @@ export function FeatureCard({
       <a
         href={href}
         aria-label={linkAriaLabel}
+        {...ctaAttrs(cta)}
         className={`mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent-blue)] hover:brightness-110 ${linkClassName}`}
       >
         {linkLabel}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "./Button";
 import { CloseIcon, MenuIcon } from "./icons";
 import { HEADER_CTA, NAV_LINKS } from "@/lib/navigation";
+import { ctaAttrs } from "@/lib/analytics/cta";
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false);
@@ -49,6 +50,7 @@ export function MobileNavigation() {
               <Link
                 key={link.href}
                 href={link.href}
+                {...ctaAttrs(link.cta && { ...link.cta, location: "mobile_nav" })}
                 onClick={() => setOpen(false)}
                 className="border-b border-white/5 py-3.5 text-base font-medium text-white/90"
               >
@@ -56,7 +58,12 @@ export function MobileNavigation() {
               </Link>
             ))}
           </nav>
-          <Button href={HEADER_CTA.href} variant="gradient" className="mt-5 w-full justify-center">
+          <Button
+            href={HEADER_CTA.href}
+            {...ctaAttrs({ ...HEADER_CTA.cta, location: "mobile_nav" })}
+            variant="gradient"
+            className="mt-5 w-full justify-center"
+          >
             {HEADER_CTA.label}
           </Button>
         </div>

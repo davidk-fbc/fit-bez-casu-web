@@ -24,10 +24,20 @@ export type GtagFunction = {
   ): void;
 };
 
-// gtag.js's real (post-load) implementation reads whatever was queued into
-// dataLayer via `arguments` objects - this type only needs to describe
-// "something array-like that got pushed", never the values themselves.
-export type DataLayerEntry = IArguments | unknown[];
+// Two shapes end up in dataLayer here, and they are not interchangeable:
+//
+// - gtag.js commands, queued as `arguments` objects. gtag.js's real
+//   (post-load) implementation reads those itself, so this type only has to
+//   say "something array-like got pushed", never what was in it.
+// - GTM custom events: a plain object carrying an `event` name plus its
+//   parameters. This is what a GTM Custom Event trigger listens for, and
+//   what lib/analytics/cta.ts pushes for `cta_click`.
+export type DataLayerEventObject = {
+  event: string;
+  [parameter: string]: unknown;
+};
+
+export type DataLayerEntry = IArguments | unknown[] | DataLayerEventObject;
 
 declare global {
   interface Window {

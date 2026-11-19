@@ -4,6 +4,7 @@ import { Container } from "./Container";
 import { Logo } from "./Logo";
 import { MobileNavigation } from "./MobileNavigation";
 import { HEADER_CTA, NAV_LINKS } from "@/lib/navigation";
+import { ctaAttrs } from "@/lib/analytics/cta";
 
 export function Header() {
   return (
@@ -20,6 +21,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
+              {...ctaAttrs(link.cta && { ...link.cta, location: "desktop_nav" })}
               className="whitespace-nowrap text-[15px] font-semibold text-white/85 transition hover:text-white"
             >
               {link.label}
@@ -30,6 +32,7 @@ export function Header() {
         <div className="hidden lg:block">
           <Button
             href={HEADER_CTA.href}
+            {...ctaAttrs({ ...HEADER_CTA.cta, location: "header_cta" })}
             variant="gradient"
             withArrow={false}
             className="whitespace-nowrap px-6 py-3 shadow-[0_14px_35px_-10px_rgba(139,60,249,0.75)] transition hover:scale-[1.03] lg:px-8"

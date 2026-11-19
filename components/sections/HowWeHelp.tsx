@@ -4,6 +4,8 @@ import { Container } from "../Container";
 import { SectionHeading } from "../SectionHeading";
 import { ChatBubblesIcon, ForkKnifeIcon, PhoneIcon, TrophyIcon } from "../icons";
 import { EXTERNAL_LINKS } from "@/lib/links";
+import { ctaAttrs } from "@/lib/analytics/cta";
+import type { CtaMark } from "@/lib/analytics/cta";
 
 type PathCardProps = {
   number: string;
@@ -14,9 +16,11 @@ type PathCardProps = {
   ctaHref: string;
   gradient: string;
   glowPosition: string;
+  /** The 21denní výzva card carries no mark - it is outside the three offers measured here. */
+  cta?: CtaMark;
 };
 
-function PathCard({ number, icon, title, description, ctaLabel, ctaHref, gradient, glowPosition }: PathCardProps) {
+function PathCard({ number, icon, title, description, ctaLabel, ctaHref, gradient, glowPosition, cta }: PathCardProps) {
   return (
     <div
       className="group relative flex min-h-[24rem] flex-col justify-between overflow-hidden rounded-[var(--radius-card)] border border-white/10 p-8 shadow-[var(--shadow-card)] transition-[transform,box-shadow,border-color] duration-300 motion-safe:hover:-translate-y-1.5 hover:border-white/25 hover:shadow-[var(--shadow-card-hover)] lg:min-h-[26rem]"
@@ -45,6 +49,7 @@ function PathCard({ number, icon, title, description, ctaLabel, ctaHref, gradien
         <p className="max-w-xs text-sm leading-relaxed text-white/85">{description}</p>
         <Button
           href={ctaHref}
+          {...ctaAttrs(cta)}
           variant="outline-light"
           className="w-fit border-white/50 bg-white/15 text-white hover:bg-white/25"
         >
@@ -79,6 +84,7 @@ export function HowWeHelp() {
               description="Jídelníček na míru, konkrétní porce a recepty. Budeš vědět, co si dát, i ve dnech, kdy na vymýšlení není čas."
               ctaLabel="Chci jídelníček"
               ctaHref={EXTERNAL_LINKS.mealPlan}
+              cta={{ id: "home_path_meal_plan", location: "home_paths", target: "meal_plan" }}
               gradient="linear-gradient(135deg, #8b3cf9, #4c1d95)"
               glowPosition="-right-16 -top-16"
             />
@@ -89,6 +95,7 @@ export function HowWeHelp() {
               description="Aplikace Fit Talíř, ve které si zapíšeš jídlo a hned vidíš, jak si vedeš. Ve vyšší variantě Fit Talíř Plus k tomu máš i hotový jídelníček a porce."
               ctaLabel="Vyzkoušet 5 dní zdarma"
               ctaHref={EXTERNAL_LINKS.app}
+              cta={{ id: "home_path_fit_talir", location: "home_paths", target: "fit_talir" }}
               gradient="linear-gradient(135deg, #1f6ef9, #4c1d95)"
               glowPosition="-right-10 top-0"
             />
@@ -109,6 +116,7 @@ export function HowWeHelp() {
               description="Když chceš, aby se na tvoji situaci někdo podíval osobně nebo tě provázel delší dobu, vybereš si mezi jednorázovým rozborem a průběžnou podporou."
               ctaLabel="Vybrat si podporu"
               ctaHref="/nabidka-podpory"
+              cta={{ id: "home_path_support", location: "home_paths", target: "personal_support" }}
               gradient="linear-gradient(135deg, #0d9488, #134e4a)"
               glowPosition="-right-12 -top-12"
             />

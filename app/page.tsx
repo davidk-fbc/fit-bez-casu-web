@@ -90,6 +90,7 @@ export default function Home() {
             description="Začínáme v lednu v malé skupině žen. Budeme s tebou pravidelně probírat, jak se ti daří s jídlem a pohybem, a pomůžeme ti upravit plán podle toho, co právě řešíš."
             buttonLabel="Zjistit, jak program probíhá"
             href={SUPPORT_OFFER_PATH}
+            cta={{ id: "home_program", location: "home_final_cta", target: "personal_support" }}
             stackOnMobile
           />
         </section>

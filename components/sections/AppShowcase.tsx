@@ -3,6 +3,7 @@ import { Button } from "../Button";
 import { Container } from "../Container";
 import { CalculatorIcon, LayersIcon, RepeatIcon, TrendingUpIcon } from "../icons";
 import { EXTERNAL_LINKS } from "@/lib/links";
+import { ctaAttrs } from "@/lib/analytics/cta";
 
 // Popis skutečných 5 hlavních funkcí aplikace - žádná motivace/připomínky/
 // obecná podpora, jen to, co aplikace opravdu dělá.
@@ -89,7 +90,13 @@ export function AppShowcase() {
             podle svého příjmu, je tu vyšší varianta{" "}
             <strong className="font-semibold text-[var(--color-text)]">Fit Talíř Plus</strong>.
           </p>
-          <Button href={EXTERNAL_LINKS.app} variant="solid-blue" withArrow={false} className="w-fit px-7 py-3.5">
+          <Button
+            href={EXTERNAL_LINKS.app}
+            {...ctaAttrs({ id: "home_app_fit_talir", location: "home_app", target: "fit_talir" })}
+            variant="solid-blue"
+            withArrow={false}
+            className="w-fit px-7 py-3.5"
+          >
             Poznat Fit Talíř
           </Button>
         </div>

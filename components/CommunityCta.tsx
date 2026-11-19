@@ -2,6 +2,8 @@ import { Button } from "./Button";
 import { Container } from "./Container";
 import { UsersIcon } from "./icons";
 import { COMMUNITY_URL } from "@/lib/navigation";
+import { ctaAttrs } from "@/lib/analytics/cta";
+import type { CtaMark } from "@/lib/analytics/cta";
 
 type CommunityCtaProps = {
   title?: string;
@@ -14,6 +16,8 @@ type CommunityCtaProps = {
    * Opt-in: every other use keeps the icon beside the text at all widths.
    */
   stackOnMobile?: boolean;
+  /** Only the homepage's closing CTA is measured; the blog and /o-nás uses are not. */
+  cta?: CtaMark;
 };
 
 export function CommunityCta({
@@ -22,6 +26,7 @@ export function CommunityCta({
   buttonLabel = "Vstoupit do komunity",
   href = COMMUNITY_URL,
   stackOnMobile = false,
+  cta,
 }: CommunityCtaProps = {}) {
   return (
     <Container>
@@ -45,7 +50,7 @@ export function CommunityCta({
               </p>
             </div>
           </div>
-          <Button href={href} variant="gradient" className="shrink-0 px-7 py-3.5">
+          <Button href={href} {...ctaAttrs(cta)} variant="gradient" className="shrink-0 px-7 py-3.5">
             {buttonLabel}
           </Button>
         </div>
